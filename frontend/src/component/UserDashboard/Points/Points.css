@@ -1,0 +1,127 @@
+.page-404__title {
+    position: relative;
+    color: rgb(97, 100, 255);
+    line-height: 100%;
+    font-size: 100px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.sign {
+    display: block;
+    position: relative;
+}
+
+.sign__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    padding: 30px 20px;
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    border: 0px solid #222227;
+    background: #F7F9F9;
+}
+.sign__content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 25px 0 0;
+}
+
+.sign__input {
+    background-color: #F2F3F4 ;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    height: 46px;
+    position: relative;
+    color: #17202A;
+    font-size: 16px;
+    width: 100%;
+    padding: 0 20px;
+    font-family: 'Noto Kufi Arabic';
+}
+
+.sign__textarea {
+    background-color: #F2F3F4;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    height: 144px;
+    position: relative;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    padding: 15px 20px;
+    resize: none;
+    font-family: 'Noto Kufi Arabic';
+}
+
+input, button, select, optgroup, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: 'Noto Kufi Arabic';
+}
+
+
+@media screen and (max-width: 600px) {
+    .mb-3 {
+        width: 300px;
+    }
+
+  }
+
+@media (min-width: 576px) and (max-width: 767px) {
+    /* CSS styles for small tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* CSS styles for medium tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    /* CSS styles for large tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 1200px) {
+    /* CSS styles for extra-large tablets */
+}
+
+.page-404__title {
+    position: relative;
+    color: #17202A;
+    line-height: 100%;
+    font-size: 100px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}

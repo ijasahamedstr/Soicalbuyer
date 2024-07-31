@@ -1,0 +1,89 @@
+
+@media screen and (max-width: 600px) {
+    .mb-3 {
+        width: 300px;
+    }
+
+  }
+
+@media (min-width: 576px) and (max-width: 767px) {
+    /* CSS styles for small tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* CSS styles for medium tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    /* CSS styles for large tablets */
+    .mb-3 {
+        width: 300px;
+    }
+
+ 
+}
+
+@media (min-width: 1200px) {
+    /* CSS styles for extra-large tablets */
+    .sign__input {
+        width: 340px;
+    }
+
+}
+
+
+.sign__group {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+
+.sign__label {
+    font-weight: 400;
+    font-size: 14px;
+    color: #bdbdbd;
+    margin-bottom: 5px;
+    padding-left: 20px;
+}
+
+
+.sign__select {
+    background-size: 18px auto;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    height: 46px;
+    position: relative;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.spanclass{
+    color: #ffffff;
+    padding: 1px 9px;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: -webkit-gradient(linear, left top, right top, from(#e24997), to(#2d2ed4));
+    background: linear-gradient(to right, #e24997, #2d2ed4);
+    display: inline-block;
+    border-radius: 5px;
+    margin-right: 5px;
+}

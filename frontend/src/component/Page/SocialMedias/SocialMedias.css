@@ -1,0 +1,26 @@
+.entry-title {
+    font-size: 36px;
+  }
+  
+  @media (max-width: 768px) {
+    .entry-title {
+     font-size: 25px;
+    }
+
+    .card-body{
+      font-size: 13px;
+    }
+
+    .mb-3{
+      width: 150px;
+    }
+
+  }
+
+  @media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px)
+  and (orientation: portrait) {
+   
+    
+}

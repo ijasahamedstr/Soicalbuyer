@@ -1,0 +1,24 @@
+.navbar-light .navbar-nav .show > .nav-link, .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .nav-link.active {
+    color: #6164ff;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-light .navbar-toggler {
+    color: azure;
+    border-color: azure;
+    background: azure;
+}
+
+@media (max-width: 767.98px) {
+    .navbar-nav .nav-link {
+        padding: 0.625rem 0;
+        color: #FDFEFE  !important;
+    }
+}
+
+.nav-link {
+    color: azure;
+}

@@ -1,0 +1,9 @@
+.page-404__title {
+    position: relative;
+    color: #fff;
+    line-height: 100%;
+    font-size: 100px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}

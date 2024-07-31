@@ -1,0 +1,163 @@
+.c-card {
+    border-radius: 0.8rem;
+    background: var(--surface);
+    width: 100%;
+    margin-bottom: 1.6rem;
+    box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.12);
+    font-family: "Noto Kufi Arabic";
+}
+
+.u-text--center {
+    text-align: center;
+}
+
+.u-mb--16 {
+    margin-bottom: 1.6rem;
+}
+
+.c-avatar--lg {
+    width: 4.6rem;
+    height: 4.6rem;
+}
+
+.c-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0px 0px 0px 1px currentColor;
+    border-radius: 50%;
+    background: var(--lightest);
+    color: var(--dark);
+}
+
+.u-mt--16 {
+    margin-top: 1.6rem;
+}
+
+.u-text--small {
+    font-size: 1rem;
+}
+
+.u-text--teal {
+    color: #20c997 !important;
+}
+
+.c-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0;
+}
+
+.c-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ul {
+    list-style: none;
+}
+
+
+.c-list__grid {
+    display: grid;
+    grid-column-gap: 2.4rem;
+}
+
+.c-list__item .c-flag {
+    margin-top: 0.8rem;
+}
+
+.c-media {
+    display: inline-flex;
+    align-items: center;
+}
+
+.c-media {
+    display: inline-flex;
+    align-items: center;
+}
+
+
+.c-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.8rem;
+    height: 3.8rem;
+    box-shadow: inset 0px 0px 0px 1px currentColor;
+    border-radius: 50%;
+    background: var(--lightest);
+    color: var(--dark);
+}
+
+.u-bg--yellow {
+    background: var(--yellow) !important;
+}
+
+.l-grid {
+    display: grid;
+    grid-column-gap: 1.6rem;
+    grid-row-gap: 1.6rem;
+    position: relative;
+}
+
+.l-wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: auto;
+    padding: 1.6rem 1.6rem 3.2rem;
+}
+
+.c-list__grid {
+    display: grid;
+    grid-template-columns: 4.8rem 3fr 1fr;
+    grid-column-gap: 2.4rem;
+}
+
+.c-media__title {
+    margin-bottom: 0.4rem;
+}
+
+.c-media__content {
+    padding-left: 1.6rem;
+}
+
+.c-media__title {
+    margin-bottom: 0.4rem;
+}
+
+.c-list__item {
+    padding: 1.6rem 0;
+}
+
+.mt-4, .my-4 {
+    margin-top: 1.5rem !important;
+}
+
+.c-header {
+    padding: 1.6rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.4rem;
+    position: relative;
+}
+
+.c-header:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 0.2rem;
+    background: #D7DBDD;
+}
+
+
+.c-list__grid {
+    display: grid;
+    grid-template-columns: 2.8rem 2fr 0.5fr;
+    grid-column-gap: 0.1rem;
+}

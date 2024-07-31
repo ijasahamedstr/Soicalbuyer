@@ -1,0 +1,42 @@
+.tobBar{
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+}
+
+@media (max-width: 767px) {
+
+  .tobBar{
+   letter-spacing: 50;
+  }
+}
+@media (max-width: 400px) {
+  
+}
+
+  @keyframes blink {
+    0%{opacity: 1;}
+    50%{opacity: .1;}
+    100%{opacity: 1;}
+  }
+  
+  .blinkingtext {
+    animation: blink 1s infinite;
+    
+  }
+  @media screen and (max-width: 600px) {
+    .tobBar{
+      font-size: 10px;
+    }
+
+    .blinkingtext{
+      font-size: calc(1.1rem + .3vw);
+    }
+
+
+}
+
+.h4, h4 {
+  font-size: calc(1.1rem + .3vw);
+}
+
+ 

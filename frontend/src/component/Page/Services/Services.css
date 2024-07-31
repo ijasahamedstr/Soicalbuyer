@@ -1,0 +1,78 @@
+.Card {
+    background: transparent;
+    border-style: solid;
+    border-width: 4px 4px 4px 4px;
+    border-color: Red;
+    border-radius: 0.3rem;
+    height: 150px; 
+}
+
+.feature {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+    gap: 10px;
+    font-size: 12px;
+}
+.feature__icon{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background-color: rgba(97, 100, 255, 0.15);
+}
+
+.feature__icon--green {
+    background-color: rgba(37, 165, 106, 0.15);
+    fill: green;
+}
+
+
+.feature__icon--purple{
+    background-color: rgba(128, 81, 212, 0.15);
+    fill: #8051d4;
+}
+
+.feature__icon--red{
+    background-color: rgba(235, 87, 87, 0.15);
+    fill: #eb5757;
+}
+
+.feature__icon svg {
+    fill: #6164ff;
+    width: auto;
+    height: 26px;
+}
+
+.feature__title {
+    display: flex;
+    line-height: 50px;
+    margin-bottom: 0;
+    margin-left: 15px;
+    width: calc(100% - 65px);
+}
+
+.entry-title {
+    position: relative;
+    padding-bottom: 24px;
+    font-weight: 600;
+    
+}
+
+ .entry-title::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 64px;
+    height: 4px;
+    border-radius: 2px;
+    background: #6164ff;
+}

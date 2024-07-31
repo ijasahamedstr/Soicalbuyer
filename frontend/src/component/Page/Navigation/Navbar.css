@@ -1,0 +1,76 @@
+.p-3 .mb-2 .bg-dark  .text-white .bg-body-tertiary{
+    margin-top: -16px;
+    background-color: #16151a;
+    font-family: 'Noto Kufi Arabic';
+}
+
+.navb{
+    color: #ffffff;
+    color: #ffffff;
+    padding: 0px 9px;
+    font-size: 10px;
+    text-transform: uppercase;
+    background: -webkit-gradient(linear, left top, right top, from(#e24997), to(#2d2ed4));
+    background: linear-gradient(to right, #e24997, #2d2ed4);
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 600px) {
+
+    .justify-content-end {
+      font-size: 15px;
+      text-align: right;
+    }
+
+  }
+
+@media (min-width: 576px) and (max-width: 767px) {
+    /* CSS styles for small tablets */
+    .justify-content-end {
+        font-size: 15px;
+        text-align: right;
+      }
+ 
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* CSS styles for medium tablets */
+    .justify-content-end {
+        font-size: 7px;
+        text-align: right;
+        margin-top: -7px;
+      }
+ 
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    /* CSS styles for large tablets */
+    .justify-content-end {
+        font-size: 10px;
+        text-align: right;
+      }
+ 
+}
+
+@media (min-width: 1200px) {
+    /* CSS styles for extra-large tablets */
+    .justify-content-end {
+        font-size: 15px;
+      }
+}
+
+
+svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.drop{
+  margin-bottom: -10px;
+}

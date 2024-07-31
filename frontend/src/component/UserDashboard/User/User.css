@@ -1,0 +1,136 @@
+.sign__input {
+    background-color: #222227;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    height: 46px;
+    position: relative;
+    color: #fff;
+    font-size: 16px;
+    width: 100%;
+    padding: 0 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.formuser{
+    width: 350px;
+}
+
+.card-body {
+    width: 100%;
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .formuser {
+        width: 250px;
+    }
+
+  }
+
+@media (min-width: 576px) and (max-width: 767px) {
+    /* CSS styles for small tablets */
+    .formuser {
+        width: 20px;
+      }
+ 
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* CSS styles for medium tablets */
+    .formuser {
+        width: 350px;
+      }
+
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+ 
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    /* CSS styles for large tablets */
+    .formuser {
+        width: 100%;
+      }
+ 
+}
+
+@media (min-width: 1200px) {
+    /* CSS styles for extra-large tablets */
+    .formuser {
+        width: 350px;
+      }
+}
+
+.knowledge__list li {
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.knowledge__list li:before {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 1px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    border-top: 1px dotted rgba(189, 189, 189, 0.4);
+    z-index: 1;
+}
+
+.knowledge__list a {
+    position: relative;
+    z-index: 2;
+    display: block;
+    padding-right: 4px;
+}
+
+.knowledge__list span {
+    color: #bdbdbd;
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    display: block;
+    padding-left: 4px;
+}
+
+.author__followers {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.mr-2, .mx-2 {
+    margin-right: 1rem !important;
+}
+
+.author__followers p {
+    font-size: 20px;
+    line-height: 100%;
+    color: rgb(97, 100, 255);
+    margin-bottom: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.author__followers span {
+    font-size: 14px;
+    color: #bdbdbd;
+    line-height: 100%;
+    margin-top: 8px;
+}

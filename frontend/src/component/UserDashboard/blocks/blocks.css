@@ -1,0 +1,17 @@
+.card1 {
+    margin-top: 20px;
+    border-radius: 16px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    background: #F7F9F9;
+}
+
+.ml-2, .mx-2 {
+    margin-left: .5rem !important;
+}
