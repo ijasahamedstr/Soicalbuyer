@@ -52,13 +52,13 @@ function OffcanvasExample({isLoggedIn = true}) {
               
               <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic'}}>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link to="/ ">الرئيسية</Nav.Link>
-                <Nav.Link to="/التواصل الإجتماعي">التواصل الإجتماعي</Nav.Link>
-                <Nav.Link href="/الألعاب">الألعاب</Nav.Link>
-                <Nav.Link href="/الخدمات">الخدمات</Nav.Link>
-                <Nav.Link href="/الأعضاء">الأعضاء</Nav.Link>
-                <Nav.Link href="/طلبات المستخدمين"><span  className='navb'>جديد</span>طلبات المستخدمين</Nav.Link>
-                <Nav.Link href="/متجر المنصة">متجر المنصة</Nav.Link>
+                <Nav.Link><Link style={{color:'#FFFFFF',textDecoration:'none'}} to="/">الرئيسية</Link></Nav.Link>
+                <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/التواصل الإجتماعي">التواصل الإجتماعي</Link></Nav.Link>
+                <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الألعاب">الألعاب</Link></Nav.Link>
+                <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الخدمات">الخدمات</Link></Nav.Link>
+                <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الأعضاء">الأعضاء</Link></Nav.Link>
+                <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/طلبات المستخدمين"><span  className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
                 </Nav>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                 <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>

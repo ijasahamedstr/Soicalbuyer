@@ -74,3 +74,16 @@ svg {
 .drop{
   margin-bottom: -10px;
 }
+
+
+.link {
+  color: #3498db; /* Change link color */
+  padding: 10px 15px; /* Adjust padding */
+  font-size: 16px; /* Adjust font size */
+  text-decoration: none; /* Remove underline */
+}
+
+.link:hover {
+  color: #2ecc71; /* Change color on hover */
+  text-decoration: underline; /* Underline on hover */
+}
