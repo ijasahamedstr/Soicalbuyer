@@ -27,6 +27,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+
+const clientid = (process.env.clientid);
+const clientsecret = (process.env.clientsecret);
+
+
 app.use(cors({
   origin:"http://localhost:3000",
   methods:"GET,POST,PUT,DELETE",
