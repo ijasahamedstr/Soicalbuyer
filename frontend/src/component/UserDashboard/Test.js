@@ -1,63 +1,77 @@
-import React, { useContext, useEffect ,useState} from 'react'
-import { useNavigate } from 'react-router-dom';
-import { LoginContext } from '../ContextProvider/Context.js';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+// import React, { useContext, useEffect ,useState} from 'react'
+// import { useNavigate } from 'react-router-dom';
+// import { LoginContext } from '../ContextProvider/Context.js';
+// import CircularProgress from '@mui/material/CircularProgress';
+// import Box from '@mui/material/Box';
+import axios from 'axios';
+import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 
 const Dashboard = () => {
 
-    const { logindata, setLoginData } = useContext(LoginContext);
+    const [userdata, setUserdata] = useState({});
+    console.log("response", userdata)
 
-    const [data, setData] = useState(false);
+    const getUser = async () => {
+        try {
+            const response = await axios.get("http://localhost:8000/login/sucess", { withCredentials: true });
 
-
-    const history = useNavigate();
-
-    const DashboardValid = async () => {
-        let token = localStorage.getItem("usersdatatoken");
-
-        const res = await fetch("/validuser", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": token
-            }
-        });
-
-        const data = await res.json();
-
-        if (data.status === 401 || !data) {
-            history("*");
-        } else {
-            console.log("user verify");
-            setLoginData(data)
-            history("/Dashboard");
+            setUserdata(response.data.user)
+        } catch (error) {
+            console.log("error", error)
         }
     }
 
+    // logoout
+    const logout = ()=>{
+        window.open("http://localhost:8000/logout","_self")
+    }
 
     useEffect(() => {
-        setTimeout(() => {
-            DashboardValid();
-            setData(true)
-        }, 2000)
-
+        getUser()
     }, [])
-
     return (
         <>
-            {
-                data ? <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <img src="./man.png" style={{ width: "200px", marginTop: 20 }} alt="" />
-                    <h1>User Email:{logindata ? logindata.ValidUserOne.email : ""}</h1>
-                </div> : <Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center", height: "100vh" }}>
-                    Loading... &nbsp;
-                    <CircularProgress />
-                </Box>
-            }
+            <header>
+                <nav>
+                    <div className="left">
+                        <h1>Harsh Pathak</h1>
+                    </div>
+                    <div className="right">
+                        <ul>
+                            <li>
+                                <NavLink to="/">
+                                    Home
+                                </NavLink>
+                            </li>
+                            {
+                                Object?.keys(userdata)?.length > 0 ? (
+                                    <>
+                                    <li style={{color:"black",fontWeight:"bold"}}>{userdata?.displayName}</li>
+                                        <li>
+                                            <NavLink to="/dashboard">
+                                                Dashboard
+                                            </NavLink>
+                                        </li>
+                                        <li onClick={logout}>Logout</li>
+                                        <li>
+                                            <img src={userdata?.image} style={{ width: "50px", borderRadius: "50%" }} alt="" />
+                                        </li>
+                                    </>
+                                ) : <li>
+                                    <NavLink to="/تسجيل الدخول">
+                                        Login
+                                    </NavLink>
+                                </li>
+                            }
 
+
+
+                        </ul>
+                    </div>
+                </nav>
+            </header>
         </>
-
     )
 }
 
