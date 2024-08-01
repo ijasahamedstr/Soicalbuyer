@@ -35,7 +35,7 @@ const LoginOTP = () => {
         localStorage.setItem("userdbtoken", response.data.userToken);
         toast.success(response.data.message);
         setTimeout(() => {
-          navigate("/Test")
+          navigate("/Dashboard")
         }, 5000)
       } else {
         toast.error(response.response.data.error)

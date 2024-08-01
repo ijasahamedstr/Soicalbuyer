@@ -91,7 +91,7 @@ passport.deserializeUser((user,done)=>{
 app.get("/auth/google",passport.authenticate("google",{scope:["profile","email"]}));
 
 app.get("/auth/google/callback",passport.authenticate("google",{
-    successRedirect:"http://localhost:3000/Test",
+    successRedirect:"http://localhost:3000/Dashboard",
     failureRedirect:"http://localhost:3000/تسجيل الدخول",
 }))
 

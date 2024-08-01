@@ -21,7 +21,6 @@ import Blocks from "./component/UserDashboard/blocks/blocks";
 import Verifyaccount from "./component/UserDashboard/verifyAccount/verifyAccount";
 import Gameview from "./component/Page/Games/Game-view";
 import Wallet from "./component/UserDashboard/wallet/wallet";
-import Test from "./component/UserDashboard/Test";
 import Chat from "./component/UserDashboard/chat/chat";
 import Notifications from "./component/UserDashboard/notifications/notifications";
 import Challenges from "./component/UserDashboard/challenges/challenges";
@@ -29,6 +28,7 @@ import SoiaclAcoountView from "./component/Page/SocialMediaAccounts/SocialMediaA
 import Userview from "./component/Page/Users/userview";
 import LoginOTP from "./component/Page/LoginPage/LoginOTP";
 import Error from "./component/UserDashboard/Error";
+import Dashboard from "./component/UserDashboard/Test";
 
 
 function App() {
@@ -61,7 +61,7 @@ function App() {
       <Route path="/challenges" element={<Challenges/>}/>
       <Route path="/social-media-accounts-view" element={<SoiaclAcoountView/>}/>
       <Route path="/UserView" element={<Userview/>}/>
-      <Route path="/Test" element={<Test/>}/>
+      <Route path="/Dashboard" element={<Dashboard/>}/>
       <Route path="/OTP" element={<LoginOTP/>}/>
       <Route path="*" element={<Error/>} />
     </Routes>
