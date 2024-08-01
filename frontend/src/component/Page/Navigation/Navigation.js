@@ -15,11 +15,13 @@ import { BsFillPersonXFill } from "react-icons/bs";
 import { IoFingerPrintSharp } from "react-icons/io5";
 import { BsBullseye } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
-import { Link } from "react-router-dom";
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link} from 'react-router-dom';
 
-function OffcanvasExample({isLoggedIn = true}) {
+
+function OffcanvasExample() {
+
   const [userdata, setUserdata] = useState({});
   console.log("response", userdata)
 
@@ -72,56 +74,54 @@ function OffcanvasExample({isLoggedIn = true}) {
                 <img  src={user.avatar} style={{width:'150px',fontSize:'15px'}} alt="User Avatar" />
                 </Offcanvas.Title>
               </Offcanvas.Header>
-              
-              
-              {
-                                Object?.keys(userdata)?.length > 0 ? (
-                                    <>
-                                  <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic'}}>
-                                  <Nav className="justify-content-end flex-grow-1 pe-3">
-                                  <Nav.Link><Link style={{color:'#FFFFFF',textDecoration:'none'}} to="/">الرئيسية</Link></Nav.Link>
-                                  <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/التواصل الإجتماعي">التواصل الإجتماعي</Link></Nav.Link>
-                                  <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الألعاب">الألعاب</Link></Nav.Link>
-                                  <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الخدمات">الخدمات</Link></Nav.Link>
-                                  <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الأعضاء">الأعضاء</Link></Nav.Link>
-                                  <Nav.Link> <Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/طلبات المستخدمين"><span  className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
-                                  <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
-                                  </Nav>
-                                  <Nav className="justify-content-end flex-grow-1 pe-3">
-                                  <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>
-                                    <div class="card__author  card__author">
-                                    <img src={userdata?.image} alt="" />
-                                    {userdata?.displayName} </div>
-
-                                  <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>
-                                  <li className='drop'><Nav.Link href='/User'><button className="dropdown-item" type="button"><span><FaRegUserCircle /></span>حسابي</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/Requests'><button className="dropdown-item" type="button"><span><MdWorkHistory /></span>الطلبات</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/sales'><button className="dropdown-item" type="button"><span><ImCoinDollar /></span>المبيعات</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/wallet'><button className="dropdown-item" type="button"><span><IoWallet /></span>المحفظة</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/Points'><button className="dropdown-item" type="button"><span><BsArchiveFill /></span>الصندوق</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/boost'><button className="dropdown-item" type="button"><span><PiBroadcastBold /></span>ترويج منتج</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/Chat'><button className="dropdown-item" type="button"><span><BsChatDots /></span>المحادثات</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/notifications'><button className="dropdown-item" type="button"><span><BiSolidBellRing /></span>التنبيهات</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/blocks'><button className="dropdown-item" type="button"><span><BsFillPersonXFill /></span>قائمة الحظر</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/verify-account'><button className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل الحساب</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/تسجيل الدخول'><button style={{color:'red'}} className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل رقم الهاتف</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/challenges'><button className="dropdown-item" type="button"><span><BsBullseye /></span>التحديات</button></Nav.Link></li>
-                                  <li className='drop'><Nav.Link href='/Test'><button className="dropdown-item" onClick={logout} type="button"><span><ImExit /></span>التحديات</button></Nav.Link></li>               
-                                  </ul>  
-                                </div>
-                                </Nav>
-                                </Offcanvas.Body>
-                                    </>
-                                ) : <li>
-                                    <Link to="/">
-                                    <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>         
-                                    <li><Nav.Link href='/تسجيل الدخول'><button className="dropdown-item" type="button">تسجيل الدخول</button></Nav.Link></li>
-                                    <li><Nav.Link href="/تسجيل حساب جديد"><button className="dropdown-item" type="button">تسجيل حساب جديد</button></Nav.Link></li>
-                                    {/* <li><Nav.Link href="/user dashboard"><button className="dropdown-item" type="button" onClick={handleLogout}>Logout</button></Nav.Link></li> */}
-                                  </ul>  
-                                    </Link>
-                                </li>
-                            }      
+              <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic'}}>
+                <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link><Link style={{color:'#FFFFFF',textDecoration:'none'}} to="/">الرئيسية</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/التواصل الإجتماعي">التواصل الإجتماعي</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الألعاب">الألعاب</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الخدمات">الخدمات</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الأعضاء">الأعضاء</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/طلبات المستخدمين"><span  className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
+                <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
+                </Nav>
+                {
+                  Object?.keys(userdata)?.length > 0 ? (
+                    <>
+                    <Nav className="justify-content-end flex-grow-1 pe-3">
+                    <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>
+                    <div class="card__author  card__author">
+                    <img src={userdata?.image} alt="" />{userdata?.displayName}</div>
+                    <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>
+                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><span><FaRegUserCircle /></span>حسابي</button></Link></li>
+                    <li className='drop'><Link to='/Requests'><button className="dropdown-item" type="button"><span><MdWorkHistory /></span>الطلبات</button></Link></li>
+                    <li className='drop'><Link to='/sales'><button className="dropdown-item" type="button"><span><ImCoinDollar /></span>المبيعات</button></Link></li>
+                    <li className='drop'><Link to='/wallet'><button className="dropdown-item" type="button"><span><IoWallet /></span>المحفظة</button></Link></li>
+                    <li className='drop'><Link to='/Points'><button className="dropdown-item" type="button"><span><BsArchiveFill /></span>الصندوق</button></Link></li>
+                    <li className='drop'><Link to='/boost'><button className="dropdown-item" type="button"><span><PiBroadcastBold /></span>ترويج منتج</button></Link></li>
+                    <li className='drop'><Link to='/Chat'><button className="dropdown-item" type="button"><span><BsChatDots /></span>المحادثات</button></Link></li>
+                    <li className='drop'><Link to='/notifications'><button className="dropdown-item" type="button"><span><BiSolidBellRing /></span>التنبيهات</button></Link></li>
+                    <li className='drop'><Link to='/blocks'><button className="dropdown-item" type="button"><span><BsFillPersonXFill /></span>قائمة الحظر</button></Link></li>
+                    <li className='drop'><Link to='/verify-account'><button className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل الحساب</button></Link></li>
+                    <li className='drop'><Link to='/تسجيل الدخول'><button style={{color:'red'}} className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل رقم الهاتف</button></Link></li>
+                    <li className='drop'><Link to='/challenges'><button className="dropdown-item" type="button"><span><BsBullseye /></span>التحديات</button></Link></li>
+                    <li className='drop'><button className="dropdown-item" type="button" onClick={logout}><span><ImExit /></span>التحديات</button></li>               
+                    </ul>  
+                  </div>
+                  </Nav>            
+                    </>
+                    ) : 
+                    <Nav className="justify-content-end flex-grow-1 pe-3">
+                    <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>
+                    <div class="card__author  card__author">
+                    <img src="https://usr.dokan-cdn.com/img/avatars/default.jpg" alt="" />زائر </div>
+                    <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>         
+                    <li><Nav.Link href='/تسجيل الدخول'><button className="dropdown-item" type="button">تسجيل الدخول</button></Nav.Link></li>
+                    <li><Nav.Link href="/تسجيل حساب جديد"><button className="dropdown-item" type="button">تسجيل حساب جديد</button></Nav.Link></li>
+                    </ul>  
+                  </div>
+                  </Nav>            
+                 }
+              </Offcanvas.Body>
             </Navbar.Offcanvas>
           </Container>
         </Navbar>
