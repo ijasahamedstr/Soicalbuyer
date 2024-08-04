@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import AlertDismissibleExample from "./component/Page/Alert/topbar";
 import Navbar from "./component/Page/Navigation/Navigation";
-import { BrowserRouter as Router,Route,Routes} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./component/Page/Home/Home";
 import Social from "./component/Page/SocialMedias/SocialMedias";
 import Users from "./component/Page/Users/Users";
@@ -29,52 +30,56 @@ import Userview from "./component/Page/Users/userview";
 import LoginOTP from "./component/Page/LoginPage/LoginOTP";
 import Error from "./component/UserDashboard/Error";
 import Dashboard from "./component/UserDashboard/Test";
-import { useState } from 'react';
-
 
 function App() {
-
+  const [userdata, setUserdata] = useState({});
   const [isOTPLoggedIn, setIsOTPLoggedIn] = useState(false);
-
   const [OTPLoggedUserData, setOTPLoggedUserData] = useState([]);
+
+  useEffect(() => {
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
+    }
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
+
+  console.log("::: user data", userdata);
+  console.log("response", userdata);
 
   return (
     <>
-    <AlertDismissibleExample/>
-    <Router>
-    <Navbar isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>
-    <Routes>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/التواصل الإجتماعي" element={<Social/>}/>
-      <Route path="/الألعاب" element={<Gamesaccount/>}/>
-      <Route path="/الخدمات" element={<Servicesuser/>}/>
-      <Route path="/الأعضاء" element={<Users/>}/>
-      <Route path="/طلبات المستخدمين" element={<Market/>}/>
-      <Route path="/متجر المنصة" element={<Store/>}/>
-      <Route path="/تسجيل الدخول" element={<LoginRegisterForm/>}/>
-      <Route path="/تسجيل حساب جديد" element={<RegisterForm/>}/>
-      <Route path="/User" element={<User/>}/>
-      <Route path="/Requests" element={<Requests/>}/>
-      <Route path="/sales" element={<Sales/>}/>
-      <Route path="/Points" element={<Points/>}/>
-      <Route path="/boost" element={<Userboost/>}/>
-      <Route path="/blocks" element={<Blocks/>}/>
-      <Route path="/verify-account" element={<Verifyaccount/>}/>
-      <Route path="/game-view" element={<Gameview/>}/>
-      <Route path="/wallet" element={<Wallet/>}/>
-      <Route path="/Chat" element={<Chat/>}/>
-      <Route path="/notifications" element={<Notifications/>}/>
-      <Route path="/challenges" element={<Challenges/>}/>
-      <Route path="/social-media-accounts-view" element={<SoiaclAcoountView/>}/>
-      <Route path="/UserView" element={<Userview/>}/>
-      <Route path="/Dashboard" element={<Dashboard/>}/>
-      <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData}/>}/>
-      <Route path="*" element={<Error/>} />
-    </Routes>
-    </Router>
-    <Footer/>
-
-
+      <AlertDismissibleExample />
+      <Router>
+        <Navbar isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/التواصل الإجتماعي" element={<Social />} />
+          <Route path="/الألعاب" element={<Gamesaccount />} />
+          <Route path="/الخدمات" element={<Servicesuser />} />
+          <Route path="/الأعضاء" element={<Users />} />
+          <Route path="/طلبات المستخدمين" element={<Market />} />
+          <Route path="/متجر المنصة" element={<Store />} />
+          <Route path="/تسجيل الدخول" element={<LoginRegisterForm />} />
+          <Route path="/تسجيل حساب جديد" element={<RegisterForm />} />
+          <Route path={`/${userdata?.username}`} element={<User isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
+          <Route path="/Requests" element={<Requests />} />
+          <Route path="/sales" element={<Sales />} />
+          <Route path="/Points" element={<Points />} />
+          <Route path="/boost" element={<Userboost />} />
+          <Route path="/blocks" element={<Blocks />} />
+          <Route path="/verify-account" element={<Verifyaccount />} />
+          <Route path="/game-view" element={<Gameview />} />
+          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/Chat" element={<Chat />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/social-media-accounts-view" element={<SoiaclAcoountView />} />
+          <Route path="/UserView" element={<Userview />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData} />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </Router>
+      <Footer />
     </>
   );
 }

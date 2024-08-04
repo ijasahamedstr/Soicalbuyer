@@ -104,8 +104,7 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
                     <div class="card__author  card__author">
                     <img src={userdata?.image ? userdata?.image : "https://usr.dokan-cdn.com/img/avatars/default.jpg"}   alt="" /> {userdata?.displayName}</div>
                     <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>
-                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> حسابي</div></button></Link></li>
-                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> الطلبات</div></button></Link></li>
+                    <li className='drop'><Link to={`/${userdata?.username}`}><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> حسابي</div></button></Link></li>
                     <li className='drop'><Link to='/Requests'><button className="dropdown-item" type="button"><div className="icon-text"><MdWorkHistory className="icon" /> المبيعات</div></button></Link></li>
                     <li className='drop'><Link to='/sales'><button className="dropdown-item" type="button"><div className="icon-text"><ImCoinDollar className="icon" /> المحفظة</div></button></Link></li>
                     <li className='drop'><Link to='/wallet'><button className="dropdown-item" type="button"><div className="icon-text"><IoWallet className="icon" /> الصندوق</div></button></Link></li>

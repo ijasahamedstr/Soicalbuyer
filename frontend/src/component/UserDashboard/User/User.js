@@ -1,4 +1,3 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -6,13 +5,26 @@ import Col from 'react-bootstrap/Col';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Card from 'react-bootstrap/Card';
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './User.css';
+import React, { useEffect, useState } from 'react';
 
 
-function User({ isLoggedIn = true }) {
+function User({isOTPLoggedIn, OTPLoggedUserData}) {
+
+  const [userdata, setUserdata] = useState({});
+  useEffect(() => {
+    if(isOTPLoggedIn){
+    setUserdata(OTPLoggedUserData?.preuser)
+    }
+    } , [isOTPLoggedIn])
+
+    console.log("::: user data", userdata)
+
+
+  console.log("response", userdata)
+
 
 const [validated, setValidated] = useState(false);
 
@@ -73,17 +85,17 @@ const [validated, setValidated] = useState(false);
             >
             <Tab eventKey="التواصل الإجتماعي" title="التواصل الإجتماعي">
             <Container>
-            {isLoggedIn ? 
+            {isOTPLoggedIn ? 
          
             <Row>
                 <Col md={4}>
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>@Ijas Ahamed</Card.Title>
+                <Card.Title>{userdata?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified " style={{borderRadius:'20px'}}>
-                <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif"  alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
+                <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif"  alt="" /><a href="https://usr.gg/meshari">{userdata?.displayName}</a></div></span>
                 </Card.Text>
                 </Card.Body>
                 <Card.Body>
@@ -103,7 +115,7 @@ const [validated, setValidated] = useState(false);
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>@Ijas Ahamed</Card.Title>
+                <Card.Title>{userdata?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified  ">
                 <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" style={{borderRadius:'20px'}} alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
@@ -126,7 +138,7 @@ const [validated, setValidated] = useState(false);
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>@Ijas Ahamed</Card.Title>
+                <Card.Title>{userdata?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified  ">
                 <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
