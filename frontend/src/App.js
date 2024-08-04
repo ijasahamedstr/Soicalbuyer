@@ -29,14 +29,20 @@ import Userview from "./component/Page/Users/userview";
 import LoginOTP from "./component/Page/LoginPage/LoginOTP";
 import Error from "./component/UserDashboard/Error";
 import Dashboard from "./component/UserDashboard/Test";
+import { useState } from 'react';
 
 
 function App() {
+
+  const [isOTPLoggedIn, setIsOTPLoggedIn] = useState(false);
+
+  const [OTPLoggedUserData, setOTPLoggedUserData] = useState([]);
+
   return (
     <>
     <AlertDismissibleExample/>
     <Router>
-    <Navbar/>
+    <Navbar isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>
     <Routes>
       <Route path="/" element={<Home/>}/>
       <Route path="/التواصل الإجتماعي" element={<Social/>}/>
@@ -62,7 +68,7 @@ function App() {
       <Route path="/social-media-accounts-view" element={<SoiaclAcoountView/>}/>
       <Route path="/UserView" element={<Userview/>}/>
       <Route path="/Dashboard" element={<Dashboard/>}/>
-      <Route path="/OTP" element={<LoginOTP/>}/>
+      <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData}/>}/>
       <Route path="*" element={<Error/>} />
     </Routes>
     </Router>

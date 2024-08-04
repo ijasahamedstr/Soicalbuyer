@@ -19,10 +19,22 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 
+// import React, { useContext } from 'react'
+// import { LoginContext } from '../../ContextProvider/Context.js';
+// import { useNavigate} from "react-router-dom"
 
-function OffcanvasExample() {
 
+function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
   const [userdata, setUserdata] = useState({});
+  useEffect(() => {
+    if(isOTPLoggedIn){
+    setUserdata(OTPLoggedUserData?.preuser)
+    }
+    } , [isOTPLoggedIn])
+
+    console.log("::: user data", userdata)
+
+
   console.log("response", userdata)
 
   const getUser = async () => {
@@ -85,12 +97,12 @@ function OffcanvasExample() {
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
                 </Nav>
                 {
-                  Object?.keys(userdata)?.length > 0 ? (
+                 isOTPLoggedIn || Object?.keys(userdata)?.length > 0 ? (
                     <>
                     <Nav className="justify-content-end flex-grow-1 pe-3">
                     <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>
                     <div class="card__author  card__author">
-                    <img src={userdata?.image} alt="" />{userdata?.displayName}</div>
+                    <img src={userdata?.image ? userdata?.image : "https://usr.dokan-cdn.com/img/avatars/default.jpg"}   alt="" /> {userdata?.displayName}</div>
                     <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>
                     <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> حسابي</div></button></Link></li>
                     <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> الطلبات</div></button></Link></li>

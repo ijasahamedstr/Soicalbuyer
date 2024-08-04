@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { userVerify } from "../LoginPage/LoginAPI/Apis.js"
 
 
-const LoginOTP = () => {
+const LoginOTP = ({setIsOTPLoggedIn,setOTPLoggedUserData}) => {
   const [otp, setOtp] = useState("");
 
   const location = useLocation();
@@ -34,6 +34,8 @@ const LoginOTP = () => {
       if (response.status === 200) {
         localStorage.setItem("userdbtoken", response.data.userToken);
         toast.success(response.data.message);
+        setIsOTPLoggedIn(true)
+        setOTPLoggedUserData(response.data)
         setTimeout(() => {
           navigate("/Dashboard")
         }, 5000)

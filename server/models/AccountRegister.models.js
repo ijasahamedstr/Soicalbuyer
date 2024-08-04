@@ -7,10 +7,6 @@ const SECRET_KEY = "abcdefghijklmnop";
 
 // Define the schema
 const AccountRegisterSchema = new Schema({
-    fname: {
-        type: String,
-      
-    },
     username: {
         type: String,
   

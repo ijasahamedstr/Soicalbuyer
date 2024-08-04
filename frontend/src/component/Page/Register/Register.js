@@ -15,7 +15,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterForm = () => {
-  const [fname, setFname] = useState('');
+  const [displayName, setdisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [Phone, setPhone] = useState('');
@@ -24,7 +24,7 @@ const RegisterForm = () => {
     e.preventDefault();
 
     // Client-side validation
-    if (fname === '') {
+    if (displayName === '') {
       toast.error('Please enter your full name.');
       return;
     }
@@ -47,7 +47,7 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post('http://localhost:8000/register', {
-        fname,
+        displayName,
         username,
         email,
         Phone
@@ -62,7 +62,7 @@ const RegisterForm = () => {
         });
 
         // Clear form fields after successful registration
-        setFname('');
+        setdisplayName('');
         setUsername('');
         setEmail('');
         setPhone('');
@@ -102,8 +102,8 @@ const RegisterForm = () => {
             type="text"
             placeholder="الأسم"
             name="fname"
-            value={fname}
-            onChange={(e) => setFname(e.target.value)}
+            value={displayName}
+            onChange={(e) => setdisplayName(e.target.value)}
           /><TbUserShield  className='icon'/>
           </div>
         </Form.Group>

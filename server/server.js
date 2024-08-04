@@ -11,6 +11,7 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import AccountRegister from "./models/AccountRegister.models.js";
+import logoutrouter from "./routes/Logout.route.js";
 
 
 // Create an instance of Express
@@ -125,6 +126,7 @@ app.use('/register',Accountrouter);
 app.use('/userotp',otprouter);
 app.use('/login',loginrouter);
 app.use('/validuser',validuserrouter);
+app.use('/logout',logoutrouter);
 
 // Start the Express server
 const port = 8000;

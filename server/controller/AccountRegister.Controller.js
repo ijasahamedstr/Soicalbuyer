@@ -5,9 +5,9 @@ import AccountRegister from "../models/AccountRegister.models.js";
 // All Acccount Create
 
 export const AccountCreate = async (req, res) => {
-    const { fname, username, email, Phone } = req.body;
+    const { displayName, username, email, Phone } = req.body;
 
-    if (!fname || !username || !email || !Phone) {
+    if (!displayName || !username || !email || !Phone) {
         res.status(400).json({ error: "Please Enter All Input Data" })
     }
 
@@ -18,7 +18,7 @@ export const AccountCreate = async (req, res) => {
             res.status(400).json({ error: "This User Allready exist in our db" })
         } else {
             const AccountCreate = new AccountRegister({
-                fname, username, email, Phone
+                displayName, username, email, Phone
             });
 
 
@@ -69,7 +69,7 @@ export const AccountUpdate = async (req, res) => {
 
     try {
         const AccountUpdatelist =  await AccountRegister.findOneAndUpdate({_id: req.params.id},{
-            name: req.body.name,
+            displayName: req.body.displayName,
             username: req.body.username,
             email: req.body.email,
             Phone: req.body.Phone
