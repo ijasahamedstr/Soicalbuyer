@@ -183,6 +183,8 @@ const [validated, setValidated] = useState(false);
                     type="text"
                     placeholder="أدخل اسم المستخدم"
                     className='sign__title'
+                    value={userdata?.username}
+                    
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
@@ -192,6 +194,7 @@ const [validated, setValidated] = useState(false);
                     required
                     type="gmail"
                     placeholder="email@email.com"
+                    value={userdata?.email}
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
@@ -199,14 +202,14 @@ const [validated, setValidated] = useState(false);
             <Row >
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
                 <Form.Label>الأسم</Form.Label>
-                <Form.Control type="text" placeholder="أدخل الأسم" required />
+                <Form.Control type="text" placeholder="أدخل الأسم" required   value={userdata?.displayName}/>
                 <Form.Control.Feedback type="invalid">
                     Please provide a valid city.
                 </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6" controlId="validationCustom04">
                 <Form.Label>رقم الهاتف</Form.Label>
-                <Form.Control type="number" value={966571883194} placeholder="966571883194" required />
+                <Form.Control type="number" value={userdata?.Phone} placeholder="966571883194" required />
                 <p class="mt-2" style={{fontSize:'14px'}}>إذا كنت ترغب بتحديث رقم هاتفك , يرجى منك <a href="/ChangePhoneNumber">الضغط علي</a></p>
                 <Form.Control.Feedback type="invalid">
                     Please provide a valid state.
