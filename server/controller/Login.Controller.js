@@ -1,4 +1,3 @@
-import userotp from "../models/sentotp.models.js";
 import AccountRegister from "../models/AccountRegister.models.js";
 
 export const userLogin = async(req,res)=>{
@@ -9,7 +8,7 @@ export const userLogin = async(req,res)=>{
     }
 
     try {
-        const otpverification = await userotp.findOne({email:email});
+        const otpverification = await AccountRegister.findOne({email:email});
 
         if(otpverification.otp === otp){
             const preuser = await AccountRegister.findOne({email:email});

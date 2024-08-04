@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import jwt from "jsonwebtoken";
+import validator from 'validator';
 
 // Use a correct secret key name
 const SECRET_KEY = "abcdefghijklmnop";
@@ -8,33 +9,40 @@ const SECRET_KEY = "abcdefghijklmnop";
 const AccountRegisterSchema = new Schema({
     fname: {
         type: String,
-        required: true,
-        unique: true
+      
     },
     username: {
         type: String,
-        required: true,
-        unique: true
+  
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
+    email:{
+        type:String,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Not Valid Email")
+            }
+        }
     },
     Phone: {
         type: String, // Changed from Number to String for phone number
-        required: true,
-        unique: true
+
     },
+    
+    otp:{
+        type:String,
+    },
+
     tokens: [
         {
             token: {
                 type: String,
-                required: true,
             }
         }
-    ]
-});
+    ],
+    googleId:String,
+    displayName:String,
+    image:String
+},{timestamps:true});
 
 // Token generation method
 AccountRegisterSchema.methods.generateAuthtoken = async function() {

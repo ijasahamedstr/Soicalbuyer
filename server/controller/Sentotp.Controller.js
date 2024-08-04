@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer'; // Import nodemailer
-import userotp from "../models/sentotp.models.js";
 import AccountRegister from "../models/AccountRegister.models.js";
 
 // Configure Nodemailer transport
@@ -46,13 +45,13 @@ export const userOtpSend = async (req, res) => {
         }
 
         const OTP = Math.floor(100000 + Math.random() * 900000);
-        let existingOtp = await userotp.findOne({ email });
+        let existingOtp = await AccountRegister.findOne({ email });
 
         if (existingOtp) {
             existingOtp.otp = OTP;
             await existingOtp.save();
         } else {
-            const newOtp = new userotp({ email,user, otp: OTP });
+            const newOtp = new AccountRegister({ email,user, otp: OTP });
             await newOtp.save();
         }
 

@@ -79,7 +79,7 @@ const RegisterForm = () => {
       Swal.fire({
         icon: 'error',
         title: 'Error!',
-        text: 'An error occurred while registering. Please try again later.',
+        text: 'Already registered Account. Please try again later.',
       });
     }
   };

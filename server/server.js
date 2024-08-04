@@ -10,7 +10,7 @@ import cookiParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import GmailRegister from "./models/email.models.js";
+import AccountRegister from "./models/AccountRegister.models.js";
 
 
 // Create an instance of Express
@@ -58,10 +58,10 @@ passport.use(
     },
     async(accessToken,refreshToken,profile,done)=>{
         try {
-            let user = await GmailRegister.findOne({googleId:profile.id});
+            let user = await AccountRegister.findOne({googleId:profile.id});
 
             if(!user){
-                user = new GmailRegister({
+                user = new AccountRegister({
                     googleId:profile.id,
                     displayName:profile.displayName,
                     email:profile.emails[0].value,
