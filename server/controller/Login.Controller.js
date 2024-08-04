@@ -16,7 +16,7 @@ export const userLogin = async(req,res)=>{
 
             // token generate
             const token = await preuser.generateAuthtoken();
-           res.status(200).json({message:"User Login Succesfully Done",userToken:token});
+           res.status(200).json({message:"User Login Succesfully Done",preuser, userToken:token});
 
         }else{
             res.status(400).json({error:"Invalid Otp"})

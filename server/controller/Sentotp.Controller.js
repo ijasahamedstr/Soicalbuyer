@@ -52,7 +52,7 @@ export const userOtpSend = async (req, res) => {
             existingOtp.otp = OTP;
             await existingOtp.save();
         } else {
-            const newOtp = new userotp({ email, otp: OTP });
+            const newOtp = new userotp({ email,user, otp: OTP });
             await newOtp.save();
         }
 
