@@ -75,7 +75,7 @@ function OffcanvasExample() {
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic',background:'#303434'}}>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav className="justify-content-start flex-grow-1 pe-3">
                 <Nav.Link><Link style={{color:'#FFFFFF',textDecoration:'none'}} to="/">الرئيسية</Link></Nav.Link>
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/التواصل الإجتماعي">التواصل الإجتماعي</Link></Nav.Link>
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/الألعاب">الألعاب</Link></Nav.Link>
