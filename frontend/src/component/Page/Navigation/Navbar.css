@@ -74,3 +74,15 @@ svg {
 .drop{
   margin-bottom: -10px;
 }
+
+
+
+.icon-text {
+  display: flex;
+  align-items: center;
+  padding: 1px;
+  border-radius: 4px;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}

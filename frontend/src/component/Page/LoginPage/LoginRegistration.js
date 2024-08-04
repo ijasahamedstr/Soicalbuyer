@@ -18,8 +18,6 @@ const LoginRegisterForm = ({ isLoggedIn = false }) => {
     window.open("http://localhost:8000/auth/google/callback","_self")
 }
 
-
-
   const [email, setEmail] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -116,13 +114,12 @@ const LoginRegisterForm = ({ isLoggedIn = false }) => {
                 </div>
               </Link>
               <div className='account'>أو قم بتسجيل الدخول عبر</div>
-	            <div className='google'>
+              <div className='google'>
               <GoogleButton
                 type="light" // can be light or dark
                 onClick={loginwithgoogle}
                 style={{width:'100%',borderRadius:'3px'}}
               />
-
             </div>
             </div>
           </div>

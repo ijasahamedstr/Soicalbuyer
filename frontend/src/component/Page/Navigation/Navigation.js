@@ -74,7 +74,7 @@ function OffcanvasExample() {
                 <img  src={user.avatar} style={{width:'150px',fontSize:'15px'}} alt="User Avatar" />
                 </Offcanvas.Title>
               </Offcanvas.Header>
-              <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic'}}>
+              <Offcanvas.Body style={{color:'black',fontFamily:'Noto Kufi Arabic',background:'#303434'}}>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link><Link style={{color:'#FFFFFF',textDecoration:'none'}} to="/">الرئيسية</Link></Nav.Link>
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/التواصل الإجتماعي">التواصل الإجتماعي</Link></Nav.Link>
@@ -92,19 +92,20 @@ function OffcanvasExample() {
                     <div class="card__author  card__author">
                     <img src={userdata?.image} alt="" />{userdata?.displayName}</div>
                     <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>
-                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><span><FaRegUserCircle /></span>حسابي</button></Link></li>
-                    <li className='drop'><Link to='/Requests'><button className="dropdown-item" type="button"><span><MdWorkHistory /></span>الطلبات</button></Link></li>
-                    <li className='drop'><Link to='/sales'><button className="dropdown-item" type="button"><span><ImCoinDollar /></span>المبيعات</button></Link></li>
-                    <li className='drop'><Link to='/wallet'><button className="dropdown-item" type="button"><span><IoWallet /></span>المحفظة</button></Link></li>
-                    <li className='drop'><Link to='/Points'><button className="dropdown-item" type="button"><span><BsArchiveFill /></span>الصندوق</button></Link></li>
-                    <li className='drop'><Link to='/boost'><button className="dropdown-item" type="button"><span><PiBroadcastBold /></span>ترويج منتج</button></Link></li>
-                    <li className='drop'><Link to='/Chat'><button className="dropdown-item" type="button"><span><BsChatDots /></span>المحادثات</button></Link></li>
-                    <li className='drop'><Link to='/notifications'><button className="dropdown-item" type="button"><span><BiSolidBellRing /></span>التنبيهات</button></Link></li>
-                    <li className='drop'><Link to='/blocks'><button className="dropdown-item" type="button"><span><BsFillPersonXFill /></span>قائمة الحظر</button></Link></li>
-                    <li className='drop'><Link to='/verify-account'><button className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل الحساب</button></Link></li>
-                    <li className='drop'><Link to='/تسجيل الدخول'><button style={{color:'red'}} className="dropdown-item" type="button"><span><IoFingerPrintSharp /></span>تفعيل رقم الهاتف</button></Link></li>
-                    <li className='drop'><Link to='/challenges'><button className="dropdown-item" type="button"><span><BsBullseye /></span>التحديات</button></Link></li>
-                    <li className='drop'><button className="dropdown-item" type="button" onClick={logout}><span><ImExit /></span>التحديات</button></li>               
+                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> حسابي</div></button></Link></li>
+                    <li className='drop'><Link to='/User'><button className="dropdown-item" type="button"><div className="icon-text"><FaRegUserCircle className="icon" /> الطلبات</div></button></Link></li>
+                    <li className='drop'><Link to='/Requests'><button className="dropdown-item" type="button"><div className="icon-text"><MdWorkHistory className="icon" /> المبيعات</div></button></Link></li>
+                    <li className='drop'><Link to='/sales'><button className="dropdown-item" type="button"><div className="icon-text"><ImCoinDollar className="icon" /> المحفظة</div></button></Link></li>
+                    <li className='drop'><Link to='/wallet'><button className="dropdown-item" type="button"><div className="icon-text"><IoWallet className="icon" /> الصندوق</div></button></Link></li>
+                    <li className='drop'><Link to='/Points'><button className="dropdown-item" type="button"><div className="icon-text"><BsArchiveFill className="icon" />ترويج منتج</div></button></Link></li>
+                    <li className='drop'><Link to='/boost'><button className="dropdown-item" type="button"><div className="icon-text"><PiBroadcastBold className="icon" /> المحادثات</div></button></Link></li>
+                    <li className='drop'><Link to='/Chat'><button className="dropdown-item" type="button"><div className="icon-text"><BsChatDots className="icon" /> التنبيهات</div></button></Link></li>
+                    <li className='drop'><Link to='/notifications'><button className="dropdown-item" type="button"><div className="icon-text"><BiSolidBellRing className="icon" />قائمة الحظر</div></button></Link></li>
+                    <li className='drop'><Link to='/blocks'><button className="dropdown-item" type="button"><div className="icon-text"><BsFillPersonXFill className="icon" />تفعيل الحساب</div></button></Link></li>
+                    <li className='drop'><Link to='/verify-account'><button className="dropdown-item" type="button"><div className="icon-text"><IoFingerPrintSharp className="icon" />تفعيل رقم الهاتف</div></button></Link></li>
+                    <li className='drop'><Link to='/تسجيل الدخول'><button style={{color:'red'}} className="dropdown-item" type="button"><div className="icon-text"><IoFingerPrintSharp className="icon" /> حاسبة الرسوم</div></button></Link></li>
+                    <li className='drop'><Link to='/challenges'><button className="dropdown-item" type="button"><div className="icon-text"><BsBullseye className="icon" /> التحديات</div></button></Link></li>
+                    <li className='drop'><button className="dropdown-item" type="button" onClick={logout}><div className="icon-text"><ImExit className="icon" /> تسجيل الخروج</div></button></li>               
                     </ul>  
                   </div>
                   </Nav>            
@@ -116,7 +117,7 @@ function OffcanvasExample() {
                     <img src="https://usr.dokan-cdn.com/img/avatars/default.jpg" alt="" />زائر </div>
                     <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{fontSize:'12px',marginBottom:'-10px'}}>         
                     <li><Nav.Link href='/تسجيل الدخول'><button className="dropdown-item" type="button">تسجيل الدخول</button></Nav.Link></li>
-                    <li><Nav.Link href="/تسجيل حساب جديد"><button className="dropdown-item" type="button">تسجيل حساب جديد</button></Nav.Link></li>
+                    <li><Nav.Link href="/تسجيل حساب جديد"><button className="dropdown-item" type="button"> حساب جديد</button></Nav.Link></li>
                     </ul>  
                   </div>
                   </Nav>            

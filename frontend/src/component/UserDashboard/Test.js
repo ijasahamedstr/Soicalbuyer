@@ -1,78 +1,113 @@
-// import React, { useContext, useEffect ,useState} from 'react'
-// import { useNavigate } from 'react-router-dom';
-// import { LoginContext } from '../ContextProvider/Context.js';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import Box from '@mui/material/Box';
-import axios from 'axios';
-import { NavLink } from "react-router-dom";
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
+import Avatar from '@mui/material/Avatar';
+import { LoginContext } from '../ContextProvider/Context.js';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 const Dashboard = () => {
+    const { logindata, setLoginData } = useContext(LoginContext);
+    const history = useNavigate();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
 
-    const [userdata, setUserdata] = useState({});
-    console.log("response", userdata)
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-    const getUser = async () => {
-        try {
-            const response = await axios.get("http://localhost:8000/login/sucess", { withCredentials: true });
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-            setUserdata(response.data.user)
-        } catch (error) {
-            console.log("error", error)
+    const logoutuser = async () => {
+        let token = localStorage.getItem('usersdatatoken');
+        const res = await fetch('/validuser', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+                Accept: 'application/json'
+            },
+            credentials: 'include'
+        });
+        const data = await res.json();
+        console.log(data);
+
+        if (data.status === 201) {
+            console.log('use logout');
+            localStorage.removeItem('usersdatatoken');
+            setLoginData(false);
+            history('/');
+        } else {
+            console.log('error');
         }
-    }
+    };
 
-    // logoout
-    const logout = ()=>{
-        window.open("http://localhost:8000/logout","_self")
-    }
+    const goDash = () => {
+        history('/Dashboard');
+    };
 
-    useEffect(() => {
-        getUser()
-    }, [])
+    const goError = () => {
+        history('*');
+    };
+
     return (
         <>
             <header>
                 <nav>
-                    <div className="left">
-                        <h1>Harsh Pathak</h1>
+                    <NavLink to="/"><h1>HP Cloud</h1></NavLink>
+                    <div className="avtar">
+                        {
+                            logindata && logindata.ValidUserOne ? (
+                                <Avatar 
+                                    style={{ background: 'salmon', fontWeight: 'bold', textTransform: 'capitalize' }} 
+                                    onClick={handleClick}
+                                >
+                                    {logindata.ValidUserOne.fname[0].toUpperCase()}
+                                </Avatar>
+                            ) : (
+                                <Avatar 
+                                    style={{ background: 'blue' }} 
+                                    onClick={handleClick}
+                                />
+                            )
+                        }
                     </div>
-                    <div className="right">
-                        <ul>
-                            <li>
-                                <NavLink to="/">
-                                    Home
-                                </NavLink>
-                            </li>
-                            {
-                                Object?.keys(userdata)?.length > 0 ? (
-                                    <>
-                                    <li style={{color:"black",fontWeight:"bold"}}>{userdata?.displayName}</li>
-                                        <li>
-                                            <NavLink to="/dashboard">
-                                                Dashboard
-                                            </NavLink>
-                                        </li>
-                                        <li onClick={logout}>Logout</li>
-                                        <li>
-                                            <img src={userdata?.image} style={{ width: "50px", borderRadius: "50%" }} alt="" />
-                                        </li>
-                                    </>
-                                ) : <li>
-                                    <NavLink to="/تسجيل الدخول">
-                                        Login
-                                    </NavLink>
-                                </li>
-                            }
-
-
-
-                        </ul>
-                    </div>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        {
+                            logindata && logindata.ValidUserOne ? (
+                                <>
+                                    <MenuItem onClick={() => {
+                                        goDash();
+                                        handleClose();
+                                    }}>Profile</MenuItem>
+                                    <MenuItem onClick={() => {
+                                        logoutuser();
+                                        handleClose();
+                                    }}>Logout</MenuItem>
+                                </>
+                            ) : (
+                                <>
+                                    <MenuItem onClick={() => {
+                                        goError();
+                                        handleClose();
+                                    }}>Profile</MenuItem>
+                                </>
+                            )
+                        }
+                    </Menu>
                 </nav>
             </header>
         </>
-    )
-}
+    );
+};
 
-export default Dashboard
+export default Dashboard;
