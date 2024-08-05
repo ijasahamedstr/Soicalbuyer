@@ -39,7 +39,9 @@ const AccountRegisterSchema = new Schema({
     ],
     googleId:String,
     displayName:String,
-    image:String
+    image:String,
+    avatar: String, // Path to avatar image
+    background: String // Path to background image
 },{timestamps:true});
 
 
