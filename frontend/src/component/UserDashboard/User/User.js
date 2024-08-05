@@ -299,7 +299,7 @@ function User({ isOTPLoggedIn, OTPLoggedUserData }) {
             <Col md={6}>
             <Card style={{background:'#fff',padding:'0px'}}>
             <Card.Body>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form noValidate validated={validated}>
             <h4 class="sign__title" style={{marginBottom:'20px',color:'rgb(97, 100, 255)'}}>تغيير مظهر الحساب</h4>
             <Row>
                 <Form.Group as={Col} md="12" controlId="validationCustom01">
@@ -333,7 +333,7 @@ function User({ isOTPLoggedIn, OTPLoggedUserData }) {
             <Col md={6}>
             <Card style={{background:'#fff',padding:'0px'}}>
             <Card.Body>
-            <Form noValidate validated={validated} className='formuser' onSubmit={handleSubmit}>
+            <Form noValidate validated={validated} className='formuser'>
             <h4 class="sign__title" style={{marginBottom:'20px',color:'rgb(97, 100, 255)'}}>رابط الإحاله</h4>
             <h5 class="sign__title" style={{marginBottom:'20px',color:'rgb(97, 100, 255)',fontSize:'15px'}}>يمكنك كسب أموال من خلال هذا الرابط!</h5>
             <Row>
