@@ -21,10 +21,12 @@ const AccountRegisterSchema = new Schema({
     },
     Phone: {
         type: String, // Changed from Number to String for phone number
-
     },
     
     otp:{
+        type:String,
+    },
+    bio:{
         type:String,
     },
 
@@ -39,6 +41,9 @@ const AccountRegisterSchema = new Schema({
     displayName:String,
     image:String
 },{timestamps:true});
+
+
+
 
 // Token generation method
 AccountRegisterSchema.methods.generateAuthtoken = async function() {
@@ -57,6 +62,10 @@ AccountRegisterSchema.methods.generateAuthtoken = async function() {
         throw new Error("Error generating token"); // Throw an error if token generation fails
     }
 };
+
+
+
+
 
 // Create the model
 const AccountRegister = model("AccountRegister", AccountRegisterSchema);

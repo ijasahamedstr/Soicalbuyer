@@ -19,11 +19,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 
-// import React, { useContext } from 'react'
-// import { LoginContext } from '../../ContextProvider/Context.js';
-// import { useNavigate} from "react-router-dom"
-
-
 function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
   const [userdata, setUserdata] = useState({});
   useEffect(() => {
@@ -65,10 +60,7 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
     setIsOpen(!isOpen);
   };
 
-  // const handleLogout = () => {
-  //   // Handle logout logic here
-  //   console.log('Logging out...');
-  // };
+
   return (
     <>
       {['sm'].map((expand)  => (

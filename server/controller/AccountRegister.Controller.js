@@ -31,6 +31,9 @@ export const AccountCreate = async (req, res) => {
 
 };
 
+
+
+
 // All Acccount View 
 export const AccountIndex = async (req, res) => {
     try {
@@ -43,6 +46,11 @@ export const AccountIndex = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+
+
 
 
 // single Acccount View 
@@ -63,6 +71,10 @@ export const AccountSingleDetails = async (req, res) => {
 };
 
 
+
+
+
+
 // All Acccount Update
 
 export const AccountUpdate = async (req, res) => {
@@ -72,7 +84,8 @@ export const AccountUpdate = async (req, res) => {
             displayName: req.body.displayName,
             username: req.body.username,
             email: req.body.email,
-            Phone: req.body.Phone
+            Phone: req.body.Phone,
+            bio: req.body.bio
         },
         {
             new:true,

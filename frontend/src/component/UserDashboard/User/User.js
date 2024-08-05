@@ -9,40 +9,79 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './User.css';
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
-function User({isOTPLoggedIn, OTPLoggedUserData}) {
+function User({ isOTPLoggedIn, OTPLoggedUserData }) {
+  const [userDetails, setUserDetails] = useState({
+    displayName: '',
+    username: '',
+    email: '',
+    Phone: '',
+    bio: ''
+  });
+  const [validated, setValidated] = useState(false);
 
-  const [userdata, setUserdata] = useState({});
   useEffect(() => {
-    if(isOTPLoggedIn){
-    setUserdata(OTPLoggedUserData?.preuser)
+    if (isOTPLoggedIn && OTPLoggedUserData?.preuser) {
+      setUserDetails({
+        displayName: OTPLoggedUserData.preuser.displayName || '',
+        username: OTPLoggedUserData.preuser.username || '',
+        email: OTPLoggedUserData.preuser.email || '',
+        Phone: OTPLoggedUserData.preuser.Phone || '',
+        bio: OTPLoggedUserData.preuser.bio || ''
+      });
     }
-    } , [isOTPLoggedIn])
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
 
-    console.log("::: user data", userdata)
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails(prevDetails => ({
+      ...prevDetails,
+      [name]: value
+    }));
+  };
 
-
-  console.log("response", userdata)
-
-
-const [validated, setValidated] = useState(false);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     }
-
     setValidated(true);
+
+    try {
+      const response = await axios.put(`http://localhost:8000/register/${OTPLoggedUserData.preuser._id}`, userDetails, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Account updated successfully!'
+        });
+        setUserDetails(response.data);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Update failed. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update account. Please try again later.'
+      });
+    }
   };
 
-  const user = {
-    name: 'ايجاس احمد',
-    email: 'يا هلا والله نقدم لك انظف و أفضل يوزرات بجميع انواعه ب اسعار الجمله - فيه هدايا بكل عمليه شراء لا تنسى التقيم - ما حصلت الي يناسبك؟ تواصل معي خاص متوفر اكثر من ٥ الف يوزر 🌹❤️ - في حال واجهة مشكله او حاب اخدمك ب اي شي تواصل معي خاص هنا 👇👇👇👇👇 ',
-    avatar: 'https://www.everypixel.com/preview_collections/20231129/people_of_the_world_vol.3_33', // Replace with actual avatar URL
-  };
   return (
     <>
       <div className="main__author">
@@ -54,12 +93,13 @@ const [validated, setValidated] = useState(false);
         <div className="user-card">
         <div className='uper-container'>
           <div className='image-card'>
-            <img className="avatar" src={user.avatar} alt="User Avatar" />
+            <img className="avatar" src={userDetails?.image ? userDetails?.image : "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
           </div>
         </div>
         <div className="user-info">
-        <h2>{user.name}<span class="pro-badge">برو</span></h2>
-        <p>{user.email}</p>
+        <h2>{userDetails.displayName}<span class="pro-badge">برو</span></h2>
+        <p>{userDetails.email}</p>
+        <p>{userDetails.bio}</p>
         </div>
         <div class="author__wrap" style={{display:'inline',marginTop:'15px'}}>
         <div class="author__followers mr-2">
@@ -92,10 +132,10 @@ const [validated, setValidated] = useState(false);
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>{userdata?.displayName}</Card.Title>
+                <Card.Title>{userDetails?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified " style={{borderRadius:'20px'}}>
-                <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif"  alt="" /><a href="https://usr.gg/meshari">{userdata?.displayName}</a></div></span>
+                <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif"  alt="" /><a href="https://usr.gg/meshari">{userDetails?.displayName}</a></div></span>
                 </Card.Text>
                 </Card.Body>
                 <Card.Body>
@@ -115,7 +155,7 @@ const [validated, setValidated] = useState(false);
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>{userdata?.displayName}</Card.Title>
+                <Card.Title>{userDetails?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified  ">
                 <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" style={{borderRadius:'20px'}} alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
@@ -138,7 +178,7 @@ const [validated, setValidated] = useState(false);
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
                 <Card.Body>
-                <Card.Title>{userdata?.displayName}</Card.Title>
+                <Card.Title>{userDetails?.displayName}</Card.Title>
                 <Card.Text>
                 <span><div class="card__author  card__author--verified  ">
                 <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
@@ -176,53 +216,75 @@ const [validated, setValidated] = useState(false);
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <h4 class="sign__title" style={{marginBottom:'20px',color:'rgb(97, 100, 255)'}}>البيانات الشخصية</h4>
             <Row>
-                <Form.Group as={Col} md="6" controlId="validationCustom01">
-                <Form.Label>اسم المستخدم</Form.Label>
+            <Form.Group as={Col} md="6" controlId="validationCustom01">
+                <Form.Label>Username</Form.Label>
                 <Form.Control
-                    required
-                    type="text"
-                    placeholder="أدخل اسم المستخدم"
-                    className='sign__title'
-                    value={userdata?.username}
-                    
+                  required
+                  type="text"
+                  name="username"
+                  placeholder="Enter username"
+                  value={userDetails.username}
+                  onChange={handleChange}
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} md="6" controlId="validationCustom02">
-                <Form.Label>البريد الألكتروني</Form.Label>
+              </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationCustom02">
+                <Form.Label>Email</Form.Label>
                 <Form.Control
-                    required
-                    type="gmail"
-                    placeholder="email@email.com"
-                    value={userdata?.email}
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="Enter email"
+                  value={userDetails.email}
+                  onChange={handleChange}
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                </Form.Group>
+              </Form.Group>
             </Row>
             <Row >
-                <Form.Group as={Col} md="6" controlId="validationCustom03">
-                <Form.Label>الأسم</Form.Label>
-                <Form.Control type="text" placeholder="أدخل الأسم" required   value={userdata?.displayName}/>
+            <Form.Group as={Col} md="6" controlId="validationCustom03">
+                <Form.Label>Display Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="displayName"
+                  placeholder="Enter display name"
+                  value={userDetails.displayName}
+                  onChange={handleChange}
+                />
                 <Form.Control.Feedback type="invalid">
-                    Please provide a valid city.
+                  Please provide a valid display name.
                 </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} md="6" controlId="validationCustom04">
-                <Form.Label>رقم الهاتف</Form.Label>
-                <Form.Control type="number" value={userdata?.Phone} placeholder="966571883194" required />
-                <p class="mt-2" style={{fontSize:'14px'}}>إذا كنت ترغب بتحديث رقم هاتفك , يرجى منك <a href="/ChangePhoneNumber">الضغط علي</a></p>
+              </Form.Group>
+              <Form.Group as={Col} md="6" controlId="validationCustom04">
+                <Form.Label>Phone</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="phone"
+                  placeholder="Enter phone number"
+                  value={userDetails.Phone}
+                  onChange={handleChange}
+                />
+                 <p class="mt-2" style={{fontSize:'14px'}}>إذا كنت ترغب بتحديث رقم هاتفك , يرجى منك <a href="/ChangePhoneNumber">الضغط علي</a></p>
                 <Form.Control.Feedback type="invalid">
-                    Please provide a valid state.
+                  Please provide a valid phone number.
                 </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group controlId="validationCustom03">
-                <Form.Label>البايو</Form.Label>
-                <Form.Control as="textarea" rows={3}  required/>
-                <span dir="rtl" class="text-danger font-bold" style={{textAlign:'center',marginTop:'7px',fontSize:'13px'}}>لاتقم بوضع أي طريقة تواصل خارج المنصة في البايو بشكل نهائي لأنها قد تعرض حسابك للحظر!</span>
+              </Form.Group>
+              <Form.Group as={Col} md="12" controlId="validationCustom05">
+                <Form.Label>Bio</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="bio"
+                  placeholder="Enter bio"
+                  value={userDetails.bio}
+                  onChange={handleChange}
+                />
                 <Form.Control.Feedback type="invalid">
-                    Please provide a valid state.
+                  Please provide a bio.
                 </Form.Control.Feedback>
-            </Form.Group>
+              </Form.Group>
             </Row>
             <Button style={{marginTop:'10px'}} type="submit">حفظ</Button>
             </Form>
