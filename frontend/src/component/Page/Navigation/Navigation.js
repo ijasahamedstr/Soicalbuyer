@@ -77,24 +77,6 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
     avatar: 'https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png',
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.querySelector('.dropdown-toggle');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-
-    // Toggle the dropdown menu visibility
-    toggleButton.addEventListener('click', (event) => {
-        dropdownMenu.classList.toggle('show');
-        event.stopPropagation(); // Prevents click event from propagating to document
-    });
-
-    // Hide the dropdown menu if clicking outside
-    document.addEventListener('click', (event) => {
-        if (!toggleButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.classList.remove('show');
-        }
-    });
-});
-
 
   return (
     <>
