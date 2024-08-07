@@ -5,31 +5,21 @@ const keysecret = process.env.SECRET_KEY;
 
 export const authenticate = async (req, res, next) => {
     try {
-        // Extract token from Authorization header (format: Bearer <token>)
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ status: 401, message: 'Unauthorized: No token provided' });
-        }
-
-        const token = authHeader.split(' ')[1]; // Extract the token part
+        const token = req.headers.authorization;
         
-        // Verify the token
-        const decodedToken = jwt.verify(token, keysecret);
+        const verifytoken = jwt.verify(token,keysecret);
+        
+        const rootUser = await AccountRegister.findOne({_id:verifytoken._id});
+        
+        if(!rootUser) {throw new Error("user not found")}
 
-        // Find user in database
-        const rootUser = await AccountRegister.findOne({ _id: decodedToken._id });
-        if (!rootUser) {
-            throw new Error('User not found');
-        }
+        req.token = token
+        req.rootUser = rootUser
+        req.userId = rootUser._id
 
-        // Attach user and token to request object
-        req.token = token;
-        req.rootUser = rootUser;
-        req.userId = rootUser._id;
-
-        next(); // Proceed to the next middleware or route handler
+        next();
 
     } catch (error) {
-        res.status(401).json({ status: 401, message: error.message || 'Unauthorized: Invalid token' });
+        res.status(401).json({status:401,message:"Unauthorized no token provide"})
     }
 };

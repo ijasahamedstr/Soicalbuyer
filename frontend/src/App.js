@@ -30,15 +30,20 @@ import Userview from "./component/Page/Users/userview";
 import LoginOTP from "./component/Page/LoginPage/LoginOTP";
 import Error from "./component/UserDashboard/Error";
 import Dashboard from "./component/UserDashboard/Test";
+import Register from './component/UserDashboard/Register';
 
 function App() {
   const [userdata, setUserdata] = useState({});
   const [isOTPLoggedIn, setIsOTPLoggedIn] = useState(false);
   const [OTPLoggedUserData, setOTPLoggedUserData] = useState([]);
-
   useEffect(() => {
-    if (isOTPLoggedIn) {
-      setUserdata(OTPLoggedUserData?.preuser || {});
+    
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    console.log(userDetails);
+    
+    if (userDetails) {
+      setUserdata(userDetails);
+    
     }
   }, [isOTPLoggedIn, OTPLoggedUserData]);
 
@@ -60,7 +65,7 @@ function App() {
           <Route path="/متجر المنصة" element={<Store />} />
           <Route path="/تسجيل الدخول" element={<LoginRegisterForm />} />
           <Route path="/تسجيل حساب جديد" element={<RegisterForm />} />
-          <Route path={`/${userdata?.username}`} element={<User isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
+          <Route path={`/${userdata?.username}`} element={<User userdata={userdata} />} />
           <Route path="/Requests" element={<Requests />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/Points" element={<Points />} />
@@ -77,6 +82,7 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData} />} />
           <Route path="*" element={<Error />} />
+          <Route path="/register" element={<Register/>} />
         </Routes>
       </Router>
       <Footer />

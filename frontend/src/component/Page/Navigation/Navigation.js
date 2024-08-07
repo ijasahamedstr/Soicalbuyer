@@ -15,49 +15,66 @@ import { BsFillPersonXFill } from "react-icons/bs";
 import { IoFingerPrintSharp } from "react-icons/io5";
 import { BsBullseye } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
-import axios from 'axios';
+// import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
+import {useNavigate } from "react-router-dom"
 
 function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
-  const [userdata, setUserdata] = useState({});
+  const [userdata, setUserdata] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if(isOTPLoggedIn){
-    setUserdata(OTPLoggedUserData?.preuser)
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
     }
-    } , [isOTPLoggedIn])
-
-    console.log("::: user data", userdata)
-
-
-  console.log("response", userdata)
-
-  const getUser = async () => {
-      try {
-          const response = await axios.get("http://localhost:8000/login/sucess", { withCredentials: true });
-
-          setUserdata(response.data.user)
-      } catch (error) {
-          console.log("error", error)
-      }
-  }
-
-  // logoout
-  const logout = ()=>{
-      window.open("http://localhost:8000/logout","_self")
-  }
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
 
   useEffect(() => {
-      getUser()
-  }, [])
+    
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  setUserdata(userDetails);
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem("userdbtoken");
+        const res = await fetch("/validuser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token
+          }
+        });
+        const data = await res.json();
 
-  const user = {
-    avatar: 'https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png', // Replace with actual avatar URL
-  };
-  const [isOpen, setIsOpen] = useState(false); // State to manage dropdown visibility
+        if (data.status === 401 || !data) {
+          console.log("User not valid");
+        } else {
+          console.log("User verified");
+          // Handle setting login data here if needed
+          navigate("/Dashboard");
+        }
+      } catch (error) {
+        console.error("Error validating user:", error);
+      }
+    };
+
+    fetchDashboardData();
+  }, [navigate]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+
+  const logoutFuntion = () => {
+    localStorage.clear();
+    console.log('logout');
+    
+    window.location.reload();
+  };
+
+  const user = {
+    avatar: 'https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png',
   };
 
 
@@ -89,7 +106,7 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
                 </Nav>
                 {
-                 isOTPLoggedIn || Object?.keys(userdata)?.length > 0 ? (
+                 userdata ? (
                     <>
                     <Nav className="justify-content-end flex-grow-1 pe-3">
                     <div className="dropdown " onClick={toggleDropdown} style={{color:'#ffffff'}}>
@@ -108,7 +125,7 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
                     <li className='drop'><Link to='/verify-account'><button className="dropdown-item" type="button"><div className="icon-text"><IoFingerPrintSharp className="icon" />تفعيل رقم الهاتف</div></button></Link></li>
                     <li className='drop'><Link to='/تسجيل الدخول'><button style={{color:'red'}} className="dropdown-item" type="button"><div className="icon-text"><IoFingerPrintSharp className="icon" /> حاسبة الرسوم</div></button></Link></li>
                     <li className='drop'><Link to='/challenges'><button className="dropdown-item" type="button"><div className="icon-text"><BsBullseye className="icon" /> التحديات</div></button></Link></li>
-                    <li className='drop'><button className="dropdown-item" type="button" onClick={logout}><div className="icon-text"><ImExit className="icon" /> تسجيل الخروج</div></button></li>               
+                    <li className='drop'><button className="dropdown-item" onClick={()=>logoutFuntion()} type="button"><div className="icon-text"><ImExit className="icon" /> تسجيل الخروج</div></button></li>               
                     </ul>  
                   </div>
                   </Nav>            

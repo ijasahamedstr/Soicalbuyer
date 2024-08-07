@@ -31,8 +31,15 @@ const LoginOTP = ({setIsOTPLoggedIn,setOTPLoggedUserData}) => {
       }
 
       const response = await userVerify(data);
+      console.log("response");
+      console.log(response);
+      
       if (response.status === 200) {
         localStorage.setItem("userdbtoken", response.data.userToken);
+        console.log("111111111111111111111111111111111111");
+        console.log(response.data);
+        
+        localStorage.setItem("userDetails", JSON.stringify(response.data.preuser));
         toast.success(response.data.message);
         setIsOTPLoggedIn(true)
         setOTPLoggedUserData(response.data)

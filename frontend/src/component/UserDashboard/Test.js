@@ -1,113 +1,27 @@
-import React, { useContext } from 'react';
-import Avatar from '@mui/material/Avatar';
-import { LoginContext } from '../ContextProvider/Context.js';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useNavigate, NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-    const { logindata, setLoginData } = useContext(LoginContext);
-    const history = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const userValid = () => {
+    const token = localStorage.getItem("userdbtoken");
+   
+    
+    if (!token) {
+      navigate("/login"); // Redirect to login page if token is not present
+    } else {
+      console.log("User is valid");
+    }
+  };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  useEffect(() => {
+    userValid();
+  }, [navigate]); // Add navigate to dependency array
 
-    const logoutuser = async () => {
-        let token = localStorage.getItem('usersdatatoken');
-        const res = await fetch('/validuser', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token,
-                Accept: 'application/json'
-            },
-            credentials: 'include'
-        });
-        const data = await res.json();
-        console.log(data);
-
-        if (data.status === 201) {
-            console.log('use logout');
-            localStorage.removeItem('usersdatatoken');
-            setLoginData(false);
-            history('/');
-        } else {
-            console.log('error');
-        }
-    };
-
-    const goDash = () => {
-        history('/Dashboard');
-    };
-
-    const goError = () => {
-        history('*');
-    };
-
-    return (
-        <>
-            <header>
-                <nav>
-                    <NavLink to="/"><h1>HP Cloud</h1></NavLink>
-                    <div className="avtar">
-                        {
-                            logindata && logindata.ValidUserOne ? (
-                                <Avatar 
-                                    style={{ background: 'salmon', fontWeight: 'bold', textTransform: 'capitalize' }} 
-                                    onClick={handleClick}
-                                >
-                                    {logindata.ValidUserOne.fname[0].toUpperCase()}
-                                </Avatar>
-                            ) : (
-                                <Avatar 
-                                    style={{ background: 'blue' }} 
-                                    onClick={handleClick}
-                                />
-                            )
-                        }
-                    </div>
-                    <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                        }}
-                    >
-                        {
-                            logindata && logindata.ValidUserOne ? (
-                                <>
-                                    <MenuItem onClick={() => {
-                                        goDash();
-                                        handleClose();
-                                    }}>Profile</MenuItem>
-                                    <MenuItem onClick={() => {
-                                        logoutuser();
-                                        handleClose();
-                                    }}>Logout</MenuItem>
-                                </>
-                            ) : (
-                                <>
-                                    <MenuItem onClick={() => {
-                                        goError();
-                                        handleClose();
-                                    }}>Profile</MenuItem>
-                                </>
-                            )
-                        }
-                    </Menu>
-                </nav>
-            </header>
-        </>
-    );
+  return (
+    <div>Dashboard</div>
+  );
 };
 
 export default Dashboard;

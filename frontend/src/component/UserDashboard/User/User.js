@@ -13,7 +13,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 
-function User({ isOTPLoggedIn, OTPLoggedUserData }) {
+function User({ userdata }) {
   const [userDetails, setUserDetails] = useState({
     displayName: '',
     username: '',
@@ -24,16 +24,16 @@ function User({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [validated, setValidated] = useState(false);
 
   useEffect(() => {
-    if (isOTPLoggedIn && OTPLoggedUserData?.preuser) {
+    if (userdata) {
       setUserDetails({
-        displayName: OTPLoggedUserData.preuser.displayName || '',
-        username: OTPLoggedUserData.preuser.username || '',
-        email: OTPLoggedUserData.preuser.email || '',
-        Phone: OTPLoggedUserData.preuser.Phone || '',
-        bio: OTPLoggedUserData.preuser.bio || ''
+        displayName: userdata.displayName || '',
+        username: userdata.username || '',
+        email: userdata.email || '',
+        Phone: userdata.Phone || '',
+        bio: userdata.bio || ''
       });
     }
-  }, [isOTPLoggedIn, OTPLoggedUserData]);
+  }, [userdata]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +52,7 @@ function User({ isOTPLoggedIn, OTPLoggedUserData }) {
     setValidated(true);
 
     try {
-      const response = await axios.put(`http://localhost:8000/register/${OTPLoggedUserData.preuser._id}`, userDetails, {
+      const response = await axios.put(`http://localhost:8000/register/${userdata._id}`, userDetails, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -125,7 +125,7 @@ function User({ isOTPLoggedIn, OTPLoggedUserData }) {
             >
             <Tab eventKey="التواصل الإجتماعي" title="التواصل الإجتماعي">
             <Container>
-            {isOTPLoggedIn ? 
+            {userdata ? 
          
             <Row>
                 <Col md={4}>
