@@ -10,13 +10,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { sentOtpFunction } from "../LoginPage/LoginAPI/Apis.js";
-// import GoogleButton from 'react-google-button'
 
 const LoginRegisterForm = ({ isLoggedIn = false }) => {
 
-//   const loginwithgoogle = ()=>{
-//     window.open("http://localhost:8000/auth/google/callback","_self")
-// }
 
   const [email, setEmail] = useState("");
   const [spinner, setSpinner] = useState(false);
@@ -115,11 +111,7 @@ const LoginRegisterForm = ({ isLoggedIn = false }) => {
               </Link>
               <div className='account'>أو قم بتسجيل الدخول عبر</div>
               <div className='google'>
-              {/* <GoogleButton
-                type="light" // can be light or dark
-                onClick={loginwithgoogle}
-                style={{width:'100%',borderRadius:'3px'}}
-              /> */}
+    
             </div>
             </div>
           </div>

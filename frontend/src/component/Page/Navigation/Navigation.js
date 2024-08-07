@@ -15,7 +15,6 @@ import { BsFillPersonXFill } from "react-icons/bs";
 import { IoFingerPrintSharp } from "react-icons/io5";
 import { BsBullseye } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
-// import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 import {useNavigate } from "react-router-dom"
