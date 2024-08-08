@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import './LoginRegistration.css';
 import PhoneInput from 'react-phone-number-input';
@@ -10,10 +9,34 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { sentOtpFunction } from "../LoginPage/LoginAPI/Apis.js";
+import { useEffect, useState } from 'react';
 
-const LoginRegisterForm = ({ isLoggedIn = false }) => {
+const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
+
+  useEffect(() => {
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
+    }
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
+
+  // Fetch user details on mount and set up periodic fetch
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setUserdata(userDetails);
+    };
+
+    fetchUserData();
+
+    // Fetch user details every 5 minutes
+    const intervalId = setInterval(fetchUserData, 300000);
+
+    // Cleanup function to clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
 
+  const [userdata, setUserdata] = useState(null);
   const [email, setEmail] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -51,7 +74,7 @@ const LoginRegisterForm = ({ isLoggedIn = false }) => {
 
   return (
     <>
-      {isLoggedIn ? (
+      { userdata ? (
         <Verifyaccount />
       ) : (
         <Container className="d-flex justify-content-center align-items-center">

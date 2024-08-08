@@ -63,7 +63,7 @@ function App() {
           <Route path="/الأعضاء" element={<Users />} />
           <Route path="/طلبات المستخدمين" element={<Market />} />
           <Route path="/متجر المنصة" element={<Store />} />
-          <Route path="/تسجيل الدخول" element={<LoginRegisterForm />} />
+          <Route path="/تسجيل الدخول" element={<LoginRegisterForm  userdata={userdata}/>} />
           <Route path="/تسجيل حساب جديد" element={<RegisterForm />} />
           <Route path={`/${userdata?.username}`} element={<User userdata={userdata} />} />
           <Route path="/Requests" element={<Requests />} />

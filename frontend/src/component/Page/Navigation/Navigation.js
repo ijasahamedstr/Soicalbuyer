@@ -29,6 +29,7 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
       setUserdata(OTPLoggedUserData?.preuser || {});
     }
   }, [isOTPLoggedIn, OTPLoggedUserData]);
+  
 
   useEffect(() => {
     
@@ -59,6 +60,9 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
     };
 
     fetchDashboardData();
+      const intervalId = setInterval(fetchDashboardData, 300000); // Fetch user details every 5 minutes
+      return () => clearInterval(intervalId); // Cleanup on unmount
+
   }, [navigate]);
 
   const toggleDropdown = () => {
