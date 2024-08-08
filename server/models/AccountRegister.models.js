@@ -29,13 +29,6 @@ const AccountRegisterSchema = new Schema({
     bio:{
         type:String,
     },
-    imgpath:{
-        type:String,
-    },
-    date:{
-        type:Date
-    },
-
     tokens: [
         {
             token: {

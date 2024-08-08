@@ -49,7 +49,6 @@ app.use(imagerouter);
 
 
 //CLIENT -> MIDDLEWARE -> SERVER
-
 app.use('/register',Accountrouter);
 app.use('/userotp',otprouter);
 app.use('/login',loginrouter);

@@ -79,7 +79,7 @@ function App() {
           <Route path="/challenges" element={<Challenges />} />
           <Route path="/social-media-accounts-view" element={<SoiaclAcoountView />} />
           <Route path="/UserView" element={<Userview />} />
-          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Dashboard" element={<Dashboard  userdata={userdata} />} />
           <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData} />} />
           <Route path="*" element={<Error />} />
           <Route path="/register" element={<Register/>} />
