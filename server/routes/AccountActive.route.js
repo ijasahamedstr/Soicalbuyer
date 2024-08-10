@@ -1,6 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import { Image, ImageDelete, ImageUpdate, ImageView } from '../controller/ImageRegister.Controller.js';
 import { AccountActivecreate, AccountActiveDelete, AccountActiveUpdate, AccountActiveView } from '../controller/AccountActive.Controller.js';
 
 // Create a new router instance
@@ -9,7 +8,7 @@ const AccountActiverouter = express.Router();
 // Image storage configuration
 const imgconfig = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, './uploads');
+        callback(null, './uploads/AccountActive');
     },
     filename: (req, file, callback) => {
         callback(null, `image-${Date.now()}.${file.originalname}`);
