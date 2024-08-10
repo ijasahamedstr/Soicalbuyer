@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    lname: {
+        type: String,
+        required: true
+    },
     imgpath: {
         type: String,
         required: true

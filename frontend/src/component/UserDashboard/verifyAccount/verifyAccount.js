@@ -7,9 +7,20 @@ import './verifyAccount.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';  // Import SweetAlert2
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
   const [userdata, setUserdata] = useState(null);
+  const [fname, setFname] = useState("");
+  const [midname, setMidname] = useState("");
+  const [lname, setLname] = useState("");
+  const [documentcountry, setDocumentcountry] = useState("");
+  const [documenttype, setDocumenttype] = useState("");
+  const [documentnumber, setDocumentnumber] = useState("");
+  const [file, setFile] = useState(null); // Ensure this is null initially
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOTPLoggedIn) {
@@ -17,7 +28,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
     }
   }, [isOTPLoggedIn, OTPLoggedUserData]);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem("userDetails"));
       setUserdata(userDetails);
@@ -28,6 +39,83 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  // Handle changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'fname':
+        setFname(value);
+        break;
+      case 'midname':
+        setMidname(value);
+        break;
+      case 'lname':
+        setLname(value);
+        break;
+      case 'documentcountry':
+        setDocumentcountry(value);
+        break;
+      case 'documenttype':
+        setDocumenttype(value);
+        break;
+      case 'documentnumber':
+        setDocumentnumber(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  // Submit form data
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("photo", file);
+    formData.append("fname", fname);
+    formData.append("midname", midname);
+    formData.append("lname", lname);
+    formData.append("documentcountry", documentcountry);
+    formData.append("documenttype", documenttype);
+    formData.append("documentnumber", documentnumber);
+    
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    };
+
+    try {
+      const res = await axios.post("http://localhost:8000/Accountactive", formData, config);
+      
+      if (res.data.status === 401 || !res.data) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error occurred while uploading data!',
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'User data uploaded successfully.',
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error occurred while uploading data!',
+      });
+    }
+  };
 
   const  marginTopValue = '50px',marginBottomValue = '10px';
   return (
@@ -47,7 +135,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <div class="col-12">
         <div class="sign">
         <div class="sign__content">
-        <Form className='sign__form'>
+        <Form className='sign__form' onSubmit={handleSubmit}>
         <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px'}}>تفعيل الحساب بالهوية يمكنك من التالي</h3>
         <div>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد السحب</p>
@@ -56,22 +144,22 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         </div>
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>الإسم الاول{userdata?.displayName}</Form.Label>
-            <Form.Control placeholder="الإسم الاول" className='sign__input'  />
+            <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname" value={fname} onChange={handleChange}  />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>الإسم الوسط</Form.Label>
-            <Form.Control placeholder="الإسم الوسط" className='sign__input'  />
+            <Form.Control placeholder="الإسم الوسط" className='sign__input'  name="midname" value={midname} onChange={handleChange}  />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>الإسم الأخير</Form.Label>
-            <Form.Control placeholder="الإسم الأخير" className='sign__input'  />
+            <Form.Control placeholder="الإسم الأخير" className='sign__input' name="lname"  value={lname} onChange={handleChange}  />
         </Form.Group>
         
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>دولة إصدار الوثيقة</Form.Label>
-        <Form.Select aria-label="Default select example" className='sign__input'>
+        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry" value={documentcountry} onChange={handleChange}>
         <option value="BH">مملكة البحرين</option>
         <option value="SA">المملكة العربية السعودية</option>
         <option value="AE">الإمارات العربية المتحدة</option>
@@ -87,7 +175,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
 
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>نوع الوثيقة</Form.Label>
-        <Form.Select aria-label="Default select example" className='sign__input'>
+        <Form.Select aria-label="Default select example" className='sign__input' name="documenttype" value={documenttype} onChange={handleChange}>
         <option value="passport">جواز السفر</option>
         <option value="id">بطاقة الهوية</option>
         <option value="driving_license">رخصة القيادة</option>
@@ -96,12 +184,12 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
 
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>رقم الوثيقة</Form.Label>
-            <Form.Control placeholder="رقم وثيقة الإثبات" className='sign__input'  />
+            <Form.Control placeholder="رقم وثيقة الإثبات" className='sign__input' name="documentnumber" value={documentnumber} onChange={handleChange}  />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>وثيقة الإثبات</Form.Label>
-            <Form.Control type="file" placeholder="رقم وثيقة الإثبات" className='sign__input'  />
+            <Form.Control  placeholder="رقم وثيقة الإثبات" className='sign__input' type="file" onChange={handleFileChange} name='photo' />
         </Form.Group>
 
         <h4 >لضمان قبول طلبك الرجاء مراجعة</h4>
@@ -160,7 +248,6 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         </div>
         <h3 style={{marginBottom:'30px',color:'red',textAlign:'center',marginTop:'15px'}}>إرشادات الوثيقة</h3>
         <p style={{textAlign:'center',fontSize:'14px',color:'red'}}>انت على وشك رفع طلب تفعيل الرجاء التأكد أن</p>
-    
         <p style={{fontSize:'13px',textAlign:'center'}}>هذه هي الوثيقة الخاصة بك الصادرة من الحكومة الخاصة بك وغير منتهية الصلاحية</p>
         <p style={{fontSize:'13px',textAlign:'center'}}>هذه هي الوثيقة الحقيقية وليست صورة أو نسخة</p>
         <p style={{fontSize:'13px',textAlign:'center'}}>التأكد من وضوح الصورة وإمكانية قراءة البيانات الموجودة عليها</p>

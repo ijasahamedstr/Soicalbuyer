@@ -1,25 +1,34 @@
-import users from '../models/usersSchema.js';
+import Accountactive from '../models/AccountActive.models.js';
 import moment from 'moment';
 
 // Example route Controller handler
 
 // All Acccount Create
 
-export const Image = async (req, res) => {
+export const AccountActivecreate = async (req, res) => {
     const { filename } = req.file;
     const { fname } = req.body;
+    const { midname } = req.body;
     const { lname } = req.body;
+    const { documentcountry } = req.body;
+    const { documenttype } = req.body;
+    const { documentnumber } = req.body;
 
-    if (!fname || !lname || !filename) {
+
+    if (!fname || !midname || !lname || !documentcountry || !documenttype || !documentnumber || !filename) {
         return res.status(400).json({ status: 400, message: 'Please fill all the data' });
     }
 
     try {
         const date = moment().format('YYYY-MM-DD');
 
-        const userdata = new users({
+        const userdata = new Accountactive({
             fname,
+            midname,
             lname,
+            documentcountry,
+            documenttype,
+            documentnumber,
             imgpath: filename,
             date
         });
@@ -36,9 +45,9 @@ export const Image = async (req, res) => {
 
 
 // All Acccount View 
-export const ImageView = async (req, res) => {
+export const AccountActiveView = async (req, res) => {
     try {
-        const getUser = await users.find();
+        const getUser = await Accountactive.find();
 
         res.status(201).json({status:201,getUser})
     } catch (error) {
@@ -50,11 +59,11 @@ export const ImageView = async (req, res) => {
 
 // All Acccount Delete
 
-export const ImageDelete = async (req, res) => {
+export const AccountActiveDelete = async (req, res) => {
     try {
         const {id} = req.params;
 
-        const dltUser = await users.findByIdAndDelete({_id:id});
+        const dltUser = await Accountactive.findByIdAndDelete({_id:id});
 
         res.status(201).json({status:201,dltUser});
 
@@ -66,7 +75,7 @@ export const ImageDelete = async (req, res) => {
 
 // All Acccount Update
 
-export const ImageUpdate = async (req, res) => {
+export const AccountActiveUpdate = async (req, res) => {
 
     const { id } = req.params;
     const { fname } = req.body;
@@ -74,7 +83,7 @@ export const ImageUpdate = async (req, res) => {
 
     try {
         // Find the user by ID
-        const user = await users.findById(id);
+        const user = await Accountactive.findById(id);
 
         if (!user) {
             return res.status(404).json({ status: 404, message: "User not found" });

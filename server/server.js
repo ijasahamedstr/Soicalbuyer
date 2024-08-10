@@ -10,12 +10,11 @@ import cookiParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import AccountRegister from "./models/AccountRegister.models.js";
 import logoutrouter from "./routes/Logout.route.js";
 import path from 'path';
-import router from "./routes/image.route.js";
 import { fileURLToPath } from 'url';
 import Imagerouter from "./routes/image.route.js";
+import AccountActiverouter from "./routes/AccountActive.route.js";
 
 
 
@@ -47,7 +46,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
 
-
 //CLIENT -> MIDDLEWARE -> SERVER
 
 // User Account Create
@@ -61,6 +59,9 @@ app.use('/logout',logoutrouter);
 
 // Image Upload 
 app.use('/imageupload',Imagerouter);
+
+// Account Active 
+app.use('/Accountactive',AccountActiverouter);
 
 
 // Get __dirname equivalent for ES modules
