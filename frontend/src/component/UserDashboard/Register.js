@@ -1,96 +1,72 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
-  const [isEdit, setIsEdit] = useState(false); // Flag to check if it's edit mode
-  const [user, setUser] = useState(null); // Store user data for editing
 
-  const navigate = useNavigate();
-  const { id } = useParams(); // Get user ID from URL params
+  const [fname, setFName] = useState("");
 
-  // Fetch user data if editing
-  useEffect(() => {
-    if (id) {
-      setIsEdit(true);
-      axios.get(`http://localhost:8000/getdata/${id}`)
-        .then(res => {
-          setUser(res.data.getUser);
-        })
-        .catch(error => {
-          setError("Error fetching user data.");
-          console.error("Error:", error);
-        });
-    }
-  }, [id]);
+  const [file, setFile] = useState("");
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const history = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const setdata = (e) => {
+    const { value } = e.target;
+    setFName(value);
+  }
+
+  const setimgfile = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  // adduser data
+
+  const addUserData = async (e) => {
     e.preventDefault();
 
-    if (!file) {
-      setError("Please select a file.");
-      return;
-    }
-
-    const formData = new FormData();
+    var formData = new FormData();
     formData.append("photo", file);
+    formData.append("fname", fname);
 
     const config = {
       headers: {
         "Content-Type": "multipart/form-data"
       }
-    };
-
-    try {
-      let response;
-      if (isEdit) {
-        response = await axios.put(`http://localhost:8000/${id}`, formData, config);
-      } else {
-        response = await axios.post("http://localhost:8000/register", formData, config);
-      }
-
-      if (response.status === 401) {
-        setError("Unauthorized access.");
-      } else if (!response.data) {
-        setError("Unexpected response format.");
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      setError("An unexpected error occurred.");
-      console.error("Error:", error);
     }
-  };
+
+    const res = await axios.post("http://localhost:8000/imageupload", formData, config);
+
+    if (res.data.status === 401 || !res.data) {
+      console.log("errror")
+    } else {
+      history("/")
+    }
+  }
 
   return (
-    <div className="container mt-3">
-      <h1>{isEdit ? "Update Your Image Here" : "Upload Your Image Here"}</h1>
-      {error && <div className="alert alert-danger">{error}</div>} {/* Display error message */}
+    <>
+      <div className="container mt-3">
+        <h1>Upload Your Img Here</h1>
 
-      <Form className='mt-3' onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formFile">
-          <Form.Label>Select Your Image</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={handleFileChange}
-            name='photo'
-            placeholder=""
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          {isEdit ? "Update" : "Submit"}
-        </Button>
-      </Form>
-    </div>
-  );
-};
+        <Form className='mt-3'>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>UserName</Form.Label>
+            <Form.Control type="text" name='fname' onChange={setdata} placeholder="" />
+          </Form.Group>
 
-export default Register;
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Select Your Image</Form.Label>
+            <Form.Control type="file" onChange={setimgfile} name='photo' placeholder="" />
+          </Form.Group>
+          <Button variant="primary" type="submit" onClick={addUserData}>
+            Submit
+          </Button>
+        </Form>
+      </div>
+    </>
+  )
+}
+
+export default Register

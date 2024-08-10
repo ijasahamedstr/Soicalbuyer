@@ -11,31 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { sentOtpFunction } from "../LoginPage/LoginAPI/Apis.js";
 import { useEffect, useState } from 'react';
 
-const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
-
-  useEffect(() => {
-    if (isOTPLoggedIn) {
-      setUserdata(OTPLoggedUserData?.preuser || {});
-    }
-  }, [isOTPLoggedIn, OTPLoggedUserData]);
-
-  // Fetch user details on mount and set up periodic fetch
-  useEffect(() => {
-    const fetchUserData = () => {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      setUserdata(userDetails);
-    };
-
-    fetchUserData();
-
-    // Fetch user details every 5 minutes
-    const intervalId = setInterval(fetchUserData, 300000);
-
-    // Cleanup function to clear interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
-
-
+const LoginRegisterForm = ({ isOTPLoggedIn, OTPLoggedUserData }) => {
   const [userdata, setUserdata] = useState(null);
   const [email, setEmail] = useState("");
   const [spinner, setSpinner] = useState(false);
@@ -43,30 +19,48 @@ const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
   const [changeText, setChangeText] = useState(true);
   const navigate = useNavigate();
 
-  // Send OTP
+  useEffect(() => {
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
+    }
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
+
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setUserdata(userDetails);
+    };
+
+    fetchUserData();
+    const intervalId = setInterval(fetchUserData, 300000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const sendOtp = async (e) => {
     e.preventDefault();
+    if (!email) {
+      toast.error("Enter Your Email!");
+      return;
+    }
 
-    if (email === "") {
-      toast.error("Enter Your Email !");
-    } else if (!email.includes("@")) {
-      toast.error("Enter Valid Email !");
-    } else {
-      setSpinner(true);
-      const data = { email };
+    if (!email.includes("@")) {
+      toast.error("Enter Valid Email!");
+      return;
+    }
 
-      try {
-        const response = await sentOtpFunction(data);
-        if (response.status === 200) {
-          navigate("/OTP", { state: email });
-        } else {
-          toast.error(response.response?.data?.error || "An error occurred");
-        }
-      } catch (error) {
-        toast.error("An unexpected error occurred");
-      } finally {
-        setSpinner(false);
+    setSpinner(true);
+    try {
+      const response = await sentOtpFunction({ email });
+      if (response.status === 200) {
+        navigate("/OTP", { state: email });
+      } else {
+        toast.error(response.response?.data?.error || "An error occurred");
       }
+    } catch {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setSpinner(false);
     }
   };
 
@@ -74,13 +68,13 @@ const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
 
   return (
     <>
-      { userdata ? (
-        <Verifyaccount />
+      {userdata ? (
+        <Verifyaccount userdata={userdata} />
       ) : (
         <Container className="d-flex justify-content-center align-items-center">
           <div className='wrapper'>
             <div className='from-box login'>
-              <h2 style={{ textAlign: 'center' }}>
+              <h2 className='text-center'>
                 <img
                   src='https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png'
                   style={{ width: '200px', fontSize: '15px', marginBottom: '30px' }}
@@ -89,30 +83,24 @@ const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
               </h2>
               <form>
                 {changeText ? (
-                  <div>
-                    <div className='input-box'>
-                      <input
-                        type='email'
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder='البريد الألكتروني'
-                        required
-                      />
-                      <FaRegUserCircle className='icon' />
-                    </div>
-                    <br />
+                  <div className='input-box'>
+                    <input
+                      type='email'
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder='البريد الألكتروني'
+                      required
+                    />
+                    <FaRegUserCircle className='icon' />
                   </div>
                 ) : (
-                  <div>
-                    <div className='input-box'>
-                      <PhoneInput
-                        style={{ marginLeft: '15px', marginTop: '10px' }}
-                        placeholder="رقم الهاتف"
-                        value={phoneNumber}
-                        onChange={handlePhoneChange}
-                        defaultCountry="SA" // Optional: Specify default country
-                      />
-                    </div>
-                    <br />
+                  <div className='input-box'>
+                    <PhoneInput
+                      style={{ marginLeft: '15px', marginTop: '10px' }}
+                      placeholder="رقم الهاتف"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      defaultCountry="SA"
+                    />
                   </div>
                 )}
                 <div className='remember-forgot'>
@@ -134,8 +122,8 @@ const LoginRegisterForm = ({isOTPLoggedIn, OTPLoggedUserData}) => {
               </Link>
               <div className='account'>أو قم بتسجيل الدخول عبر</div>
               <div className='google'>
-    
-            </div>
+                {/* Google login component or button can be added here */}
+              </div>
             </div>
           </div>
           <ToastContainer />

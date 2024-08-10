@@ -13,8 +13,9 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import AccountRegister from "./models/AccountRegister.models.js";
 import logoutrouter from "./routes/Logout.route.js";
 import path from 'path';
-import imagerouter from "./routes/image.route.js";
+import router from "./routes/image.route.js";
 import { fileURLToPath } from 'url';
+import Imagerouter from "./routes/image.route.js";
 
 
 
@@ -45,20 +46,28 @@ app.use(express.json());
 //Validate your Data
 app.use(express.urlencoded({extended:true}))
 
-app.use(imagerouter);
 
 
 //CLIENT -> MIDDLEWARE -> SERVER
+
+// User Account Create
 app.use('/register',Accountrouter);
+
+// Login 
 app.use('/userotp',otprouter);
 app.use('/login',loginrouter);
 app.use('/validuser',validuserrouter);
 app.use('/logout',logoutrouter);
+
+// Image Upload 
+app.use('/imageupload',Imagerouter);
+
+
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Start the Express server
 const port = 8000;

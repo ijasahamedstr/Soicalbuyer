@@ -29,6 +29,7 @@ const AccountRegisterSchema = new Schema({
     bio:{
         type:String,
     },
+    
     tokens: [
         {
             token: {

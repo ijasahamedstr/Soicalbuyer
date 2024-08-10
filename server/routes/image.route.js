@@ -1,11 +1,11 @@
 import express from 'express';
 import multer from 'multer';
-import moment from 'moment';
-import AccountRegister from '../models/AccountRegister.models.js';
+import { Image, ImageDelete, ImageView } from '../controller/ImageRegister.Controller.js';
 
-const router = express.Router();
+// Create a new router instance
+const Imagerouter = express.Router();
 
-// Configure multer storage
+// Image storage configuration
 const imgconfig = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, './uploads');
@@ -15,12 +15,12 @@ const imgconfig = multer.diskStorage({
     }
 });
 
-// Filter to allow only images
+// Image filter
 const isImage = (req, file, callback) => {
     if (file.mimetype.startsWith('image')) {
         callback(null, true);
     } else {
-        callback(new Error('Only images are allowed'), false);
+        callback(new Error('Only images are allowed'));
     }
 };
 
@@ -29,85 +29,18 @@ const upload = multer({
     fileFilter: isImage
 });
 
-// Register user
-router.post('/register', upload.single('photo'), async (req, res) => {
-    const { filename } = req.file;
+// Define the POST route with file upload and Image handler
+Imagerouter.post('/', upload.single('photo'), Image);
 
-    if (!filename) {
-        return res.status(400).json({ status: 400, message: 'Fill all the data' });
-    }
 
-    try {
-        const date = moment(new Date()).format('YYYY-MM-DD');
-        const userdata = new AccountRegister({
-            imgpath: filename,
-            date: date
-        });
+// View the Data Register
+Imagerouter.get('/',ImageView);
 
-        const finaldata = await userdata.save();
-        res.status(201).json({ status: 201, finaldata });
 
-    } catch (error) {
-        res.status(500).json({ status: 500, error: error.message });
-    }
-});
+//Delete Data Register
+Imagerouter.delete('/:id',ImageDelete);
 
-// Get user data
-router.get('/getdata', async (req, res) => {
-    try {
-        const getUser = await AccountRegister.find();
-        res.status(200).json({ status: 200, getUser });
-    } catch (error) {
-        res.status(500).json({ status: 500, error: error.message });
-    }
-});
 
-// Delete user data
-router.delete('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const dltUser = await AccountRegister.findByIdAndDelete(id);
 
-        if (!dltUser) {
-            return res.status(404).json({ status: 404, message: 'User not found' });
-        }
 
-        res.status(200).json({ status: 200, dltUser });
-
-    } catch (error) {
-        res.status(500).json({ status: 500, error: error.message });
-    }
-});
-
-// Update user data
-router.put('/:id', upload.single('photo'), async (req, res) => {
-    const { id } = req.params;
-    const { fname } = req.body;
-    const filename = req.file ? req.file.filename : null;
-
-    try {
-        // Find the user by ID
-        const user = await AccountRegister.findById(id);
-
-        if (!user) {
-            return res.status(404).json({ status: 404, message: 'User not found' });
-        }
-
-        // Update fields
-        if (fname) {
-            user.fname = fname;
-        }
-        if (filename) {
-            user.imgpath = filename;
-        }
-
-        // Save the updated user
-        const updatedUser = await user.save();
-        res.status(200).json({ status: 200, updatedUser });
-
-    } catch (error) {
-        res.status(500).json({ status: 500, error: error.message });
-    }
-});
-
-export default router;
+export default Imagerouter;

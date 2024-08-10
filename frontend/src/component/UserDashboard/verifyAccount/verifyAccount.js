@@ -6,9 +6,29 @@ import Col from 'react-bootstrap/Col';
 import './verifyAccount.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useEffect, useState } from 'react';
 
+function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
+  const [userdata, setUserdata] = useState(null);
 
-function Verifyaccount() {
+  useEffect(() => {
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
+    }
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
+
+   useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setUserdata(userDetails);
+    };
+
+    fetchUserData();
+    const intervalId = setInterval(fetchUserData, 300000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const  marginTopValue = '50px',marginBottomValue = '10px';
   return (
     <Container>
@@ -35,7 +55,7 @@ function Verifyaccount() {
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>عرض حسابات بقيمة 250$ وما فوق</p><br/>
         </div>
         <Form.Group className="mb-3" controlId="formGridAddress2">
-        <Form.Label>الإسم الاول</Form.Label>
+        <Form.Label>الإسم الاول{userdata?.displayName}</Form.Label>
             <Form.Control placeholder="الإسم الاول" className='sign__input'  />
         </Form.Group>
 
