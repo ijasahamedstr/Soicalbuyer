@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
   const [userdata, setUserdata] = useState(null);
+  const [userid, setuserid] = useState("");
   const [fname, setFname] = useState("");
   const [midname, setMidname] = useState("");
   const [lname, setLname] = useState("");
@@ -44,9 +45,12 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     switch (name) {
-      case 'fname':
-        setFname(value);
+      case 'userid':
+        setuserid(String(userdata?._id));
         break;
+        case 'fname':
+          setFname(value);
+          break;
       case 'midname':
         setMidname(value);
         break;
@@ -78,6 +82,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
 
     const formData = new FormData();
     formData.append("photo", file);
+    formData.append("userid", String(userdata?._id)); // Convert _id to string if necessary
     formData.append("fname", fname);
     formData.append("midname", midname);
     formData.append("lname", lname);
@@ -142,6 +147,11 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد التحويل الداخلي</p>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>عرض حسابات بقيمة 250$ وما فوق</p><br/>
         </div>
+        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Label>الإسم الاول</Form.Label>
+            <Form.Control placeholder="الإسم الاول" className='sign__input' name="userid" value={userid} onChange={handleChange}  />
+        </Form.Group>
+        
         <Form.Group className="mb-3" controlId="formGridAddress2">
         <Form.Label>الإسم الاول{userdata?.displayName}</Form.Label>
             <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname" value={fname} onChange={handleChange}  />

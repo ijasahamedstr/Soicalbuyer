@@ -7,6 +7,7 @@ import moment from 'moment';
 
 export const AccountActivecreate = async (req, res) => {
     const { filename } = req.file;
+    const { userid } = req.body;
     const { fname } = req.body;
     const { midname } = req.body;
     const { lname } = req.body;
@@ -15,7 +16,7 @@ export const AccountActivecreate = async (req, res) => {
     const { documentnumber } = req.body;
 
 
-    if (!fname || !midname || !lname || !documentcountry || !documenttype || !documentnumber || !filename) {
+    if (!userid || !fname || !midname || !lname || !documentcountry || !documenttype || !documentnumber || !filename) {
         return res.status(400).json({ status: 400, message: 'Please fill all the data' });
     }
 
@@ -23,6 +24,7 @@ export const AccountActivecreate = async (req, res) => {
         const date = moment().format('YYYY-MM-DD');
 
         const userdata = new Accountactive({
+            userid,
             fname,
             midname,
             lname,

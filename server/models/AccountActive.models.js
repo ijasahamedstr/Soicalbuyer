@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 
 // Define the schema
 const AccountactiveSchema = new mongoose.Schema({
+    userid: {
+        type: String,
+    },
     fname: {
         type: String,
     },
