@@ -148,8 +148,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>عرض حسابات بقيمة 250$ وما فوق</p><br/>
         </div>
         <Form.Group className="mb-3" controlId="formGridAddress2">
-        <Form.Label>الإسم الاول</Form.Label>
-            <Form.Control placeholder="الإسم الاول" className='sign__input' name="userid" value={userid} onChange={handleChange}  />
+            <Form.Control placeholder="الإسم الاول" className="hidden" name="userid" value={userid} onChange={handleChange}  />
         </Form.Group>
         
         <Form.Group className="mb-3" controlId="formGridAddress2">
