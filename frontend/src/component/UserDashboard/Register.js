@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';  // Import SweetAlert2
 
 const Register = () => {
 
@@ -39,8 +40,17 @@ const Register = () => {
     const res = await axios.post("http://localhost:8000/imageupload", formData, config);
 
     if (res.data.status === 401 || !res.data) {
-      console.log("errror")
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error occurred while uploading data!',
+      });
     } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'User data uploaded successfully.',
+      });
       history("/")
     }
   }

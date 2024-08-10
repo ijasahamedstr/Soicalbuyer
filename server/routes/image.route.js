@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { Image, ImageDelete, ImageView } from '../controller/ImageRegister.Controller.js';
+import { Image, ImageDelete, ImageUpdate, ImageView } from '../controller/ImageRegister.Controller.js';
 
 // Create a new router instance
 const Imagerouter = express.Router();
@@ -40,7 +40,8 @@ Imagerouter.get('/',ImageView);
 //Delete Data Register
 Imagerouter.delete('/:id',ImageDelete);
 
-
+//Update Data Register
+Imagerouter.put('/:id',upload.single('photo'), ImageUpdate);
 
 
 export default Imagerouter;

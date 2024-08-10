@@ -57,6 +57,7 @@ const Dashboard = () => {
                 <h1 className='text-center mt-2'>MERN Image Upload Projects</h1>
                 <div className='text-end'>
                     <Button variant="primary"><NavLink to="/register" className="text-decoration-none text-light">Add User</NavLink></Button>
+                    <Button variant="primary"><NavLink to="/Update" className="text-decoration-none text-light">Update User</NavLink></Button>
                 </div>
 
                 <div className='row d-flex justify-content-between align-iteams-center mt-5'>

@@ -31,6 +31,7 @@ import LoginOTP from "./component/Page/LoginPage/LoginOTP";
 import Error from "./component/UserDashboard/Error";
 import Dashboard from "./component/UserDashboard/Test";
 import Register from './component/UserDashboard/Register';
+import Update from './component/UserDashboard/Update';
 
 function App() {
   const [userdata, setUserdata] = useState({});
@@ -83,6 +84,7 @@ function App() {
           <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData} />} />
           <Route path="*" element={<Error />} />
           <Route path="/register" element={<Register/>} />
+          <Route path="/Update" element={<Update/>} />
         </Routes>
       </Router>
       <Footer />
