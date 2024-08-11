@@ -149,11 +149,11 @@ function User({ userdata }) {
               </div>
               <div className="author__wrap" style={{ display: 'inline', marginTop: '15px' }}>
                 <div className="author__followers mr-2">
-                  <p>0</p>
+                  <p>{userDetails.posts}</p>
                   <span>عدد المبيعات</span>
                 </div>
                 <div className="author__followers ">
-                  <p>0$</p>
+                  <p>{userDetails.currentbalance}</p>
                   <span>مجمل المبيعات</span>
                 </div>
               </div>
