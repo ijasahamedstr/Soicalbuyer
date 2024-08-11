@@ -137,10 +137,7 @@ function MyVerticallyCenteredModal(props) {
   }
 
 
-
-
-
-function Wallet({ isLoggedIn = false },{ isActive = false }) {
+function Wallet({ isLoggedIn = true },{ isActive = false }) {
   const [modalShowone, setModalShowone] = React.useState(false);
   const [modalShowtwo, setModalShowtwo] = React.useState(false);
   const [modalShowtree, setModalShowtree] = React.useState(false);
@@ -214,7 +211,7 @@ function Wallet({ isLoggedIn = false },{ isActive = false }) {
      <Container>
     {/* Stack the columns on mobile by making one full-width and the other half-width */}
     <Row>
-    <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>الطلبات</h2></div>
+    <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue,fontFamily:'Changa, sans-serif'}}><h2 className='entry-title'>الطلبات</h2></div>
       <Col style={{backgroundColor:'#FFFFFF'}}>
       </Col>
     </Row>
@@ -224,7 +221,7 @@ function Wallet({ isLoggedIn = false },{ isActive = false }) {
         <div class="col d-flex align-items-center justify-content-center">
         <div className="col-12 col-md-6 col-lg-9">
         <div class="col-12">
-        <h2 style={{textAlign:'center',fontFamily:'Noto Kufi Arabic',marginTop:'1.5rem'}}>المحفظة</h2>
+        <h2 style={{textAlign:'center',fontFamily:'Changa, sans-serif',marginTop:'1.5rem'}}>المحفظة</h2>
         <div class="col-12">
         <div class="sign">
         <div class="sign__content">

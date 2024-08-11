@@ -8,7 +8,7 @@
     font-size: 16px;
     width: 100%;
     padding: 0 20px;
-    font-family: 'Inter', sans-serif;
+    font-family: "Changa", sans-serif;
 }
 
 .formuser{
@@ -125,7 +125,7 @@
     line-height: 100%;
     color: rgb(97, 100, 255);
     margin-bottom: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: "Changa", sans-serif;
 }
 
 .author__followers span {
