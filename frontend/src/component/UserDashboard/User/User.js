@@ -395,7 +395,7 @@ function User({ userdata }) {
                                         type="text"
                                         placeholder="أدخل اسم المستخدم"
                                         className='sign__title'
-                                        value={userDetails?.Referrallink} 
+                                        value={userDetails?.Referrallink || userDetails?.username || 'defaultValue'}
                                         
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -404,7 +404,7 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} controlId="validationCustom03">
                                       <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب"  value={userDetails?.Referral}  required />
+                                      <Form.Control type="text" placeholder="خلفية الحساب"  value={userDetails?.Referral}  required style={{border:'none'}} />
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>
@@ -413,7 +413,7 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} controlId="validationCustom03">
                                       <Form.Label>كم كسبت؟</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب" value={userDetails?.Referralamount} required />
+                                      <Form.Control type="text" placeholder="خلفية الحساب" value={userDetails?.Referralamount} required style={{border:'none'}} />
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>
