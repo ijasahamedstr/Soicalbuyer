@@ -19,6 +19,18 @@ const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [Phone, setPhone] = useState('');
+  const [Referrallink] = useState('https://usr.gg/register?ref=');
+  const [Referral] = useState('0');
+  const [Referralamount] = useState('$0');
+  const [supportcode] = useState('$0');
+  const [posts] = useState('0');
+  const [documentationstatus] = useState('غير موثق');
+  const [Accountlevel] = useState('1');
+  const [currentbalance] = useState('$0.00');
+  const [packagetype] = useState('مستخدم');
+  const [packageexpirationdate] = useState('لايوجد');
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,7 +62,18 @@ const RegisterForm = () => {
         displayName,
         username,
         email,
-        Phone
+        Phone,
+        Referrallink,
+        Referral,
+        Referralamount,
+        supportcode,
+        posts,
+        documentationstatus,
+        Accountlevel,
+        currentbalance,
+        packagetype,
+        packageexpirationdate
+
       });
       
       if (response.status === 200) {
@@ -66,6 +89,18 @@ const RegisterForm = () => {
         setUsername('');
         setEmail('');
         setPhone('');
+        Referrallink('https://usr.gg/register?ref=');
+        Referral('0');
+        Referralamount('$0');
+
+        supportcode('$0');
+        posts('0');
+        documentationstatus('غير موثق');
+        Accountlevel('1');
+        currentbalance('$0.00');
+        packagetype('مستخدم');
+        packageexpirationdate('لايوجد');
+
       } else {
         // Handle unexpected response status
         Swal.fire({

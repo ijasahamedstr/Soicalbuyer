@@ -5,9 +5,9 @@ import AccountRegister from "../models/AccountRegister.models.js";
 // All Acccount Create
 
 export const AccountCreate = async (req, res) => {
-    const { displayName, username, email, Phone } = req.body;
+    const { displayName, username, email, Phone ,Referrallink, Referral,  Referralamount, supportcode, posts, documentationstatus, Accountlevel, currentbalance, packagetype, packageexpirationdate } = req.body;
 
-    if (!displayName || !username || !email || !Phone) {
+    if (!displayName || !username || !email || !Phone || !Referrallink || !Referral || !Referralamount || !supportcode || !posts || !documentationstatus || !Accountlevel || !currentbalance || !packagetype || !packageexpirationdate) {
         res.status(400).json({ error: "Please Enter All Input Data" })
     }
 
@@ -18,7 +18,7 @@ export const AccountCreate = async (req, res) => {
             res.status(400).json({ error: "This User Allready exist in our db" })
         } else {
             const AccountCreate = new AccountRegister({
-                displayName, username, email, Phone
+                displayName, username, email, Phone,Referrallink,Referral,Referralamount,supportcode,posts,documentationstatus,Accountlevel,currentbalance,packagetype,packageexpirationdate
             });
 
 

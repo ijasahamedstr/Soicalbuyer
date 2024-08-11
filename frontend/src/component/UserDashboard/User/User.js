@@ -19,10 +19,12 @@ function User({ userdata }) {
     email: '',
     Phone: '',
     bio: '',
-    image: ''
+    imgpath: '',
+    bmgpath:''
   });
   const [validated, setValidated] = useState(false);
   const [updatedFile, setUpdatedFile] = useState(null);
+  const [updatedFile1, setUpdatedFile1] = useState(null);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -36,7 +38,7 @@ function User({ userdata }) {
 
     if (userdata) {
       fetchUserDetails();
-      const intervalId = setInterval(fetchUserDetails, 5000); // Fetch user details every 5 seconds
+      const intervalId = setInterval(fetchUserDetails, 50000); // Fetch user details every 5 seconds
       return () => clearInterval(intervalId); // Cleanup on unmount
     }
   }, [userdata]);
@@ -88,6 +90,8 @@ function User({ userdata }) {
     }
   };
 
+
+
   const updateUserData = async () => {
     if (!userdata) return;
 
@@ -95,6 +99,10 @@ function User({ userdata }) {
       const formData = new FormData();
       if (updatedFile) {
         formData.append('photo', updatedFile);
+      }
+
+      if (updatedFile1) {
+        formData.append('photo', updatedFile1);
       }
 
       const res = await axios.put(`http://localhost:8000/register/${userdata._id}`, formData, {
@@ -131,7 +139,7 @@ function User({ userdata }) {
             <div className="user-card">
               <div className='uper-container'>
                 <div className='image-card'>
-                  <img className="avatar" src={userDetails?.image ? userDetails?.image : "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
+                  <img className="avatar" src={userDetails?.imgpath ? userDetails?.imgpath : "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
                 </div>
               </div>
               <div className="user-info">
@@ -359,7 +367,8 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} md="12" controlId="validationCustom03">
                                       <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control type="file" placeholder="خلفية الحساب" required />
+                                      <Form.Control placeholder="خلفية الحساب" required  type="file"
+                                        onChange={(e) => setUpdatedFile1(e.target.files[0])} />
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>
@@ -386,7 +395,8 @@ function User({ userdata }) {
                                         type="text"
                                         placeholder="أدخل اسم المستخدم"
                                         className='sign__title'
-                                        value="https://usr.gg/register?ref=ijas704"
+                                        value={userDetails?.Referrallink} 
+                                        
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                     </Form.Group>
@@ -394,7 +404,7 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} controlId="validationCustom03">
                                       <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب" required />
+                                      <Form.Control type="text" placeholder="خلفية الحساب"  value={userDetails?.Referral}  required />
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>
@@ -403,7 +413,7 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} controlId="validationCustom03">
                                       <Form.Label>كم كسبت؟</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب" required />
+                                      <Form.Control type="text" placeholder="خلفية الحساب" value={userDetails?.Referralamount} required />
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>
@@ -422,14 +432,14 @@ function User({ userdata }) {
                                 <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>تفاصيل الحساب</h4>
                                 <Row>
                                   <ul className="knowledge__list">
-                                    <li>رمز الدعم الفني<span>i-106597</span></li>
-                                    <li>عدد بوستاتي<span>0</span></li>
-                                    <li>حالة التوثيق<span>غير موثق</span></li>
-                                    <li>مستوى الحساب<span>1</span></li>
-                                    <li>الرصيد الحالي<span>$0.00</span></li>
-                                    <li>نوع الباقة<span>مستخدم</span></li>
-                                    <li>تاريخ إنتهاء الباقة<span>لايوجد</span></li>
-                                    <li>تاريخ إنشاء الحساب<span>2024-06-02 23:27PM</span></li>
+                                    <li>رمز الدعم الفني<span>{userDetails.supportcode}</span></li>
+                                    <li>عدد بوستاتي<span>{userDetails.posts}</span></li>
+                                    <li>حالة التوثيق<span>{userDetails.documentationstatus}</span></li>
+                                    <li>مستوى الحساب<span>{userDetails.Accountlevel}</span></li>
+                                    <li>الرصيد الحالي<span>{userDetails.currentbalance}</span></li>
+                                    <li>نوع الباقة<span>{userDetails.packagetype}</span></li>
+                                    <li>تاريخ إنتهاء الباقة<span>{userDetails.packageexpirationdate}</span></li>
+                                    <li>تاريخ إنشاء الحساب<span>{userDetails.createdAt}</span></li>
                                   </ul>
                                 </Row>
                               </Card.Body>

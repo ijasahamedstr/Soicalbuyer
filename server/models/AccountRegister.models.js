@@ -29,7 +29,46 @@ const AccountRegisterSchema = new Schema({
     bio:{
         type:String,
     },
+    Referrallink:{
+        type:String,
+    },
+    Referral:{
+        type:String,
+    },
+    Referralamount:{
+        type:String,
+    },
+
+    
+    supportcode:{
+        type:String,
+    },
+    posts:{
+        type:String,
+    },
+    documentationstatus:{
+        type:String,
+    },
+    Accountlevel:{
+        type:String,
+    },
+    currentbalance:{
+        type:String,
+    },
+    packagetype:{
+        type:String,
+    },
+    packageexpirationdate:{
+        type:String,
+    },
+  
+
+
+
     imgpath: {
+        type: String,
+    },
+    bmgpath: {
         type: String,
     },
     date: {
