@@ -69,6 +69,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/uploads/AccountActive', express.static(path.join(__dirname, 'uploads/AccountActive')));
+app.use('/Accountimage', express.static(path.join(__dirname, 'Accountimage')));
 
 
 // Start the Express server

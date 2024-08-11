@@ -71,36 +71,6 @@ export const AccountSingleDetails = async (req, res) => {
 };
 
 
-
-
-
-
-// All Acccount Update
-
-export const AccountUpdate = async (req, res) => {
-
-    try {
-        const AccountUpdatelist =  await AccountRegister.findOneAndUpdate({_id: req.params.id},{
-            displayName: req.body.displayName,
-            username: req.body.username,
-            email: req.body.email,
-            Phone: req.body.Phone,
-            bio: req.body.bio
-        },
-        {
-            new:true,
-        }
-    );
-
-        res.status(200).json(AccountUpdatelist);
-
-    } catch (error) {
-        res.status(400).json({message:error.message});
-    }
-};
-
-
-
 // All Acccount Delete
 
 export const AccountDelete = async (req, res) => {
@@ -113,3 +83,57 @@ export const AccountDelete = async (req, res) => {
     res.status(500).json({message:error.message})
    }
 };
+
+
+// All Acccount Update
+
+export const AccountUpdate  = async (req, res) => {
+
+    const { id } = req.params;
+    const { displayName } = req.body;
+    const { username } = req.body;
+    const { email } = req.body;
+    const {  Phone } = req.body;
+    const {  bio } = req.body;
+    const { file } = req;
+
+    try {
+        // Find the user by ID
+        const user = await AccountRegister.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ status: 404, message: "User not found" });
+        }
+
+        // Update user details
+        if (displayName) {
+            user.displayName = displayName;
+        }
+        if (username) {
+            user.username = username;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (Phone) {
+            user.Phone = Phone;
+        }
+        if (bio) {
+            user.bio = bio;
+        }
+
+        // Update image if a new file is uploaded
+        if (file) {
+            user.imgpath = file.filename;
+        }
+
+        // Save the updated user data
+        const updatedUser = await user.save();
+
+        res.status(200).json({ status: 200, updatedUser });
+    } catch (error) {
+        res.status(401).json({ status: 401, error });
+    }
+};
+
+
