@@ -134,3 +134,25 @@
     line-height: 100%;
     margin-top: 8px;
 }
+
+
+.knowledge__list li {
+
+    font-family: "Changa", sans-serif;
+}
+
+h5, .h5 {
+    font-family: "Changa", sans-serif;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+    font-family: "Changa", sans-serif;
+}
+
+.form-label {
+    font-family: "Changa", sans-serif;
+}
+
+p, a, li, button, ul {
+    font-family: "Changa", sans-serif;
+}

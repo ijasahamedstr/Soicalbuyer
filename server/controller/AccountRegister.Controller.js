@@ -96,6 +96,7 @@ export const AccountUpdate  = async (req, res) => {
     const {  Phone } = req.body;
     const {  bio } = req.body;
     const { file } = req;
+    
 
     try {
         // Find the user by ID

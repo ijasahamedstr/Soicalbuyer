@@ -139,7 +139,7 @@ function User({ userdata }) {
             <div className="user-card">
               <div className='uper-container'>
                 <div className='image-card'>
-                  <img className="avatar" src={userDetails?.imgpath ? userDetails?.imgpath : "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
+                  <img className="avatar" src={userDetails.avatar || "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
                 </div>
               </div>
               <div className="user-info">
@@ -367,8 +367,9 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} md="12" controlId="validationCustom03">
                                       <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control placeholder="خلفية الحساب" required  type="file"
-                                        onChange={(e) => setUpdatedFile1(e.target.files[0])} />
+                                      <Form.Control placeholder="خلفية الحساب" required
+                                        type="file"
+                                        onChange={(e) => setUpdatedFile1(e.target.files[0])}/>
                                       <Form.Control.Feedback type="invalid">
                                         Please provide a valid city.
                                       </Form.Control.Feedback>

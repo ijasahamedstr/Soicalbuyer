@@ -38,8 +38,6 @@ const AccountRegisterSchema = new Schema({
     Referralamount:{
         type:String,
     },
-
-    
     supportcode:{
         type:String,
     },
