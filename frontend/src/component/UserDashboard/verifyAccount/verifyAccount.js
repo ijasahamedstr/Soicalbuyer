@@ -141,7 +141,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <div class="sign">
         <div class="sign__content">
         <Form className='sign__form' onSubmit={handleSubmit}>
-        <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px'}}>تفعيل الحساب بالهوية يمكنك من التالي</h3>
+        <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px',textAlign:'center'}}>تفعيل الحساب بالهوية يمكنك من التالي</h3>
         <div>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد السحب</p>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد التحويل الداخلي</p>

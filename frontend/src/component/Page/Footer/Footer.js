@@ -13,8 +13,8 @@ const Footer = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 col-lg-5 col-12 ft-6" style={{marginBottom:'30px'}}>
-                             <img  src={user.avatar} style={{width:'200px',fontSize:'15px'}} alt="User Avatar" />
-                            <p style={{fontFamily:'Noto Kufi Arabic',marginTop:'20px'}}>
+                             <img  src={user.avatar} style={{width:'200px',fontSize:'15px'}} alt="User Avatar" /><br/>
+                            <p style={{marginTop:'20px'}}>
                             منصة يوزر
                             هي أفضل منصة لبيع وشراء حسابات مواقع التواصل الأجتماعي بسهولة تامة وأمان عالي وهي تابعة لشركة تطبيق دُكان لتقنية المعلومات المسجلة في وزارة التجارة بالمملكة العربية السعودية</p>
                             {/* <div className="footer-icons">

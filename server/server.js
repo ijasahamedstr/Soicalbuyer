@@ -13,8 +13,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import logoutrouter from "./routes/Logout.route.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import Imagerouter from "./routes/image.route.js";
 import AccountActiverouter from "./routes/AccountActive.route.js";
+import userrouter from "./routes/userAuthRoutes.js";
 
 
 
@@ -57,8 +57,6 @@ app.use('/login',loginrouter);
 app.use('/validuser',validuserrouter);
 app.use('/logout',logoutrouter);
 
-// Image Upload 
-app.use('/imageupload',Imagerouter);
 
 // Account Active 
 app.use('/Accountactive',AccountActiverouter);
@@ -70,6 +68,16 @@ const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/uploads/AccountActive', express.static(path.join(__dirname, 'uploads/AccountActive')));
 app.use('/Accountimage', express.static(path.join(__dirname, 'Accountimage')));
+
+
+
+// multi image
+// get images
+app.use("/uploads",express.static("./useruploads"))
+
+// user routes
+app.use("/user/api",userrouter);
+
 
 
 // Start the Express server

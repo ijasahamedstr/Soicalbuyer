@@ -1,104 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';  // Import SweetAlert2
+import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import axios from "axios"
+import toast from "react-hot-toast"
+
 
 const Register = () => {
-  const [fname, setFName] = useState("");
-  const [lname, setLName] = useState("");
-  const [file, setFile] = useState("");
-  const history = useNavigate();
+  const [username, setUserName] = useState("");
+  const [files, setFiles] = useState([]);
 
-  // Handle changes for first name
-  const handleFNameChange = (e) => {
-    setFName(e.target.value);
-  };
+  const handleChange = (event) => {
+      setUserName(event.target.value)
+  }
 
-  // Handle changes for document type
-  const handleLNameChange = (e) => {
-    setLName(e.target.value);
-  };
+  const handeFilechange = (event) => {
+      let finalFiles = [];
 
-  // Handle file input change
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // Submit form data
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("photo", file);
-    formData.append("fname", fname);
-    formData.append("lname", lname);
-
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data"
+      for (let iteams of event.target.files) {
+          finalFiles.push(iteams)
       }
-    };
 
-    try {
-      const res = await axios.post("http://localhost:8000/imageupload", formData, config);
-      
-      if (res.data.status === 401 || !res.data) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Error occurred while uploading data!',
-        });
+      setFiles(finalFiles)
+  }
+
+  const handleSubmit = async (event) => {
+      event.preventDefault()
+
+      const config = {
+          headers: {
+              "Content-Type": "multipart/form-data"
+          }
+      }
+
+      const formdata = new FormData();
+      formdata.append("username", username);
+
+      for (let filesdata of files) {
+          formdata.append("userimg", filesdata)
+      }
+
+      const response = await axios.post("http://localhost:8000/user/api/register", formdata, config).then((res) => res).catch((error) => error);
+      console.log("response", response)
+
+      if (response.status === 200) {
+          setUserName("")
+          setFiles([]);
+          toast.success("image sucessfully uploaded")
       } else {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'User data uploaded successfully.',
-        });
-        history("/");
+          toast.error(response.response.data.error)
       }
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Error occurred while uploading data!',
-      });
-    }
-  };
-
+  }
   return (
-    <>
-      <div className="container mt-3">
-        <h1>Upload Your Img Here</h1>
+      <>
+          <Container style={{ marginTop: "10px" }}>
+              <h1 className='text-center'>Upload Multiple Image</h1>
+              <div className='d-flex flex-direct-column justify-content-center'>
+                  <Form className='w-50'>
+                      <Form.Group className="mb-3" >
+                          <Form.Label>User Name</Form.Label>
+                          <Form.Control type="text" value={username} onChange={handleChange} placeholder="username" />
+                      </Form.Group>
 
-        <Form className='mt-3' onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>UserName</Form.Label>
-            <Form.Control type="text" name='fname' value={fname} onChange={handleFNameChange} placeholder="" />
-          </Form.Group>
+                      <Form.Group className="mb-3" controlId="formBasicPassword">
+                          <Form.Label>Select Image</Form.Label>
+                          <Form.Control type="file" onChange={handeFilechange} multiple={true} />
+                      </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formGridAddress2">
-            <Form.Label>Document Type</Form.Label>
-            <Form.Select aria-label="Default select example" className='sign__input' value={lname} onChange={handleLNameChange}>
-              <option value="">Select document type</option>
-              <option value="passport">Passport</option>
-              <option value="id">ID Card</option>
-              <option value="driving_license">Driving License</option>
-            </Form.Select>
-          </Form.Group>
+                      <Button variant="primary" type="submit" onClick={handleSubmit}>
+                          Submit
+                      </Button>
+                  </Form>
+              </div>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Select Your Image</Form.Label>
-            <Form.Control type="file" onChange={handleFileChange} name='photo' placeholder="" />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </div>
-    </>
-  );
+              {/* images preview */}
+              {
+                  files.length > 0 && (
+                      <>
+                          <Container className='mt-2 d-flex justify-content-center'>
+                              {
+                                  files.map((element) => {
+                                      return (
+                                          <>
+                                              <Card style={{ width: '70px', height: "70px", marginLeft: "5px" }}>
+                                                  <Card.Img variant="top" src={URL.createObjectURL(element)} />
+                                              </Card>
+                                          </>
+                                      )
+                                  })
+                              }
+                          </Container>
+                      </>
+                  )
+              }
+          </Container>
+      </>
+  )
 };
 
 export default Register;
