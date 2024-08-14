@@ -15,6 +15,7 @@ function Points() {
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
 
+
   // Fetch user data from localStorage and set interval
   useEffect(() => {
     const fetchUserData = () => {

@@ -148,7 +148,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
         <Row>
           <Col>
             <div className="col d-flex align-items-center justify-content-center">
-              <div className="col-12 col-md-6 col-lg-9">
+              <div className="">
                 <h2 style={{ textAlign: 'center', fontFamily: 'Changa, sans-serif', marginTop: '1.5rem' }}>المحفظة</h2>
                 <div className="sign">
                   <div className="sign__content" style={{display:'grid'}}>
