@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import './Register.css';
 import 'react-phone-number-input/style.css'; // 
@@ -17,6 +17,11 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import es from 'react-phone-input-2/lang/es.json'
 
+const generateReferenceNumber = () => {
+  const randomNumber = Math.floor(Math.random() * 90000) + 10000; // Generates a random number between 10000 and 99999
+  return `REF${randomNumber}`;
+};
+
 const RegisterForm = () => {
   const [displayName, setdisplayName] = useState('');
   const [username, setUsername] = useState('');
@@ -25,16 +30,19 @@ const RegisterForm = () => {
   const [Referrallink] = useState('https://usr.gg/register?ref=');
   const [Referral] = useState('0');
   const [Referralamount] = useState('$0');
-  const [supportcode] = useState('$0');
+  const [supportcode, SetSupportcode] = useState('');
   const [posts] = useState('0');
   const [documentationstatus] = useState('Not verified');
   const [Accountlevel] = useState('1');
-  const [currentbalance] = useState('$100.00');
+  const [currentbalance] = useState('0');
   const [packagetype] = useState('مستخدم');
   const [packageexpirationdate] = useState('لايوجد');
   const [Accountstatus] = useState('Not verified');
 
-
+  useEffect(() => {
+    const newReferenceNumber = generateReferenceNumber();
+    SetSupportcode(newReferenceNumber);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

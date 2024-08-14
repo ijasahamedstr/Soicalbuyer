@@ -96,6 +96,7 @@ export const AccountUpdate  = async (req, res) => {
     const {  Phone } = req.body;
     const {  bio } = req.body;
     const { file } = req;
+    const { file1 } = req;
     
 
     try {
@@ -126,6 +127,10 @@ export const AccountUpdate  = async (req, res) => {
         // Update image if a new file is uploaded
         if (file) {
             user.imgpath = file.filename;
+        }
+
+        if (file1) {
+            user.bmgpath = file.filename;
         }
 
         // Save the updated user data

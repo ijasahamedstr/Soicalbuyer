@@ -72,6 +72,7 @@ function User({ userdata }) {
           title: 'Success!',
           text: 'Account updated successfully!'
         });
+  
         setUserDetails(response.data);
       } else {
         Swal.fire({
@@ -355,7 +356,6 @@ function User({ userdata }) {
                                     <Form.Group as={Col} md="12" controlId="validationCustom01">
                                       <Form.Label>افتار الحساب</Form.Label>
                                       <Form.Control
-                                        required
                                         placeholder="افتار الحساب"
                                         className='sign__title'
                                         type="file"
@@ -396,7 +396,7 @@ function User({ userdata }) {
                                         type="text"
                                         placeholder="أدخل اسم المستخدم"
                                         className='sign__title'
-                                        value={userDetails?.Referrallink || userDetails?.username}
+                                        value={userDetails?.Referrallink + userDetails?.username}
                                         
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
