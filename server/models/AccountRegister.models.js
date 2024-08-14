@@ -54,7 +54,7 @@ const AccountRegisterSchema = new Schema({
         type:String,
     },
     currentbalance:{
-        type:String,
+        type:Number,
     },
     packagetype:{
         type:String,

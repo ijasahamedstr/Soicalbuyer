@@ -31,6 +31,7 @@ export const transferPoints = async (req, res) => {
             recipient.currentbalance += numericPoints;
             await recipient.save();
         }
+console.log(numericPoints);
 
         // Deduct points from sender
         sender.currentbalance -= numericPoints;

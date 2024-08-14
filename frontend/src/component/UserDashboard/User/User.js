@@ -367,7 +367,7 @@ function User({ userdata }) {
                                   <Row>
                                     <Form.Group as={Col} md="12" controlId="validationCustom03">
                                       <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control placeholder="خلفية الحساب" required
+                                      <Form.Control placeholder="خلفية الحساب" 
                                         type="file"
                                         onChange={(e) => setUpdatedFile1(e.target.files[0])}/>
                                       <Form.Control.Feedback type="invalid">
