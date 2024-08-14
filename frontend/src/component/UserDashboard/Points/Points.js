@@ -95,7 +95,7 @@ function Points() {
     <Row>
       <Col>
         <div class="col d-flex align-items-center justify-content-center">
-        <div className="col-12 col-md-6 col-lg-9">
+        <div className="">
         <div class="col-12">
         <h1 class="page-404__title"  id="xLoader">🗃</h1>
         <h2 style={{textAlign:'center',marginTop:'1.5rem',fontSize:'25px'}}>الصندوق</h2>

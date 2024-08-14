@@ -20,7 +20,7 @@ function Chat() {
     <Row>
       <Col>
         <div class="col d-flex align-items-center justify-content-center">
-        <div className="col-12 col-md-6 col-lg-9">
+        <div className="">
         <div class="col-12">
         <div class="col-12">
         <div class="sign">

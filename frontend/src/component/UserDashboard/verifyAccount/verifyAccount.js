@@ -134,7 +134,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
     <Row>
       <Col>
         <div class="col d-flex align-items-center justify-content-center">
-        <div className="col-12 col-md-6 col-lg-9">
+        <div className="">
         <div class="col-12">
         <h2 style={{textAlign:'center',fontFamily:'Noto Kufi Arabic',marginTop:'1.5rem'}}>تفعيل الحساب</h2>
         <div class="col-12">
@@ -240,7 +240,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
     <Row>
       <Col>
         <div class="col d-flex align-items-center justify-content-center">
-        <div className="col-12 col-md-6 col-lg-9">
+        <div className="">
         <div class="col-12">
         <div class="col-12">
         <div class="sign">
