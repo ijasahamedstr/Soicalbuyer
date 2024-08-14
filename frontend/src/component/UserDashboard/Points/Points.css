@@ -5,7 +5,6 @@
     font-size: 100px;
     margin-bottom: 10px;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
     text-align: center;
 }
 
@@ -22,8 +21,6 @@
     border-radius: 16px;
     padding: 30px 20px;
     position: relative;
-    width: 100%;
-    max-width: 420px;
     border: 0px solid #222227;
     background: #F7F9F9;
 }
@@ -35,6 +32,7 @@
     width: 100%;
     height: auto;
     padding: 25px 0 0;
+    font-family: "Changa", sans-serif;
 }
 
 .sign__input {
@@ -47,7 +45,6 @@
     font-size: 16px;
     width: 100%;
     padding: 0 20px;
-    font-family: 'Noto Kufi Arabic';
 }
 
 .sign__textarea {
@@ -61,7 +58,6 @@
     width: 100%;
     padding: 15px 20px;
     resize: none;
-    font-family: 'Noto Kufi Arabic';
 }
 
 input, button, select, optgroup, textarea {
@@ -74,46 +70,6 @@ input, button, select, optgroup, textarea {
 p {
     margin-top: 0;
     margin-bottom: 1rem;
-    font-family: 'Noto Kufi Arabic';
-}
-
-
-@media screen and (max-width: 600px) {
-    .mb-3 {
-        width: 300px;
-    }
-
-  }
-
-@media (min-width: 576px) and (max-width: 767px) {
-    /* CSS styles for small tablets */
-    .mb-3 {
-        width: 300px;
-    }
-
- 
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-    /* CSS styles for medium tablets */
-    .mb-3 {
-        width: 300px;
-    }
-
- 
-}
-
-@media (min-width: 1024px) and (max-width: 1199px) {
-    /* CSS styles for large tablets */
-    .mb-3 {
-        width: 300px;
-    }
-
- 
-}
-
-@media (min-width: 1200px) {
-    /* CSS styles for extra-large tablets */
 }
 
 .page-404__title {
@@ -123,5 +79,4 @@ p {
     font-size: 100px;
     margin-bottom: 10px;
     font-weight: 500;
-    font-family: 'Inter', sans-serif;
 }

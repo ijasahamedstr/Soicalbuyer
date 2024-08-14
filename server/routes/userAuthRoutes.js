@@ -8,5 +8,6 @@ const userrouter = express.Router();
 // User routes
 userrouter.post('/register', userUpload.array('userimg'),ImageUpload);
 userrouter.get('/getUser', getUserdata);
+userrouter.post('/:id', userUpload.array('userimg'),ImageUpload);
 
 export default userrouter;

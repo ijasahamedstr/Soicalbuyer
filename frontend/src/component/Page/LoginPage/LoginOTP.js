@@ -36,7 +36,6 @@ const LoginOTP = ({setIsOTPLoggedIn,setOTPLoggedUserData}) => {
       
       if (response.status === 200) {
         localStorage.setItem("userdbtoken", response.data.userToken);
-        console.log("111111111111111111111111111111111111");
         console.log(response.data);
         
         localStorage.setItem("userDetails", JSON.stringify(response.data.preuser));

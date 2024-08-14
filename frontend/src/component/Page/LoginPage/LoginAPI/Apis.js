@@ -9,3 +9,7 @@ export const sentOtpFunction = async(data)=>{
 export const userVerify = async(data)=>{
     return await commonrequest("POST",`${BACKEND_URL}/login`,data)
 }
+
+export const Verify = async(data)=>{
+    return await commonrequest("POST",`${BACKEND_URL}/verify`,data)
+}

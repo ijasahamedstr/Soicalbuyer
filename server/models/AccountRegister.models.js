@@ -29,6 +29,9 @@ const AccountRegisterSchema = new Schema({
     bio:{
         type:String,
     },
+    Accountstatus:{
+        type:String,
+    },
     Referrallink:{
         type:String,
     },
@@ -59,14 +62,14 @@ const AccountRegisterSchema = new Schema({
     packageexpirationdate:{
         type:String,
     },
-  
-
-
 
     imgpath: {
         type: String,
     },
     bmgpath: {
+        type: String,
+    },
+    reason: {
         type: String,
     },
     date: {

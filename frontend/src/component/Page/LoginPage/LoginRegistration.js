@@ -108,7 +108,7 @@ const LoginRegisterForm = ({ isOTPLoggedIn, OTPLoggedUserData }) => {
                     className='changeaccount'
                     onClick={() => setChangeText(!changeText)}
                   >
-                    {changeText ? 'تسجيل الدخول عبر رقم الهاتف' : 'تسجيل الدخول عبر البريد'}
+                    {/* {changeText ? 'تسجيل الدخول عبر رقم الهاتف' : 'تسجيل الدخول عبر البريد'} */}
                   </label>
                 </div>
                 <button type="button" onClick={sendOtp} disabled={spinner}>

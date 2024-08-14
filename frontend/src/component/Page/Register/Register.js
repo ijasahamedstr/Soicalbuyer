@@ -13,6 +13,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import es from 'react-phone-input-2/lang/es.json'
 
 const RegisterForm = () => {
   const [displayName, setdisplayName] = useState('');
@@ -24,11 +27,12 @@ const RegisterForm = () => {
   const [Referralamount] = useState('$0');
   const [supportcode] = useState('$0');
   const [posts] = useState('0');
-  const [documentationstatus] = useState('غير موثق');
+  const [documentationstatus] = useState('Not verified');
   const [Accountlevel] = useState('1');
-  const [currentbalance] = useState('$0.00');
+  const [currentbalance] = useState('$100.00');
   const [packagetype] = useState('مستخدم');
   const [packageexpirationdate] = useState('لايوجد');
+  const [Accountstatus] = useState('Not verified');
 
 
 
@@ -72,7 +76,8 @@ const RegisterForm = () => {
         Accountlevel,
         currentbalance,
         packagetype,
-        packageexpirationdate
+        packageexpirationdate,
+        Accountstatus
 
       });
       
@@ -95,11 +100,12 @@ const RegisterForm = () => {
 
         supportcode('$0');
         posts('0');
-        documentationstatus('غير موثق');
+        documentationstatus('Not verified');
         Accountlevel('1');
         currentbalance('$0.00');
         packagetype('مستخدم');
         packageexpirationdate('لايوجد');
+        Accountstatus('Not verified');
 
       } else {
         // Handle unexpected response status
@@ -166,17 +172,42 @@ const RegisterForm = () => {
           </div>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phone">
-        <div className='input-box'>
-          <Form.Control
-            type="phone"
-            placeholder="رقم الهاتف"
-            name="phone"
-            value={Phone}
-            onChange={(e) => setPhone(e.target.value)}
-          /><MdOutlinePhoneIphone className='icon' />
-          </div>
-        </Form.Group>
+           <Form.Group className="mb-3" controlId="phone">
+                <div className="input-box">
+                  <PhoneInput
+                    country={'SA'}
+                    localization={es}
+                    value={Phone}
+                    onChange={setPhone}
+                    placeholder="رقم الهاتف"
+                    inputClass="form-control"
+                    containerClass="phone-input-container"
+                    dropdownClass="phone-input-dropdown"
+                    containerStyle={{
+                      height: '40px', // Height of the container
+                      width: '100%', // Full width
+                      position: 'relative',
+                    }}
+                    inputStyle={{
+                      height: '100%', // Matches the container height
+                      borderRadius: '0.25rem',
+                      border: '1px solid #ced4da',
+                      padding: '0.375rem 0.75rem',
+                      fontSize: '1rem',
+                      boxSizing: 'border-box',
+                      width: '100%', // Full width of container
+                    }}
+                    dropdownStyle={{
+                      borderRadius: '0 0 0.25rem 0.25rem',
+                      border: '1px solid #ced4da',
+                      boxShadow: '0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)',
+                      zIndex: 1000,
+                    }}
+                  />
+                  <MdOutlinePhoneIphone className="icon" />
+                </div>
+              </Form.Group>
+
         <button name='sign' type="submit">Register</button>
       </Form>
     </div>

@@ -32,6 +32,7 @@ import Error from "./component/UserDashboard/Error";
 import Dashboard from "./component/UserDashboard/Test";
 import Register from './component/UserDashboard/Register';
 import Update from './component/UserDashboard/Update';
+import PointTransfer from './component/check';
 
 function App() {
   const [userdata, setUserdata] = useState({});
@@ -85,6 +86,7 @@ function App() {
           <Route path="*" element={<Error />} />
           <Route path="/register" element={<Register/>} />
           <Route path="/Update" element={<Update/>} />
+          <Route path="/check" element={<PointTransfer/>} />
         </Routes>
       </Router>
       <Footer />

@@ -15,6 +15,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import AccountActiverouter from "./routes/AccountActive.route.js";
 import userrouter from "./routes/userAuthRoutes.js";
+import verifyrouter from "./routes/Accountverify.route.js";
+import pointrouter from "./routes/Point.Routes.js";
 
 
 
@@ -57,9 +59,15 @@ app.use('/login',loginrouter);
 app.use('/validuser',validuserrouter);
 app.use('/logout',logoutrouter);
 
+// User Account verify
+app.use('/verify',verifyrouter);
 
 // Account Active 
 app.use('/Accountactive',AccountActiverouter);
+
+
+// Account Point Transfer
+app.use('/point',pointrouter);
 
 
 // Get __dirname equivalent for ES modules

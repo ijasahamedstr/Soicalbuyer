@@ -349,7 +349,7 @@ function User({ userdata }) {
                           <Col md={6}>
                             <Card style={{ background: '#fff', padding: '0px' }}>
                               <Card.Body>
-                                <Form noValidate validated={validated} onSubmit={(e) => { e.preventDefault(); updateUserData(); }}>
+                                <Form onSubmit={(e) => { e.preventDefault(); updateUserData(); }}>
                                   <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>تغيير مظهر الحساب</h4>
                                   <Row>
                                     <Form.Group as={Col} md="12" controlId="validationCustom01">
@@ -396,7 +396,7 @@ function User({ userdata }) {
                                         type="text"
                                         placeholder="أدخل اسم المستخدم"
                                         className='sign__title'
-                                        value={userDetails?.Referrallink || userDetails?.username || 'defaultValue'}
+                                        value={userDetails?.Referrallink || userDetails?.username}
                                         
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
