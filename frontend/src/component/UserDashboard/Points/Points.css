@@ -23,6 +23,7 @@
     position: relative;
     border: 0px solid #222227;
     background: #F7F9F9;
+    width: 400px;
 }
 .sign__content {
     display: flex;
@@ -43,7 +44,7 @@
     position: relative;
     color: #17202A;
     font-size: 16px;
-    width: 100%;
+    width: 350px;
     padding: 0 20px;
 }
 

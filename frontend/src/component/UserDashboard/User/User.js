@@ -154,7 +154,7 @@ function User({ userdata }) {
                   <span>عدد المبيعات</span>
                 </div>
                 <div className="author__followers ">
-                  <p>{userDetails.currentbalance}</p>
+                  <p>${userDetails.currentbalance}</p>
                   <span>مجمل المبيعات</span>
                 </div>
               </div>
@@ -437,7 +437,7 @@ function User({ userdata }) {
                                     <li>عدد بوستاتي<span>{userDetails.posts}</span></li>
                                     <li>حالة التوثيق<span>{userDetails.documentationstatus}</span></li>
                                     <li>مستوى الحساب<span>{userDetails.Accountlevel}</span></li>
-                                    <li>الرصيد الحالي<span>{userDetails.currentbalance}</span></li>
+                                    <li>الرصيد الحالي<span>${userDetails.currentbalance}</span></li>
                                     <li>نوع الباقة<span>{userDetails.packagetype}</span></li>
                                     <li>تاريخ إنتهاء الباقة<span>{userDetails.packageexpirationdate}</span></li>
                                     <li>تاريخ إنشاء الحساب<span>{userDetails.createdAt}</span></li>
