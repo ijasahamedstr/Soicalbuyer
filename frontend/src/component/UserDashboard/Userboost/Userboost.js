@@ -80,7 +80,6 @@ const handleIncrease2 = () => {
 };
 
 
-
 // setup 04
 
 const [days3, setDays3] = useState(1); // Default to 1 day
