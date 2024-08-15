@@ -46,38 +46,22 @@ export const getUserdata = async (req, res) => {
 
 export const ImageUpdate = async (req, res) => {
 
-    const { id } = req.params;
-    const { username } = req.params;
-    const updateFields = req.body;
-    const files = req.files && req.files.length > 0 ? req.files : [];
+    const userId = req.params.id;
+    const { username } = req.body;
+    const files = req.files;
 
+    // Find the user
+    const user = users.find(u => u._id === userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-    try {
-        // Find the user by ID
-        const user = await userDB.findById(id);
+    // Update username
+    if (username) user.username = username;
 
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        // Update user details
-        if (username) {
-            user.username = username;
-        }
-
-        // Update image if a new file is uploaded
-       // Update fields
-       if (files.length > 0) {
-        const updatedUrls = files.map((file) => file.filename);
-        updateFields.userprofile = updatedUrls;
+    // Update profile images
+    if (files && files.length > 0) {
+        const newFiles = files.map(file => file.filename);
+        user.userprofile = [...user.userprofile, ...newFiles];
     }
 
-
-        // Save the updated user data
-        const updatedUser = await user.save();
-
-        res.status(200).json({ status: 200, updatedUser });
-    } catch (error) {
-        res.status(401).json({ status: 401, error });
-    }
+    res.json({ message: 'User updated successfully', user });
 };

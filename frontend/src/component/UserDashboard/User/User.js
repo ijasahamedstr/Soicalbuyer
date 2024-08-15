@@ -19,8 +19,7 @@ function User({ userdata }) {
     email: '',
     Phone: '',
     bio: '',
-    imgpath: '',
-    bmgpath:''
+    Referrallink: '',
   });
   const [validated, setValidated] = useState(false);
   const [updatedFile, setUpdatedFile] = useState(null);
@@ -38,7 +37,7 @@ function User({ userdata }) {
 
     if (userdata) {
       fetchUserDetails();
-      const intervalId = setInterval(fetchUserDetails, 50000); // Fetch user details every 5 seconds
+      const intervalId = setInterval(fetchUserDetails, 5000); // Fetch user details every 5 seconds
       return () => clearInterval(intervalId); // Cleanup on unmount
     }
   }, [userdata]);
@@ -61,9 +60,7 @@ function User({ userdata }) {
 
     try {
       const response = await axios.put(`http://localhost:8000/register/${userdata._id}`, userDetails, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (response.status === 200) {
@@ -72,7 +69,6 @@ function User({ userdata }) {
           title: 'Success!',
           text: 'Account updated successfully!'
         });
-  
         setUserDetails(response.data);
       } else {
         Swal.fire({
@@ -91,8 +87,6 @@ function User({ userdata }) {
     }
   };
 
-
-
   const updateUserData = async () => {
     if (!userdata) return;
 
@@ -101,9 +95,8 @@ function User({ userdata }) {
       if (updatedFile) {
         formData.append('photo', updatedFile);
       }
-
       if (updatedFile1) {
-        formData.append('photo', updatedFile1);
+        formData.append('photo1', updatedFile1); // Use different key if needed
       }
 
       const res = await axios.put(`http://localhost:8000/register/${userdata._id}`, formData, {
@@ -126,9 +119,15 @@ function User({ userdata }) {
       }
     } catch (error) {
       console.error('Error updating user data:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Failed to update user data. Please try again later.'
+      });
     }
   };
 
+  
   return (
     <>
       <div className="main__author">
@@ -140,7 +139,7 @@ function User({ userdata }) {
             <div className="user-card">
               <div className='uper-container'>
                 <div className='image-card'>
-                  <img className="avatar" src={userDetails.avatar || "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="User Avatar" />
+                  <img className="avatar"  src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}  alt="User Avatar" />
                 </div>
               </div>
               <div className="user-info">
@@ -385,7 +384,7 @@ function User({ userdata }) {
                           <Col md={6}>
                             <Card style={{ background: '#fff', padding: '0px' }}>
                               <Card.Body>
-                                <Form noValidate validated={validated} className='formuser'>
+                                <Form noValidate validated={validated} className='formuser' onSubmit={handleSubmit}>
                                   <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>رابط الإحاله</h4>
                                   <h5 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)', fontSize: '15px' }}>يمكنك كسب أموال من خلال هذا الرابط!</h5>
                                   <Row>
@@ -397,6 +396,8 @@ function User({ userdata }) {
                                         placeholder="أدخل اسم المستخدم"
                                         className='sign__title'
                                         value={userDetails?.Referrallink + userDetails?.username}
+                                        name="Referrallink"
+                                        onChange={handleChange}
                                         
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>

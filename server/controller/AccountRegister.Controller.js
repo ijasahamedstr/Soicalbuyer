@@ -95,6 +95,7 @@ export const AccountUpdate  = async (req, res) => {
     const { email } = req.body;
     const {  Phone } = req.body;
     const {  bio } = req.body;
+    const { Referrallink } = req.body;
     const { file } = req;
     const { file1 } = req;
     
@@ -122,6 +123,9 @@ export const AccountUpdate  = async (req, res) => {
         }
         if (bio) {
             user.bio = bio;
+        }
+        if (Referrallink) {
+            user.Referrallink = Referrallink;
         }
 
         // Update image if a new file is uploaded

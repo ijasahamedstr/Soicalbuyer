@@ -127,7 +127,6 @@
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    color: #EBF5FB;
     transition: transform 0.3s ease-in-out;
     position: relative;
   }
@@ -139,7 +138,7 @@
     inset: -0.2rem;
     z-index: -1;
     background: linear-gradient(var(--angle), 
-      #032146,  #C3F2FF, #b00);
+      #032146,  #C3F2FF, #f8f9f9);
     animation: rotate 10s linear infinite;
   }
 
@@ -175,7 +174,6 @@
   
   .user-info p {
     margin-bottom: 5px;
-    font-family: 'Noto Kufi Arabic';
     font-size: 14px;
   }
 
