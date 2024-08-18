@@ -17,6 +17,7 @@ import AccountActiverouter from "./routes/AccountActive.route.js";
 import userrouter from "./routes/userAuthRoutes.js";
 import verifyrouter from "./routes/Accountverify.route.js";
 import pointrouter from "./routes/Point.Routes.js";
+import Accountboostrouter from "./routes/Accountboost.route.js";
 
 
 
@@ -68,6 +69,10 @@ app.use('/Accountactive',AccountActiverouter);
 
 // Account Point Transfer
 app.use('/point',pointrouter);
+
+
+// User Account User boost
+app.use('/boost',Accountboostrouter);
 
 
 // Get __dirname equivalent for ES modules

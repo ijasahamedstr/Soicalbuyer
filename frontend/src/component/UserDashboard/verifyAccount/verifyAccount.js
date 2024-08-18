@@ -152,7 +152,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         </Form.Group>
         
         <Form.Group className="mb-3" controlId="formGridAddress2">
-        <Form.Label>الإسم الاول{userdata?.displayName}</Form.Label>
+        <Form.Label>الإسم الاول</Form.Label>
             <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname" value={fname} onChange={handleChange}  />
         </Form.Group>
 

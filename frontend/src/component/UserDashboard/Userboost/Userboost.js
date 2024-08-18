@@ -2,418 +2,446 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import './Userboost.css';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './Userboost.css';
 
+// Reusable DayCounter component
+const DayCounter = ({ days, totalPrice, onIncrease, onDecrease }) => (
+  <div className="p-4 pb-0">
+    <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
+      <Button
+        className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
+        type="button"
+        onClick={onDecrease}
+        disabled={days <= 1}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
+          <path d="M5 12h14"></path>
+        </svg>
+        <span className="sr-only">Decrease</span>
+      </Button>
+      <div className="flex-1 text-center">
+        <div className="text-7xl font-bold tracking-tighter">
+          {days} <span className="text-sm tracking-normal font-extrabold text-purple-300">/{totalPrice}$</span>
+        </div>
+        <div className="text-[0.70rem] uppercase text-muted-foreground">عدد الأيام</div>
+      </div>
+      <Button
+        className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
+        type="button"
+        onClick={onIncrease}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+        <span className="sr-only">Increase</span>
+      </Button>
+    </div>
+  </div>
+);
 
-function Userboost() {
-
-// setup 01
-
+const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
+  const [userdata, setUserdata] = useState(null);
+  const [selectedPromotion, setSelectedPromotion] = useState('');
   const [days, setDays] = useState(1);
-  const [selectedPromotion, setSelectedPromotion] = useState(''); // State for selected promotion type
+  const [days1, setDays1] = useState(1);
+  const [days2, setDays2] = useState(1);
+  const [days3, setDays3] = useState(1);
+  const [ setSelectedTab] = useState('تواصل');
+  const navigate = useNavigate();
 
-  const handleDecrease = () => {
-    if (days > 1) {
-      setDays(days - 1);
+  const [paccount, setPaccount] = useState('');
+
+  useEffect(() => {
+    if (isOTPLoggedIn) {
+      setUserdata(OTPLoggedUserData?.preuser || {});
     }
-  };
+  }, [isOTPLoggedIn, OTPLoggedUserData]);
 
-  const handleIncrease = () => {
-    setDays(days + 1);
-  };
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+      setUserdata(userDetails);
+    };
+
+    fetchUserData();
+    const intervalId = setInterval(fetchUserData, 300000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const handleDecrease = () => setDays(prevDays => Math.max(prevDays - 1, 1));
+  const handleIncrease = () => setDays(prevDays => prevDays + 1);
+
+  const handleDecrease1 = () => setDays1(prevDays => Math.max(prevDays - 1, 1));
+  const handleIncrease1 = () => setDays1(prevDays => prevDays + 1);
+
+  const handleDecrease2 = () => setDays2(prevDays => Math.max(prevDays - 1, 1));
+  const handleIncrease2 = () => setDays2(prevDays => prevDays + 1);
+
+  const handleDecrease3 = () => setDays3(prevDays => Math.max(prevDays - 1, 1));
+  const handleIncrease3 = () => setDays3(prevDays => prevDays + 1);
 
   const handleRadioChange = (event) => {
     setSelectedPromotion(event.target.value);
   };
 
-  // Define prices for each promotion type
   const promotionPrices = {
     'تميز+': 5,
     'تميز': 3,
     'عادي': 2,
   };
 
-  // Calculate total price based on selected promotion and number of days
   const totalPrice = selectedPromotion ? (promotionPrices[selectedPromotion] * days) : 0;
+  const totalPrice1 = days1;
+  const totalPrice2 = days2;
+  const totalPrice3 = days3;
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Calculate totalPrice based on selected promotion and days
+    const totalPrice = promotionPrices[selectedPromotion] * days;
+    
+    try {
+      // Make the POST request to the server
+      const response = await axios.post('http://localhost:8000/boost', {
+        userid: userdata?._id,
+        paccount,
+        pdays: days,
+        pselectedPromotion: selectedPromotion,
+        ptotalPrice: totalPrice
+      });
+  
+      // Handle the response
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Account boost created successfully.',
+        });
+        navigate('/');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.data.message || 'An error occurred.',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error',
+        text: 'An internal server error occurred.',
+      });
+    }
+  };
+  const handleSubmit1 = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/boost/game', {
+        userid: userdata._id,
+        gdays: days1,
+        gtotalPrice: totalPrice1
+      });
 
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Account boost created successfully.',
+        });
+        navigate('/');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.data.message || 'An error occurred.',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error',
+        text: 'An internal server error occurred.',
+      });
+    }
+  };
 
-// setup 02
+  const handleSubmit2 = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/boost/Users', {
+        userid: userdata._id,
+        udays: days2,
+        utotalPrice: totalPrice2
+      });
 
-const [days1, setDays1] = useState(1); // Default to 1 day
-const [totalPrice1, setTotalPrice1] = useState(0); // Default price for 1 day, update based on your pricing logic
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Account boost created successfully.',
+        });
+        navigate('/');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.data.message || 'An error occurred.',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error',
+        text: 'An internal server error occurred.',
+      });
+    }
+  };
 
-const handleDecrease1 = () => {
-  if (days1 > 1) {
-    setDays1(days1 - 1);
-    setTotalPrice1((days1 - 1) * 1); // Update the total price based on the number of days
-  }
-};
+  const handleSubmit3 = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/boost/Services', {
+        userid: userdata._id,
+        sdays: days3,
+        stotalPrice: totalPrice3
+      });
 
-const handleIncrease1 = () => {
-  setDays1(days1 + 1);
-  setTotalPrice1((days1 + 1) * 1); // Update the total price based on the number of days
-};
-
-
-
-// setup 03
-
-const [days2, setDays2] = useState(1); // Default to 1 day
-const [totalPrice2, setTotalPrice2] = useState(0); // Default price for 1 day, update based on your pricing logic
-
-const handleDecrease2 = () => {
-  if (days2 > 1) {
-    setDays2(days2 - 1);
-    setTotalPrice2((days2 - 1) * 1); // Update the total price based on the number of days
-  }
-};
-
-const handleIncrease2 = () => {
-  setDays2(days2 + 1);
-  setTotalPrice2((days2 + 1) * 1); // Update the total price based on the number of days
-};
-
-
-// setup 04
-
-const [days3, setDays3] = useState(1); // Default to 1 day
-const [totalPrice3, setTotalPrice3] = useState(0); // Default price for 1 day, update based on your pricing logic
-
-
-const handleDecrease3 = () => {
-  if (days3 > 1) {
-    setDays3(days3 - 1);
-    setTotalPrice3((days3 - 1) * 1); // Update the total price based on the number of days
-  }
-};
-const handleIncrease3 = () => {
-  setDays3(days3 + 1);
-  setTotalPrice3((days3 + 1) * 1); // Update the total price based on the number of days
-};
-
-
-
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Account boost created successfully.',
+        });
+        navigate('/');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.data.message || 'An error occurred.',
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Server Error',
+        text: 'An internal server error occurred.',
+      });
+    }
+  };
 
   return (
     <Container>
-    <Row>
-      <Col style={{ backgroundColor: '#FFFFFF' }}>
-      </Col>
-    </Row>
-    <Row>
-      <Col>
-        <div className="col d-flex align-items-center justify-content-center">
-          <div className="col-12 col-md-6 col-lg-9">
-            <h2 style={{ textAlign: 'center', fontFamily: 'Changa, sans-serif', marginTop: '1.5rem' }}>المحفظة</h2>
-            <div className="sign">
-              <div className="sign__content" style={{display:'grid'}}>
-              <Tabs
-                defaultActiveKey="تواصل"
-                transition={false}
-                id="fill-tab-example"
-                className="mb-3" style={{justifyContent:'center'}}
-              >
-                <Tab eventKey="تواصل" title="تواصل">
-                <div class="col d-flex align-items-center justify-content-center">
-                <div className="">
-                <div class="col-12">
-                <h2 style={{textAlign:'center',fontFamily:'Noto Kufi Arabic',marginTop:'1.5rem'}}>🚀يوزر بوست</h2>
-                <div class="col-12">
-                <div class="sign">
-                <div class="sign__content">
-                <Form className='sign__form'>
-                <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)'}}>التواصل الإجتماعي & الرئيسية</h3>
-                <p style={{textAlign:'center',fontSize:'14px'}}>يمكنك جعل حساب التواصل الإجتماعي الخاص بك يظهر في الصفحة الرئيسية وأيضاً في صفحة سوق التواصل الإجتماعي في البداية بمبلغ رمزي وبسيط ويساعدك على بيع الحساب بسرعة😍🥰</p>
-                
-                <Form.Group className="mb-3" controlId="formGridAddress2">
-                <Form.Label>الحساب</Form.Label>
-                <Form.Select aria-label="Default select example" className='sign__input'>
-                <option value="">الرجاء الأختيار</option>
-                </Form.Select>
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formGridPromotionType">
-                          <Form.Label>نوع الترويج</Form.Label>
-                          {['تميز+', 'تميز', 'عادي'].map((label, index) => (
-                            <Form.Check
-                              key={index}
-                              label={`${label} (${promotionPrices[label]}$)`}
-                              name="promotion"
-                              type="radio"
-                              id={`promotion-${index}`}
-                              value={label}
-                              checked={selectedPromotion === label}
-                              onChange={handleRadioChange}
-                            />
-                          ))}
-                        </Form.Group>
-
-                        <div className="p-4 pb-0">
-                          <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
-                            <Button
-                              className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                              type="button"
-                              onClick={handleDecrease}
-                              disabled={days <= 1}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
-                                <path d="M5 12h14"></path>
-                              </svg>
-                              <span className="sr-only">Decrease</span>
-                            </Button>
-
-                            <div className="flex-1 text-center">
-                              <div className="text-7xl font-bold tracking-tighter">
-                                {days} <span className="text-sm tracking-normal font-extrabold text-purple-300">/{totalPrice}$</span>
-                              </div>
-                              <div className="text-[0.70rem] uppercase text-muted-foreground">عدد الأيام</div>
-                            </div>
-
-                            <Button
-                              className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                              type="button"
-                              onClick={handleIncrease}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
-                                <path d="M5 12h14"></path>
-                                <path d="M12 5v14"></path>
-                              </svg>
-                              <span className="sr-only">Increase</span>
-                            </Button>
-                          </div>
-                        </div>
-                      <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
-
-                      <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>
-                      😎تنفيذ البوست  
-                      </Button>
-                      <p style={{marginTop:'15px',textAlign:'center',fontSize:'14px'}}>يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي</p>
-                        {/* Display selected value */}
-                        <p className="text-center mt-3">
+      <Row>
+        <Col style={{ backgroundColor: '#FFFFFF' }}></Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className="col d-flex align-items-center justify-content-center">
+            <div className="col-12 col-md-6 col-lg-9">
+              <h2 style={{ textAlign: 'center', fontFamily: 'Changa, sans-serif', marginTop: '1.5rem' }}>المحفظة</h2>
+              <div className="sign">
+                <div className="sign__content" style={{ display: 'grid' }}>
+                  <Tabs
+                    defaultActiveKey="تواصل"
+                    transition={false}
+                    id="fill-tab-example"
+                    className="mb-3"
+                    onSelect={(key) => setSelectedTab(key)}
+                  >
+                    <Tab eventKey="تواصل" title="تواصل">
+                      <div className="col d-flex align-items-center justify-content-center">
+                        <div className="">
+                          <div className="col-12">
+                            <h2 style={{ textAlign: 'center', fontFamily: 'Noto Kufi Arabic', marginTop: '1.5rem' }}>🚀يوزر بوست</h2>
+                            <Form className='sign__form' onSubmit={handleSubmit}>
+                              <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)' }}>التواصل الإجتماعي & الرئيسية</h3>
+                              <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                                يمكنك جعل حساب التواصل الإجتماعي الخاص بك يظهر في الصفحة الرئيسية وأيضاً في صفحة سوق التواصل الإجتماعي في البداية بمبلغ رمزي وبسيط ويساعدك على بيع الحساب بسرعة😍🥰
+                              </p>
+                              <Form.Group className="mb-3" controlId="formGridAddress2">
+                                <Form.Control
+                                  placeholder="الإسم الاول"
+                                  className="hidden"
+                                  type="text"
+                                  name="userid"
+                                  value={userdata?.userid}
+                                  readOnly
+                                />
+                              </Form.Group>
+                              <Form.Label>الحساب</Form.Label>
+                                <Form.Select aria-label="Default select example" className='sign__input'  value={paccount}
+                                onChange={(e) => setPaccount(e.target.value)}>
+                                  <option value="ijas">الرجاء الأختيار</option>
+                                      {/* Add options here */}
+                              </Form.Select><br/>
+                              <Form.Group className="mb-3" controlId="formGridPromotionType">
+                                <Form.Label>نوع الترويج</Form.Label>
+                                {['تميز+', 'تميز', 'عادي'].map((label, index) => (
+                                  <Form.Check
+                                    key={index}
+                                    label={`${label} (${promotionPrices[label]}$)`}
+                                    name="promotion"
+                                    type="radio"
+                                    id={`promotion-${index}`}
+                                    value={label}
+                                    checked={selectedPromotion === label}
+                                    onChange={handleRadioChange}
+                                  />
+                                ))}
+                              </Form.Group>
+                              <DayCounter
+                                days={days}
+                                totalPrice={totalPrice}
+                                onIncrease={handleIncrease}
+                                onDecrease={handleDecrease}
+                              />
+                              <p style={{ color: 'red', fontSize: '13px' }}>السعر شامل ضريبة القيمة المضافة*</p>
+                              <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic' }}>
+                                😎تنفيذ البوست  
+                              </Button>
+                              <p style={{ marginTop: '15px', textAlign: 'center', fontSize: '14px' }}>
+                                يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي
+                              </p>
+                              <p className="text-center mt-3">
                                 تم اختيار: <strong>{selectedPromotion || 'لم يتم اختيار أي نوع'}</strong>
-                          </p>
-                      </Form>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </Tab>
-                      <Tab eventKey="العاب" title="العاب">
-                      <div class="col d-flex align-items-center justify-content-center">
-                      <div className="">
-                      <div class="col-12">
-                      <div class="col-12">
-                      <div class="sign">
-                      <div class="sign__content">
-                      <Form className='sign__form'>
-                      <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)'}}><span className='spanclass'>جديد</span>حسابات الألعاب</h3>
-                      <p style={{textAlign:'center',fontSize:'14px'}}>يمكنك جعل حسابك يظهر في بداية صفحة سوق الألعاب وأيضاً إظهار شعار 🚀 أسفل الحساب🥰</p>
-                      
-                      <Form.Group className="mb-3" controlId="formGridAddress2">
-                      <Form.Label>الحساب</Form.Label>
-                      <Form.Select aria-label="Default select example" className='sign__input'>
-                      <option value="">الرجاء الأختيار</option>
-                      </Form.Select>
-                      </Form.Group>
-                    <div className="p-4 pb-0">
-                      <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleDecrease1}
-                          disabled={days1 <= 1}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                          </svg>
-                          <span className="sr-only">Decrease</span>
-                        </Button>
-                        
-                        <div className="flex-1 text-center">
-                          <div className="text-7xl font-bold tracking-tighter">
-                            {days1} <span className="text-sm tracking-normal font-extrabold text-purple-300">/{totalPrice1}$</span>
+                              </p>
+                            </Form>
                           </div>
-                          <div className="text-[0.70rem] uppercase text-muted-foreground">عدد الأيام</div>
                         </div>
-                        
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleIncrease1}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                            <path d="M12 5v14"></path>
-                          </svg>
-                          <span className="sr-only">Increase</span>
-                        </Button>
                       </div>
-                    </div>
-                    <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
-
-                <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>
-                😎تنفيذ البوست  
-                </Button>
-                <p style={{marginTop:'15px',textAlign:'center',fontSize:'14px'}}>يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي</p>
-                
-                </Form>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </Tab>
-                <Tab eventKey="خدمة" title="خدمة" >
-                <div class="col d-flex align-items-center justify-content-center">
-                <div className="">
-                <div class="col-12">
-                <div class="col-12">
-                <div class="sign">
-                <div class="sign__content">
-                <Form className='sign__form'>
-                <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)'}}> المستخدمين</h3>
-                <p style={{textAlign:'center',fontSize:'14px'}}>جعل ملفك الشخصي يظهر في قائمة المستخدمين في البداية🔥🔥</p>
-                
-                <Form.Group className="mb-3" controlId="formGridAddress2">
-                <Form.Label>الحساب</Form.Label>
-                <Form.Select aria-label="Default select example" className='sign__input'>
-                <option value="">الرجاء الأختيار</option>
-                </Form.Select>
-                </Form.Group>
-
-                <div className="p-4 pb-0">
-                      <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleDecrease2}
-                          disabled={days2 <= 1}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                          </svg>
-                          <span className="sr-only">Decrease</span>
-                        </Button>
-                        
-                        <div className="flex-1 text-center">
-                          <div className="text-7xl font-bold tracking-tighter">
-                            {days2} <span className="text-sm tracking-normal font-extrabold text-purple-300">/{totalPrice2}$</span>
+                    </Tab>
+                    <Tab eventKey="العاب" title="العاب">
+                      <div className="col d-flex align-items-center justify-content-center">
+                        <div className="">
+                          <div className="col-12">
+                            <div className="sign">
+                              <div className="sign__content">
+                                <Form className='sign__form' onSubmit={handleSubmit1}>
+                                  <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)' }}>
+                                    <span className='spanclass'>جديد</span> حسابات الألعاب
+                                  </h3>
+                                  <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                                    يمكنك جعل حسابك يظهر في بداية صفحة سوق الألعاب وأيضاً إظهار شعار 🚀 أسفل الحساب🥰
+                                  </p>
+                                  <Form.Group className="mb-3" controlId="formGridAddress2">
+                                    <Form.Control
+                                      placeholder="الإسم الاول"
+                                      className="hidden"
+                                      type="text"
+                                      name="userid"
+                                      value={userdata?.userid}
+                                      readOnly
+                                    />
+                                  </Form.Group>
+                                  <Form.Group className="mb-3" controlId="formGridPromotionType">
+                                    <Form.Label>الحساب</Form.Label>
+                                    <Form.Select aria-label="Default select example" className='sign__input' onChange={(e) => setSelectedPromotion(e.target.value)}>
+                                      <option value="">الرجاء الأختيار</option>
+                                      {/* Add options here */}
+                                    </Form.Select>
+                                  </Form.Group>
+                                  <DayCounter
+                                    days={days1}
+                                    totalPrice={totalPrice1}
+                                    onIncrease={handleIncrease1}
+                                    onDecrease={handleDecrease1}
+                                  />
+                                  <p style={{ color: 'red', fontSize: '13px' }}>السعر شامل ضريبة القيمة المضافة*</p>
+                                  <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic' }}>
+                                    😎تنفيذ البوست
+                                  </Button>
+                                  <p style={{ marginTop: '15px', textAlign: 'center', fontSize: '14px' }}>
+                                    يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي
+                                  </p>
+                                </Form>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-[0.70rem] uppercase text-muted-foreground">عدد الأيام</div>
                         </div>
-                        
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleIncrease2}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                            <path d="M12 5v14"></path>
-                          </svg>
-                          <span className="sr-only">Increase</span>
-                        </Button>
                       </div>
-                    </div>
-                <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
+                    </Tab>
+                    <Tab eventKey="خدمة" title="خدمة">
+                      <div className="col d-flex align-items-center justify-content-center">
+                        <div className="">
+                          <div className="col-12">
+                            <h2 className="text-center my-3">🚀 مستخدمين</h2>
+                            <Form className='sign__form' onSubmit={handleSubmit2}>
+                              <h3 className="mb-3 text-primary">المستخدمين</h3>
+                              <p style={{textAlign:'center',fontSize:'14px'}}>جعل ملفك الشخصي يظهر في قائمة المستخدمين في البداية🔥🔥</p>
 
-                <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>
-                😎تنفيذ البوست  
-                </Button>
-                <p style={{marginTop:'15px',textAlign:'center',fontSize:'14px'}}>يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي</p>
-                
-                </Form>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </Tab>
-                <Tab eventKey="حسابي" title="حسابي" >
-                <div class="col d-flex align-items-center justify-content-center">
-                <div className="">
-                <div class="col-12">
-                <div class="col-12">
-                <div class="sign">
-                <div class="sign__content">
-                <Form className='sign__form'>
-                <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)'}}> الخدمات</h3>
-                <p style={{textAlign:'center',fontSize:'14px'}}>يمكنك جعل خدمتك تظهر في بداية الخدمات وأيضاً إظهار كلمة (خدمة مميزة) أسفل الخدمة🥰</p>
-                
-                <Form.Group className="mb-3" controlId="formGridAddress2">
-                <Form.Label>الحساب</Form.Label>
-                <Form.Select aria-label="Default select example" className='sign__input'>
-                <option value="">الرجاء الأختيار</option>
-                </Form.Select>
-                </Form.Group>
-
-                <div className="p-4 pb-0">
-                      <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleDecrease3}
-                          disabled={days3 <= 1}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                          </svg>
-                          <span className="sr-only">Decrease</span>
-                        </Button>
-                        
-                        <div className="flex-1 text-center">
-                          <div className="text-7xl font-bold tracking-tighter">
-                            {days3} <span className="text-sm tracking-normal font-extrabold text-purple-300">/{totalPrice3}$</span>
+                              <Form.Group className="mb-3" controlId="formGridAddress2">
+                              <Form.Label>الحساب</Form.Label>
+                              <Form.Select aria-label="Default select example" className='sign__input'>
+                              <option value="">الرجاء الأختيار</option>
+                              </Form.Select>
+                              </Form.Group>
+                              <DayCounter
+                                days={days2}
+                                totalPrice={totalPrice2}
+                                onDecrease={handleDecrease2}
+                                onIncrease={handleIncrease2}
+                              />
+                                <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
+                              <Button variant="primary" type="submit" className="w-100">
+                                قم بتفعيل الباقة الآن
+                              </Button>
+                            </Form>
                           </div>
-                          <div className="text-[0.70rem] uppercase text-muted-foreground">عدد الأيام</div>
                         </div>
-                        
-                        <Button
-                          className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
-                          type="button"
-                          onClick={handleIncrease3}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
-                            <path d="M5 12h14"></path>
-                            <path d="M12 5v14"></path>
-                          </svg>
-                          <span className="sr-only">Increase</span>
-                        </Button>
                       </div>
-                    </div>
-                <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
-
-                <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>
-                😎تنفيذ البوست  
-                </Button>
-                <p style={{marginTop:'15px',textAlign:'center',fontSize:'14px'}}>يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي</p>
-                
-                </Form>
+                    </Tab>
+                    <Tab eventKey="حسابي" title="حسابي">
+                      <div className="col d-flex align-items-center justify-content-center">
+                        <div className="">
+                          <div className="col-12">
+                            <Form className='sign__form' onSubmit={handleSubmit3}>
+                              <h3 className="mb-3 text-primary">المستخدمين</h3>
+                              <p style={{textAlign:'center',fontSize:'14px'}}>يمكنك جعل خدمتك تظهر في بداية الخدمات وأيضاً إظهار كلمة (خدمة مميزة) أسفل الخدمة🥰</p>
+                              <Form.Group className="mb-3" controlId="formGridAddress2">
+                                <Form.Label>الحساب</Form.Label>
+                                <Form.Select aria-label="Default select example" className='sign__input'>
+                                <option value="">الرجاء الأختيار</option>
+                                </Form.Select>
+                                </Form.Group>
+                              <DayCounter
+                                days={days3}
+                                totalPrice={totalPrice3}
+                                onDecrease={handleDecrease3}
+                                onIncrease={handleIncrease3}
+                              />
+                              <p style={{color:'red',fontSize:'13px'}}>السعر شامل ضريبة القيمة المضافة*</p>
+                              <Button variant="primary" type="submit" className="w-100">
+                                قم بتفعيل الباقة الآن
+                              </Button>
+                              <p style={{marginTop:'15px',textAlign:'center',fontSize:'14px'}}>يمكنك عمل بوست برصيد حسابك في المنصة فقط إذا كنت تود تعبئة الرصيد إضغط علي</p>
+                            </Form>
+                          </div>
+                        </div>
+                      </div>
+                    </Tab>
+                  </Tabs>
                 </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </Tab>
-              </Tabs>
               </div>
             </div>
           </div>
-        </div>
-      </Col>
-    </Row>
-  </Container>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
