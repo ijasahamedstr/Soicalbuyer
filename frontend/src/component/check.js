@@ -1,63 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+
 function PointTransfer() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [username, setUsername] = useState('');
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Replace with your API endpoint
-    fetch('http://localhost:8000/register/')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
+  const checkAccount = async () => {
+    setLoading(true);
+    setError('');
+    setResult('');
+
+    try {
+      // Replace with your backend API endpoint
+      const response = await axios.get('http://localhost:8000/check-account', {
+        params: { username }
       });
-  }, []);
 
-  if (loading) return (
-    <Container className="text-center">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-      <p>Loading data...</p>
-    </Container>
-  );
-
-  if (error) return (
-    <Container className="text-center">
-      <Alert variant="danger">
-        Error: {error.message}
-      </Alert>
-    </Container>
-  );
+      setResult(response.data.result);
+    } catch (err) {
+      setError('An error occurred while checking the account.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Container>
-    <Row>
-      {data && data.map(data => (
-        <Col  key={data._id}>
-          <Card>
-            <Card.Body>
-              <Card.Title>{data.displayName}</Card.Title>
-              <Card.Text>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  </Container>
+    <div>
+      <h1>Instagram Account Checker</h1>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter Instagram username"
+      />
+      <button onClick={checkAccount} disabled={loading}>
+        {loading ? 'Checking...' : 'Check Account'}
+      </button>
+      {result && <p>{result}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
   );
 }
 

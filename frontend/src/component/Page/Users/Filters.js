@@ -6,8 +6,8 @@ const Filters = ({ filters, onFilterChange }) => {
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     onFilterChange(name, value);
-    
   };
+  
   const marginTopValue = '10px',marginBottomValue = '20px';
   return (
     <>
@@ -17,7 +17,6 @@ const Filters = ({ filters, onFilterChange }) => {
         <div class="main__filter" style={{justifyContent:'center'}}>
         <form method="get" class="main__filter-search">
         <input type="text" placeholder="Keyword"  name="location" value={filters.location} onChange={handleFilterChange}/>
-
         </form>
         </div>
         </div>

@@ -48,33 +48,24 @@ const DayCounter = ({ days, totalPrice, onIncrease, onDecrease }) => (
   </div>
 );
 
-const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
+const Userboost = () => {
   const [userdata, setUserdata] = useState(null);
   const [selectedPromotion, setSelectedPromotion] = useState('');
   const [days, setDays] = useState(1);
   const [days1, setDays1] = useState(1);
   const [days2, setDays2] = useState(1);
   const [days3, setDays3] = useState(1);
-  const [ setSelectedTab] = useState('تواصل');
+  const [selectedTab, setSelectedTab] = useState('تواصل');
   const navigate = useNavigate();
-
-  const [paccount, setPaccount] = useState('');
-
-  useEffect(() => {
-    if (isOTPLoggedIn) {
-      setUserdata(OTPLoggedUserData?.preuser || {});
-    }
-  }, [isOTPLoggedIn, OTPLoggedUserData]);
 
   useEffect(() => {
     const fetchUserData = () => {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      setUserdata(userDetails);
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+      setUserdata(userDetails || {});
     };
 
     fetchUserData();
-    const intervalId = setInterval(fetchUserData, 300000);
-
+    const intervalId = setInterval(fetchUserData, 300000); // Refresh user data every 5 minutes
     return () => clearInterval(intervalId);
   }, []);
 
@@ -107,21 +98,14 @@ const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Calculate totalPrice based on selected promotion and days
-    const totalPrice = promotionPrices[selectedPromotion] * days;
-    
     try {
-      // Make the POST request to the server
       const response = await axios.post('http://localhost:8000/boost', {
         userid: userdata?._id,
-        paccount,
         pdays: days,
         pselectedPromotion: selectedPromotion,
         ptotalPrice: totalPrice
       });
-  
-      // Handle the response
+
       if (response.status === 201) {
         Swal.fire({
           icon: 'success',
@@ -145,6 +129,7 @@ const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
       });
     }
   };
+
   const handleSubmit1 = async (e) => {
     e.preventDefault();
     try {
@@ -273,20 +258,9 @@ const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
                               <p style={{ textAlign: 'center', fontSize: '14px' }}>
                                 يمكنك جعل حساب التواصل الإجتماعي الخاص بك يظهر في الصفحة الرئيسية وأيضاً في صفحة سوق التواصل الإجتماعي في البداية بمبلغ رمزي وبسيط ويساعدك على بيع الحساب بسرعة😍🥰
                               </p>
-                              <Form.Group className="mb-3" controlId="formGridAddress2">
-                                <Form.Control
-                                  placeholder="الإسم الاول"
-                                  className="hidden"
-                                  type="text"
-                                  name="userid"
-                                  value={userdata?.userid}
-                                  readOnly
-                                />
-                              </Form.Group>
                               <Form.Label>الحساب</Form.Label>
-                                <Form.Select aria-label="Default select example" className='sign__input'  value={paccount}
-                                onChange={(e) => setPaccount(e.target.value)}>
-                                  <option value="ijas">الرجاء الأختيار</option>
+                                <Form.Select aria-label="Default select example" className='sign__input' onChange={(e) => setSelectedPromotion(e.target.value)}>
+                                  <option value="">الرجاء الأختيار</option>
                                       {/* Add options here */}
                               </Form.Select><br/>
                               <Form.Group className="mb-3" controlId="formGridPromotionType">
@@ -338,16 +312,6 @@ const Userboost = ({isOTPLoggedIn, OTPLoggedUserData}) => {
                                   <p style={{ textAlign: 'center', fontSize: '14px' }}>
                                     يمكنك جعل حسابك يظهر في بداية صفحة سوق الألعاب وأيضاً إظهار شعار 🚀 أسفل الحساب🥰
                                   </p>
-                                  <Form.Group className="mb-3" controlId="formGridAddress2">
-                                    <Form.Control
-                                      placeholder="الإسم الاول"
-                                      className="hidden"
-                                      type="text"
-                                      name="userid"
-                                      value={userdata?.userid}
-                                      readOnly
-                                    />
-                                  </Form.Group>
                                   <Form.Group className="mb-3" controlId="formGridPromotionType">
                                     <Form.Label>الحساب</Form.Label>
                                     <Form.Select aria-label="Default select example" className='sign__input' onChange={(e) => setSelectedPromotion(e.target.value)}>

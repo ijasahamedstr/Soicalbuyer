@@ -12,6 +12,45 @@ import Card from 'react-bootstrap/Card';
 import { MdOutlineAccessTime } from "react-icons/md";
 import { PiWarningCircle } from "react-icons/pi";
 import { IoIosRocket } from "react-icons/io";
+import { IoCardOutline } from "react-icons/io5";
+import { FaBitcoin } from "react-icons/fa";
+import { BsBank } from "react-icons/bs";
+
+// Reusable DayCounter component
+const DayCounter = ({ totalPrice, onIncrease, onDecrease }) => (
+  <div className="p-4 pb-0">
+    <div className="d-flex align-items-center justify-content-center" style={{ width: '300px' }}>
+      <Button
+        className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
+        type="button"
+        onClick={onDecrease}
+        disabled={totalPrice <= 0}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-minus h-4 w-4">
+          <path d="M5 12h14"></path>
+        </svg>
+        <span className="sr-only">Decrease</span>
+      </Button>
+      <div className="flex-1 text-center">
+        <div className="text-7xl font-bold tracking-tighter">
+          ${totalPrice} 
+        </div>
+        <div className="text-[0.70rem] uppercase text-muted-foreground">المبلغ</div>
+      </div>
+      <Button
+        className="d-flex align-items-center justify-content-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0 rounded-full"
+        type="button"
+        onClick={onIncrease}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus h-4 w-4">
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+        <span className="sr-only">Increase</span>
+      </Button>
+    </div>
+  </div>
+);
 
 function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
   const [userdata, setUserdata] = useState(null);
@@ -79,6 +118,26 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
       }
     }
   };
+
+// Initialize states
+const [totalPrice3, setTotalPrice3] = useState(10); // Initial total price
+
+// Price increment per click
+const priceIncrement = 5; // Fixed increment amount
+
+// Handler to decrease total price
+const handleDecrease3 = () => {
+  if (totalPrice3 > 0) {
+    const newPrice = totalPrice3 - priceIncrement;
+    setTotalPrice3(newPrice >= 0 ? newPrice : 0); // Ensure price doesn't go below 0
+  }
+};
+
+// Handler to increase total price
+const handleIncrease3 = () => {
+  setTotalPrice3(totalPrice3 + priceIncrement);
+};
+
 
   return (
     <>
@@ -159,7 +218,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                     className="mb-3"
                   >
                     <Tab eventKey="سحب" title="سحب">
-                    <Card style={{ width: '32rem',background:'#ffff'}}>
+                    <Card style={{ width: '32rem',background:'#F7F9F9'}}>
                       <Card.Body>
                       <Row>
                         <Col><Card.Subtitle className="mb-2 text-muted">سحب رصيد</Card.Subtitle></Col>
@@ -170,7 +229,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                         </Card.Text>
                         <Row>
                         <Col>
-                        <Card className="text-center" style={{ width: '12rem', background:'#ffff'}}>
+                        <Card className="text-center" style={{background:'#F7F9F9'}}>
                         <Card.Body>
                           <Card.Title><MdOutlineAccessTime /></Card.Title>
                           <Card.Text style={{fontSize:'13px'}}>
@@ -183,7 +242,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                       </Card>
                         </Col>
                         <Col>
-                        <Card className="text-center" style={{ width: '12rem', background:'#ffff'}}>
+                        <Card className="text-center" style={{background:'#F7F9F9'}}>
                         <Card.Body>
                           <Card.Title><IoIosRocket /></Card.Title>
                           <Card.Text style={{fontSize:'13px'}}>
@@ -201,13 +260,89 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                     </Card>
                     </Tab>
                     <Tab eventKey="تحويل" title="تحويل">
-                      Tab content for Profile
+                    <Card style={{background:'#F7F9F9'}}>
+                    <Card.Body>
+                    <Row>
+                        <Col><Card.Subtitle className="mb-2 text-muted">تحويل رصيد</Card.Subtitle></Col>
+                        <Col><Card.Subtitle className="mb-2 text-muted" style={{textAlign:'right'}}>$0.00</Card.Subtitle></Col>
+                      </Row>
+                      <Card.Subtitle className="mb-2 text-muted">قم بتحويل رصيد إلى مستخدم أخر</Card.Subtitle><br/>
+                      <Form style={{textAlign:'center'}}>
+                      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>إسم مستخدم المستفيد</Form.Label>
+                        <Form.Control type="text" className='username' />
+                      </Form.Group>
+
+                      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>المبلغ</Form.Label>
+                        <Form.Control type="number" className='Amount' />
+                      </Form.Group>
+
+                      <Form.Group className="mb-3">
+                      <Form.Label>سبب التحويل</Form.Label>
+                      <Form.Select >
+                        <option>سبب التحويل</option>
+                        <option>سبب التحويل </option>
+                      </Form.Select>
+                    </Form.Group>
+                     <p>المبلغ المتوقع إستلامه: $0</p>
+                     <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic' }}>
+                        😎تنفيذ البوست
+                      </Button>
+                    </Form>
+                    </Card.Body>
+                  </Card>
                     </Tab>
                     <Tab eventKey="إيداع" title="إيداع" >
-                      Tab content for Contact
+                    <div className="col d-flex align-items-center justify-content-center">
+                        <div className="">
+                          <div className="col-12">
+                            <Form className='sign__form'>
+                            <div className="col d-flex align-items-center justify-content-center">
+                              <div className="">
+                                <div className="col-12">
+                                  <Form className='sign__form'>
+                                    <h3 className="mb-3 text-primary">المستخدمين</h3>
+                                    <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                                      يمكنك جعل خدمتك تظهر في بداية الخدمات وأيضاً إظهار كلمة (خدمة مميزة) أسفل الخدمة🥰
+                                    </p>
+                                    <DayCounter
+                                      totalPrice={totalPrice3}
+                                      onDecrease={handleDecrease3}
+                                      onIncrease={handleIncrease3}
+                                    />
+                                    <Button variant="primary" type="submit" className="w-100">
+                                    <IoCardOutline />إيداع عبر البطاقة
+                                    </Button><br/>
+
+                                    <Button variant="primary" type="submit" className="w-100">
+                                    <FaBitcoin />إيداع عبر العملات الرقمية 
+                                    </Button>
+                             
+                                  </Form>
+                                </div>
+                              </div>
+                            </div>
+                            </Form>
+                            </div>
+                            </div>
+                          </div>   
                     </Tab>
                     <Tab eventKey="بنكي" title="بنكي" >
-                      Tab content for Contact
+                    <Card style={{ width: '32rem',background:'#F7F9F9'}}>
+                      <Card.Body>
+                      <Row>
+                        <Col><Card.Subtitle className="mb-2 text-muted"> <BsBank />حساباتي البنكية</Card.Subtitle></Col>
+                      </Row>
+                        <Card.Text>
+                        إدارة حساباتك البنكية المربوطة
+                        </Card.Text>
+                        <Card.Text>
+                        الحسابات البنكية
+                        </Card.Text>
+                      </Card.Body>
+
+                    </Card>
                     </Tab>
                   </Tabs>
                   </div>

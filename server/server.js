@@ -93,6 +93,43 @@ app.use("/user/api",userrouter);
 
 
 
+// check the integram
+
+const API_VERSION = 'v15.0'; // or another version number
+const USER_ID = 'your_user_id_here'; // replace with actual user ID
+
+// Replace with your external API endpoint
+const EXTERNAL_API_ENDPOINT = `https://graph.instagram.com/${API_VERSION}/${USER_ID}`;
+
+app.get('http://localhost:8000/check-account', async (req, res) => {
+  const { username } = req.query;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
+  try {
+    const response = await axios.get(EXTERNAL_API_ENDPOINT, {
+      params: { username }
+    });
+
+    // Adjust according to your external API's response format
+    if (response.data.isGenuine) {
+      res.json({ result: 'The account is genuine.' });
+    } else {
+      res.json({ result: 'The account is fake.' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while checking the account.' });
+  }
+});
+
+
+
+
+
+
+
 // Start the Express server
 const port = 8000;
 app.listen(port, () => {

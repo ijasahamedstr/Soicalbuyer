@@ -23,7 +23,6 @@ function User({ userdata }) {
   });
   const [validated, setValidated] = useState(false);
   const [updatedFile, setUpdatedFile] = useState(null);
-  const [updatedFile1, setUpdatedFile1] = useState(null);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -95,9 +94,7 @@ function User({ userdata }) {
       if (updatedFile) {
         formData.append('photo', updatedFile);
       }
-      if (updatedFile1) {
-        formData.append('photo1', updatedFile1); // Use different key if needed
-      }
+   
 
       const res = await axios.put(`http://localhost:8000/register/${userdata._id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -361,17 +358,6 @@ function User({ userdata }) {
                                         onChange={(e) => setUpdatedFile(e.target.files[0])}
                                       />
                                       <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Row>
-                                    <Form.Group as={Col} md="12" controlId="validationCustom03">
-                                      <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control placeholder="خلفية الحساب" 
-                                        type="file"
-                                        onChange={(e) => setUpdatedFile1(e.target.files[0])}/>
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a valid city.
-                                      </Form.Control.Feedback>
                                     </Form.Group>
                                   </Row>
                                   <Button style={{ background: '#6164ff', marginTop: '20px' }} type="submit">حفظ</Button>
