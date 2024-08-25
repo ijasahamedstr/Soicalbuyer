@@ -23,20 +23,15 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
   const [file, setFile] = useState(null); // Ensure this is null initially
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isOTPLoggedIn) {
-      setUserdata(OTPLoggedUserData?.preuser || {});
-    }
-  }, [isOTPLoggedIn, OTPLoggedUserData]);
-
-  useEffect(() => {
+   // Fetch user data from localStorage and set interval
+   useEffect(() => {
     const fetchUserData = () => {
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      setUserdata(userDetails);
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+      setUserdata(userDetails || {}); // Fallback to empty object
     };
 
     fetchUserData();
-    const intervalId = setInterval(fetchUserData, 300000);
+    const intervalId = setInterval(fetchUserData, 300000); // 5 minutes interval
 
     return () => clearInterval(intervalId);
   }, []);
@@ -245,7 +240,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <div class="col-12">
         <div class="sign">
         <div class="sign__content">
-        <Form className='sign__form'>
+        <Form className='sign__form' style={{width:'400px'}}>
         <div className="container mt-4">
         <div className="row justify-content-center">
             <img

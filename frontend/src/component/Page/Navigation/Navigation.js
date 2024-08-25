@@ -108,6 +108,15 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/طلبات المستخدمين"><span  className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
                 <Nav.Link><Link  style={{color:'#FFFFFF',textDecoration:'none'}} to="/متجر المنصة">متجر المنصة</Link></Nav.Link>
                 </Nav>
+
+                {
+                    userdata && userdata.Accountstatus === 'verified' ? (
+                      <><Nav.Link href='/Sell'><button type="button" class="btn btn-light" style={{width:'100px',height:'40px',marginBottom:'10px',marginRight:'10px'}}>🚀بيع</button></Nav.Link></>
+                    ) : (
+                      <></>
+                    )
+                  }
+
                 {
                  userdata ? (
                     <>

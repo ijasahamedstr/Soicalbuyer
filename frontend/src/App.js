@@ -33,6 +33,10 @@ import Dashboard from "./component/UserDashboard/Test";
 import Register from './component/UserDashboard/Register';
 import Update from './component/UserDashboard/Update';
 import PointTransfer from './component/check';
+import Sell from './component/Page/sell/sell';
+import SellSocial from './component/Page/sell/sell.social';
+import Sellgaming from './component/Page/sell/sell.gaming';
+import Sellservice from './component/Page/sell/sell.service';
 
 function App() {
   const [userdata, setUserdata] = useState({});
@@ -87,6 +91,10 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/Update" element={<Update/>} />
           <Route path="/check" element={<PointTransfer/>} />
+          <Route path="/sell" element={<Sell/>} />
+          <Route path="/sell/social" element={<SellSocial userdata={userdata} />} />
+          <Route path="/sell/gaming" element={<Sellgaming userdata={userdata} />} />
+          <Route path="/sell/service" element={<Sellservice userdata={userdata} />} />
         </Routes>
       </Router>
       <Footer />

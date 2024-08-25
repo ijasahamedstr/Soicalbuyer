@@ -18,6 +18,8 @@ import userrouter from "./routes/userAuthRoutes.js";
 import verifyrouter from "./routes/Accountverify.route.js";
 import pointrouter from "./routes/Point.Routes.js";
 import Accountboostrouter from "./routes/Accountboost.route.js";
+import notificationrouter from "./routes/notification.route.js";
+import gamerouter from "./routes/gameaccount.route.js";
 
 
 
@@ -67,12 +69,20 @@ app.use('/verify',verifyrouter);
 app.use('/Accountactive',AccountActiverouter);
 
 
+// Game Account Post 
+app.use('/gameaccount',gamerouter);
+
+
 // Account Point Transfer
 app.use('/point',pointrouter);
 
 
 // User Account User boost
 app.use('/boost',Accountboostrouter);
+
+
+// User Account User notification
+app.use('/notification',notificationrouter);
 
 
 // Get __dirname equivalent for ES modules
@@ -90,44 +100,6 @@ app.use("/uploads",express.static("./useruploads"))
 
 // user routes
 app.use("/user/api",userrouter);
-
-
-
-// check the integram
-
-const API_VERSION = 'v15.0'; // or another version number
-const USER_ID = 'your_user_id_here'; // replace with actual user ID
-
-// Replace with your external API endpoint
-const EXTERNAL_API_ENDPOINT = `https://graph.instagram.com/${API_VERSION}/${USER_ID}`;
-
-app.get('http://localhost:8000/check-account', async (req, res) => {
-  const { username } = req.query;
-
-  if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
-  }
-
-  try {
-    const response = await axios.get(EXTERNAL_API_ENDPOINT, {
-      params: { username }
-    });
-
-    // Adjust according to your external API's response format
-    if (response.data.isGenuine) {
-      res.json({ result: 'The account is genuine.' });
-    } else {
-      res.json({ result: 'The account is fake.' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while checking the account.' });
-  }
-});
-
-
-
-
-
 
 
 // Start the Express server

@@ -7,6 +7,8 @@ export const ValidUser = async (req, res) => {
             return res.status(400).json({ status: 400, error: "User ID is missing" });
         }
 
+        console.log(req.userId)
+
         // Find the user by their ID
         const ValidUserOne = await AccountRegister.findOne({ _id: req.userId });
 

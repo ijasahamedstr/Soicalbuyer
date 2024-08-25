@@ -57,7 +57,10 @@ const Userboost = () => {
   const [days3, setDays3] = useState(1);
   const [selectedTab, setSelectedTab] = useState('تواصل');
   const navigate = useNavigate();
-
+  const [paccount, setPaccount] = useState();
+  const [gaccount, setGaccount] = useState();
+  const [uaccount, setUaccount] = useState();
+  const [saccount, setSaccount] = useState();
   useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -101,6 +104,7 @@ const Userboost = () => {
     try {
       const response = await axios.post('http://localhost:8000/boost', {
         userid: userdata?._id,
+        paccount:paccount,
         pdays: days,
         pselectedPromotion: selectedPromotion,
         ptotalPrice: totalPrice
@@ -135,6 +139,7 @@ const Userboost = () => {
     try {
       const response = await axios.post('http://localhost:8000/boost/game', {
         userid: userdata._id,
+        gaccount:gaccount,
         gdays: days1,
         gtotalPrice: totalPrice1
       });
@@ -168,6 +173,7 @@ const Userboost = () => {
     try {
       const response = await axios.post('http://localhost:8000/boost/Users', {
         userid: userdata._id,
+        uaccount:uaccount,
         udays: days2,
         utotalPrice: totalPrice2
       });
@@ -200,7 +206,8 @@ const Userboost = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8000/boost/Services', {
-        userid: userdata._id,
+        sserid: userdata._id,
+        saccount:saccount,
         sdays: days3,
         stotalPrice: totalPrice3
       });
@@ -251,7 +258,7 @@ const Userboost = () => {
                     <Tab eventKey="تواصل" title="تواصل">
                       <div className="col d-flex align-items-center justify-content-center">
                         <div className="">
-                          <div className="col-12">
+                          <div className="col-12"  style={{width:'400px'}}>
                             <h2 style={{ textAlign: 'center', fontFamily: 'Noto Kufi Arabic', marginTop: '1.5rem' }}>🚀يوزر بوست</h2>
                             <Form className='sign__form' onSubmit={handleSubmit}>
                               <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)' }}>التواصل الإجتماعي & الرئيسية</h3>
@@ -259,8 +266,9 @@ const Userboost = () => {
                                 يمكنك جعل حساب التواصل الإجتماعي الخاص بك يظهر في الصفحة الرئيسية وأيضاً في صفحة سوق التواصل الإجتماعي في البداية بمبلغ رمزي وبسيط ويساعدك على بيع الحساب بسرعة😍🥰
                               </p>
                               <Form.Label>الحساب</Form.Label>
-                                <Form.Select aria-label="Default select example" className='sign__input' onChange={(e) => setSelectedPromotion(e.target.value)}>
-                                  <option value="">الرجاء الأختيار</option>
+                                <Form.Select aria-label="Default select example" className='sign__input' onChange={(e)=>setPaccount(e.target.value)} >
+                                  <option value="ijas">الرجاء الأختيار</option>
+                                  <option value="test">الرجاء الأختيار</option>
                                       {/* Add options here */}
                               </Form.Select><br/>
                               <Form.Group className="mb-3" controlId="formGridPromotionType">
@@ -302,7 +310,7 @@ const Userboost = () => {
                     <Tab eventKey="العاب" title="العاب">
                       <div className="col d-flex align-items-center justify-content-center">
                         <div className="">
-                          <div className="col-12">
+                          <div className="col-12"  style={{width:'400px'}}>
                             <div className="sign">
                               <div className="sign__content">
                                 <Form className='sign__form' onSubmit={handleSubmit1}>
@@ -314,8 +322,9 @@ const Userboost = () => {
                                   </p>
                                   <Form.Group className="mb-3" controlId="formGridPromotionType">
                                     <Form.Label>الحساب</Form.Label>
-                                    <Form.Select aria-label="Default select example" className='sign__input' onChange={(e) => setSelectedPromotion(e.target.value)}>
-                                      <option value="">الرجاء الأختيار</option>
+                                    <Form.Select aria-label="Default select example" className='sign__input' onChange={(e)=>setGaccount(e.target.value)}>
+                                    <option value="ijas">الرجاء الأختيار</option>
+                                    <option value="test">الرجاء الأختيار</option>
                                       {/* Add options here */}
                                     </Form.Select>
                                   </Form.Group>
@@ -342,7 +351,7 @@ const Userboost = () => {
                     <Tab eventKey="خدمة" title="خدمة">
                       <div className="col d-flex align-items-center justify-content-center">
                         <div className="">
-                          <div className="col-12">
+                          <div className="col-12"  style={{width:'400px'}}>
                             <h2 className="text-center my-3">🚀 مستخدمين</h2>
                             <Form className='sign__form' onSubmit={handleSubmit2}>
                               <h3 className="mb-3 text-primary">المستخدمين</h3>
@@ -350,8 +359,9 @@ const Userboost = () => {
 
                               <Form.Group className="mb-3" controlId="formGridAddress2">
                               <Form.Label>الحساب</Form.Label>
-                              <Form.Select aria-label="Default select example" className='sign__input'>
-                              <option value="">الرجاء الأختيار</option>
+                              <Form.Select aria-label="Default select example" className='sign__input'  onChange={(e)=>setUaccount(e.target.value)}>
+                              <option value="ijas">الرجاء الأختيار</option>
+                              <option value="test">الرجاء الأختيار</option>
                               </Form.Select>
                               </Form.Group>
                               <DayCounter
@@ -372,14 +382,15 @@ const Userboost = () => {
                     <Tab eventKey="حسابي" title="حسابي">
                       <div className="col d-flex align-items-center justify-content-center">
                         <div className="">
-                          <div className="col-12">
+                          <div className="col-12"  style={{width:'400px'}}>
                             <Form className='sign__form' onSubmit={handleSubmit3}>
                               <h3 className="mb-3 text-primary">المستخدمين</h3>
                               <p style={{textAlign:'center',fontSize:'14px'}}>يمكنك جعل خدمتك تظهر في بداية الخدمات وأيضاً إظهار كلمة (خدمة مميزة) أسفل الخدمة🥰</p>
                               <Form.Group className="mb-3" controlId="formGridAddress2">
                                 <Form.Label>الحساب</Form.Label>
-                                <Form.Select aria-label="Default select example" className='sign__input'>
-                                <option value="">الرجاء الأختيار</option>
+                                <Form.Select aria-label="Default select example" className='sign__input' onChange={(e)=>setSaccount(e.target.value)}>
+                                <option value="ijas">الرجاء الأختيار</option>
+                                <option value="test">الرجاء الأختيار</option>
                                 </Form.Select>
                                 </Form.Group>
                               <DayCounter

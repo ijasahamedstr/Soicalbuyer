@@ -1,45 +1,52 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 function PointTransfer() {
   const [username, setUsername] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [isValid, setIsValid] = useState(null);
+  const [error, setError] = useState(null);
 
-  const checkAccount = async () => {
-    setLoading(true);
-    setError('');
-    setResult('');
-
+  const handleCheckAccount = async () => {
     try {
-      // Replace with your backend API endpoint
-      const response = await axios.get('http://localhost:8000/check-account', {
-        params: { username }
-      });
-
-      setResult(response.data.result);
+      const response = await axios.post('http://localhost:8000/api/check-instagram-account', { username });
+      setIsValid(response.data.valid);
+      setError(null);
     } catch (err) {
-      setError('An error occurred while checking the account.');
-    } finally {
-      setLoading(false);
+      setError('Error checking account');
+      setIsValid(null);
     }
   };
 
   return (
     <div>
-      <h1>Instagram Account Checker</h1>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter Instagram username"
-      />
-      <button onClick={checkAccount} disabled={loading}>
-        {loading ? 'Checking...' : 'Check Account'}
-      </button>
-      {result && <p>{result}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <h2>Check Instagram Account</h2>
+      <Form>
+        <Form.Group controlId="username">
+          <Form.Label>Instagram Username</Form.Label>
+          <Form.Control
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter Instagram username"
+          />
+        </Form.Group>
+        <Button variant="primary" onClick={handleCheckAccount}>
+          Check Account
+        </Button>
+      </Form>
+
+      {isValid !== null && (
+        <Alert variant={isValid ? 'success' : 'danger'}>
+          {isValid ? 'The Instagram account is valid.' : 'The Instagram account is not valid.'}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert variant="danger">
+          {error}
+        </Alert>
+      )}
     </div>
   );
 }
