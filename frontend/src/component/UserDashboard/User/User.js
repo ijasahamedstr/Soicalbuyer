@@ -11,8 +11,17 @@ import './User.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Nav from 'react-bootstrap/Nav';
 
-function User({ userdata }) {
+const truncateText = (text = '', maxLength) => {
+  if (typeof text !== 'string') return '';
+  if (text.length <= maxLength) return text;
+  return `${text.substring(0, maxLength)}...`;
+};
+
+
+function User({ userdata}) {
   const [userDetails, setUserDetails] = useState({
     displayName: '',
     username: '',
@@ -124,6 +133,66 @@ function User({ userdata }) {
     }
   };
 
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/gameaccount'); // Replace with actual API endpoint
+        // Filter the data based on the current user's ID
+        const userPosts = response.data.filter(item => item.userid === userdata._id);
+        setData(userPosts);
+      } catch (error) {
+        setError(error.message); // Handle error
+      } finally {
+        setLoading(false); // Set loading to false once data is fetched or error occurs
+      }
+    };
+
+    fetchData();
+  }, [userdata._id]); // Depend on userId to re-fetch data if userId changes
+
+
+  const [data1, setData1] = useState([]);
+  const [loading1, setLoading1] = useState(true);
+  const [error1, setError1] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/soical'); // Replace with actual API endpoint
+        // Filter the data based on the current user's ID
+        const userPosts = response.data.filter(item => item.userid === userdata._id);
+        setData1(userPosts);
+      } catch (error) {
+        setError1(error.message); // Handle error
+      } finally {
+        setLoading1(false); // Set loading to false once data is fetched or error occurs
+      }
+    };
+
+    fetchData();
+  }, [userdata._id]); // Depend on userId to re-fetch data if userId changes
+
+
+   const getImageForPlatform = (social_type) => {
+    switch (social_type) {
+      case 'instagram':
+        return 'https://usr.dokan-cdn.com/instagram.png';
+      case 'tiktok':
+        return 'https://usr.dokan-cdn.com/tiktok.png';
+      case 'twitter':
+        return 'https://usr.dokan-cdn.com/twitter.png';
+      case 'steam':
+        return 'https://usr.dokan-cdn.com/steam.png';
+      default:
+        return 'https://usr.dokan-cdn.com/default.png';
+    }
+  };
+
   
   return (
     <>
@@ -162,98 +231,107 @@ function User({ userdata }) {
                 <Col>
                   {/* Social Media Card Section */}
                   <Tabs defaultActiveKey="التواصل الإجتماعي" id="fill-tab-example" fill>
-                    <Tab eventKey="التواصل الإجتماعي" title="التواصل الإجتماعي">
-                      <Container>
-                        {userdata ?
-                          <Row>
-                            <Col md={4}>
+                  <Tab eventKey="التواصل الإجتماعي" title="التواصل الإجتماعي">
+                    <Container>
+                      {data1.length > 0 ? (
+                        <Row style={{ marginTop: '30px', fontWeight: '700' }}>
+                          {data1.map(item => (
+                            <Col md={4} key={item._id}>
                               <Card style={{ backgroundColor: '#F2F3F4' }}>
-                                <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
+                                <Card.Img variant="top" src={getImageForPlatform(item.social_type)} />
                                 <Card.Body>
-                                  <Card.Title>{userDetails?.displayName}</Card.Title>
+                                  <Card.Title>{item.social_username}</Card.Title>
                                   <Card.Text>
-                                    <span>
-                                      <div className="card__author card__author--verified " style={{ borderRadius: '20px' }}>
-                                        <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" />
-                                        <a href="https://usr.gg/meshari">{userDetails?.displayName}</a>
-                                      </div>
-                                    </span>
+                                    <div className="card__author card__author--verified" style={{ borderRadius: '20px' }}>
+                                      <img src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                                      <a href={`https://usr.gg/${userDetails?.username}`}>{userDetails?.displayName}</a>
+                                    </div>
                                   </Card.Text>
                                 </Card.Body>
                                 <Card.Body>
-                                  <Card.Link href="#"><div className='card__likes'><span className='card__likes1'>🚀بوست</span></div></Card.Link>
+                                  <Card.Link href="#">
+                                    <div className='card__likes'><span className='card__likes1'>🚀بوست</span></div>
+                                  </Card.Link>
                                   <Card.Link href="#">
                                     <div className="card__price">
                                       <span>السعر</span>
                                       <span dir="rtl">
-                                        <span className="account_price_previe">499$</span>
+                                        <span className="account_price_previe">${item.social_amount}</span>
                                       </span>
                                     </div>
                                   </Card.Link>
                                 </Card.Body>
                               </Card>
                             </Col>
-                            <Col md={4}>
-                              <Card style={{ backgroundColor: '#F2F3F4' }}>
-                                <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
-                                <Card.Body>
-                                  <Card.Title>{userDetails?.displayName}</Card.Title>
-                                  <Card.Text>
-                                    <span>
-                                      <div className="card__author card__author--verified " style={{ borderRadius: '20px' }}>
-                                        <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" />
-                                        <a href="https://usr.gg/meshari">{userDetails?.displayName}</a>
-                                      </div>
-                                    </span>
-                                  </Card.Text>
-                                </Card.Body>
-                                <Card.Body>
-                                  <Card.Link href="#"><div className='card__likes'><span className='card__likes1'>🚀بوست</span></div></Card.Link>
-                                  <Card.Link href="#">
-                                    <div className="card__price">
-                                      <span>السعر</span>
-                                      <span dir="rtl">
-                                        <span className="account_price_previe">499$</span>
-                                      </span>
-                                    </div>
-                                  </Card.Link>
-                                </Card.Body>
-                              </Card>
-                            </Col>
-                            <Col md={4}>
-                              <Card style={{ backgroundColor: '#F2F3F4' }}>
-                                <Card.Img variant="top" src="https://usr.dokan-cdn.com/instagram.png" />
-                                <Card.Body>
-                                  <Card.Title>{userDetails?.displayName}</Card.Title>
-                                  <Card.Text>
-                                    <span>
-                                      <div className="card__author card__author--verified " style={{ borderRadius: '20px' }}>
-                                        <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" />
-                                        <a href="https://usr.gg/meshari">{userDetails?.displayName}</a>
-                                      </div>
-                                    </span>
-                                  </Card.Text>
-                                </Card.Body>
-                                <Card.Body>
-                                  <Card.Link href="#"><div className='card__likes'><span className='card__likes1'>🚀بوست</span></div></Card.Link>
-                                  <Card.Link href="#">
-                                    <div className="card__price">
-                                      <span>السعر</span>
-                                      <span dir="rtl">
-                                        <span className="account_price_previe">499$</span>
-                                      </span>
-                                    </div>
-                                  </Card.Link>
-                                </Card.Body>
-                              </Card>
-                            </Col>
-                            {/* Repeat other columns similarly */}
-                          </Row>
-                          
-                          : <p style={{ textAlign: 'center', marginTop: '30px', fontSize: '25px', color: 'rgb(97, 100, 255)' }}>لايوجد منتجات</p>}
-                      </Container>
-                    </Tab>
+                          ))}
+                        </Row>
+                      ) : (
+                        <p style={{ textAlign: 'center', marginTop: '30px', fontSize: '18px', color: 'rgb(97, 100, 255)' ,fontWeight:'normal' }}>
+                          لايوجد منتجات
+                        </p>
+                      )}
+                    </Container>
+                  </Tab>
                     {/* End Social Media Card Section */}
+
+                    <Tab eventKey="ijas" title="التواصل الإجتماعي">
+                    <Container>
+                      {data && data.length > 0 ? (
+                        <Row className="mb-4">
+                          {data.map(item => (
+                            <Col md={4} key={item._id}>
+                              <Card style={{ backgroundColor: '#F2F3F4' }}>
+                                <Card.Header>
+                                  <div className='card__likes'>
+                                    <span className='card__likes1'>🚀بوست</span>
+                                  </div>
+                                </Card.Header>
+                                <Nav.Link href={`/game-view/${item._id}`}>
+                                  <Card.Title>{item.gametitle}</Card.Title>
+                                </Nav.Link>
+                                <Card.Body>
+                                  <Card.Text style={{ fontSize: '13px' }}>
+                                    {truncateText(item.gamedec, 100)}
+                                  </Card.Text>
+                                  <Card.Text>
+                                    <span>
+                                      <div className="card__author card__author--verified">
+                                        <img src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="Author Avatar" />
+                                        <a href="https://usr.gg/meshari">@Ijas Ahamed</a>
+                                      </div>
+                                    </span>
+                                  </Card.Text>
+                                </Card.Body>
+                                <ListGroup.Item>
+                                  <h3 style={{ color: '#6164ff', fontSize: '24px' }}>${item.gameAmount}</h3>
+                                  <div className='post__meta'>
+                                    <span className="post__comments">
+                                      {/* Game-related icon */}
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-controller" viewBox="0 0 16 16">
+                                        {/* SVG paths */}
+                                      </svg>
+                                      <span>{item.gamename}</span>
+                                    </span>
+                                    <span className="post__comments">
+                                      {/* Game-type icon */}
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-globe" viewBox="0 0 16 16">
+                                        {/* SVG paths */}
+                                      </svg>
+                                      <span>{item.gametype}</span>
+                                    </span>
+                                  </div>
+                                </ListGroup.Item>
+                              </Card>
+                            </Col>
+                          ))}
+                        </Row>
+                      ) : (
+                        <p style={{ textAlign: 'center', marginTop: '30px', fontSize: '25px', color: 'rgb(97, 100, 255)',fontWeight:'normal' }}>
+                          لايوجد منتجات
+                        </p>
+                      )}
+                    </Container>
+                  </Tab>
 
                     {/* Profile Setting Card Section */}
                     <Tab eventKey="الأعدادات" title="الأعدادات">

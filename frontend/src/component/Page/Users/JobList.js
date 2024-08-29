@@ -19,7 +19,7 @@ const JobList = ({ jobs }) => {
             <div className='image-card'>
               <img
                 className="avatar"
-                src={`http://localhost:8000/uploads/${job .imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                src={`http://localhost:8000/uploads/${job.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
                 alt="User Avatar"
               />
             </div>

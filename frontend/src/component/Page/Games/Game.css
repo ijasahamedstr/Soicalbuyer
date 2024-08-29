@@ -12,7 +12,7 @@
     }
 
     .mb-3{
-      width: 150px;
+      width: 280px;
     }
 
   }
@@ -440,4 +440,42 @@
   top: 0;
   width: auto;
   height: auto;
+}
+
+.btn{
+  font-family: "Changa", sans-serif;
+}
+
+
+
+@media screen and (max-width: 600px) {
+
+
+
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+
+
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* CSS styles for medium tablets */
+
+
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  /* CSS styles for large tablets */
+ 
+}
+
+@media (min-width: 1200px) {
+  /* CSS styles for extra-large tablets */
+
+  .mb-3{
+    width: 500px;
+  }
+
+
 }

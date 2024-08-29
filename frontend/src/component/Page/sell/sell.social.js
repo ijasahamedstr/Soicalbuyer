@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Button, Form, Modal, Card, Nav } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { Card, Nav } from 'react-bootstrap';
 
 // Modal for description configuration
 const DescriptionModal = ({ show, onHide, onSelectOption }) => (
@@ -32,7 +41,7 @@ const DescriptionModal = ({ show, onHide, onSelectOption }) => (
 );
 
 // Modal for ownership confirmation
-const DescriptionModal1 = ({ show, onHide, text1, suportcode }) => (
+const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code,social_username }) => (
   <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     <Modal.Header closeButton>
       <Modal.Title id="contained-modal-title-vcenter">تأكيد الملكية ومعلومات التسليم</Modal.Title>
@@ -42,17 +51,16 @@ const DescriptionModal1 = ({ show, onHide, text1, suportcode }) => (
         حرصاً منا على تقديم بيئة آمنة لبيع وشراء الحسابات يجب عليك إتمام الخطوات أدناه لكي تتمكن من إضافة الحساب.
       </h4>
       <p>
-        قم بوضع الكلمة أدناه في بايو الحساب <span>({text1})</span> واضغط تأكيد لكي تتمكن من المتابعة.
+        قم بوضع الكلمة أدناه في بايو الحساب <span>({social_username})</span> واضغط تأكيد لكي تتمكن من المتابعة.
       </p>
       <Form.Group className="mb-3" controlId="supportCode">
         <Form.Label>الكلمة</Form.Label>
-        <Form.Control type="text" value={suportcode} readOnly />
+        <Form.Control type="text" readOnly value={social_code} />
       </Form.Group>
-      <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px',width:'100%'}}>
-      تأكيد الملكية
-        </Button>        
+      <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', width: '100%' }} onClick={handleSubmit}>
+        تأكيد الملكية
+      </Button>
     </Modal.Body>
-  
   </Modal>
 );
 
@@ -62,18 +70,21 @@ const generateReferenceNumber = () => {
 };
 
 function Sellsocial() {
+  const [userid, setUserid] = useState("");
+  const [social_username, setSocial_username] = useState("");
+  const [social_type, setSocial_type] = useState("instagram");
+  const [social_dec, setSocial_dec] = useState("");
+  const [social_Amount, setSocial_Amount] = useState("");
   const [userdata, setUserdata] = useState(null);
+  const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [modalShow1, setModalShow1] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [selectedPlatform, setSelectedPlatform] = useState('instagram'); // Default platform
-  const [text, setText] = useState('');
-  const [text1, setText1] = useState('');
-  const [suportcode, setSupportcode] = useState('');
+  const [social_code, setSocial_code] = useState('');
 
   useEffect(() => {
     const newReferenceNumber = generateReferenceNumber();
-    setSupportcode(newReferenceNumber);
+    setSocial_code(newReferenceNumber);
   }, []);
 
   const handleCheckboxChange = (event) => {
@@ -86,13 +97,13 @@ function Sellsocial() {
   };
 
   const handlePlatformChange = (event) => {
-    setSelectedPlatform(event.target.value);
+    setSocial_type(event.target.value);
   };
 
   const generateText = () => selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`;
 
   const getImageForPlatform = () => {
-    switch (selectedPlatform) {
+    switch (social_type) {
       case 'instagram':
         return 'https://usr.dokan-cdn.com/instagram.png';
       case 'tiktok':
@@ -106,17 +117,66 @@ function Sellsocial() {
     }
   };
 
+  const [formData, setFormData] = useState({
+    social_code: "",
+  });
+
   useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem('userDetails'));
       setUserdata(userDetails || {});
+      setUserid(userDetails?._id || "");
     };
 
     fetchUserData();
-    const intervalId = setInterval(fetchUserData, 300000); // Refresh every 5 minutes
+    const intervalId = setInterval(fetchUserData, 300000); // Fetch every 5 minutes
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const handleSubmit1 = async () => {
+    const formdata = new FormData();
+    formdata.append("userid", String(userdata?._id));
+    formdata.append("social_username", social_username);
+    formdata.append("social_type", social_type);
+    formdata.append("social_dec", social_dec);
+    formdata.append("social_Amount", social_Amount);
+    formdata.append("social_code", formData.social_code);
+
+    try {
+      const response = await axios.post("http://localhost:8000/gameaccount", formdata, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      if (response.status === 200) {
+        resetForm();
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your operation was successful.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error.response?.data.error || "An error occurred",
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  };
+
+  const resetForm = () => {
+    setUserid("");
+    setSocial_username("");
+    setSocial_type("instagram");
+    setSocial_dec("");
+    setSocial_Amount("");
+    setFormData({
+      social_code: "",
+    });
+  };
 
   return (
     <Container>
@@ -138,19 +198,29 @@ function Sellsocial() {
                   <p>وضح في الوصف نوع الأيميل الأساسي أيضاً قم بتوضيح إن كان الحساب مربوط برقم هاتف أم لا.</p>
                   <p>*الرجاء كتابة وصف دقيق يذكر جميع مميزات وعيوب الحساب لتجنب حدوث أي مشاكل*</p>
 
+                  <Form.Group className="mb-3" controlId="formGridAddress2">
+                    <Form.Control
+                      placeholder="الإسم الاول"
+                      value={userid}
+                      onChange={e => setUserid(e.target.value)}
+                      aria-label="First name"
+                      className="hidden"
+                    />
+                  </Form.Group>
+
                   <Form.Group className="mb-3" controlId="formBasicUsername">
                     <Form.Label>اسم المستخدم</Form.Label>
                     <Form.Control 
                       type="text" 
-                      value={text1} 
-                      onChange={e => setText1(e.target.value)} 
+                      value={social_username} 
+                      onChange={e => setSocial_username(e.target.value)} 
                       placeholder="أدخل اسم المستخدم" 
                     />
                   </Form.Group>
 
                   <Form.Group className="mb-3">
                     <Form.Label>المنصة</Form.Label>
-                    <Form.Select value={selectedPlatform} onChange={handlePlatformChange}>
+                    <Form.Select value={social_type} onChange={handlePlatformChange}>
                       <option value="instagram">انستقرام</option>
                       <option value="tiktok">تيك توك</option>
                       <option value="twitter">تويتر</option>
@@ -164,7 +234,7 @@ function Sellsocial() {
 
                   <Form.Group className="mb-3" controlId="descriptionTextarea">
                     <Form.Label>وصف الحساب</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={generateText()} readOnly />
+                    <Form.Control as="textarea" rows={3} value={generateText()} onChange={e => setSocial_dec(e.target.value)} readOnly />
                     <p>لا تقم بوضع أي طريقة تواصل خارج المنصة في الوصف بشكل نهائي لأنها تعرض حسابك للحظر!</p>
                   </Form.Group>
 
@@ -179,7 +249,7 @@ function Sellsocial() {
 
                   <Form.Group className="mb-3" controlId="price">
                     <Form.Label>السعر (بالدولار)</Form.Label>
-                    <Form.Control type="number" value={text} onChange={e => setText(e.target.value)} />
+                    <Form.Control type="number" value={social_Amount} onChange={e => setSocial_Amount(e.target.value)} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="priceBeforeDiscount">
@@ -200,7 +270,7 @@ function Sellsocial() {
                   </Form.Group>
                   
                   <p>ستتمكن من استقبال عروض مالية على الحساب من المستخدمين الآخرين (سومات) وبإمكانك قبول عرض بسهولة تامة*</p>
-                  <p className="text-center">المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: ${text}</p>
+                  <p className="text-center">المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: ${social_Amount}</p>
                  
                   <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px' }} onClick={() => setModalShow1(true)}>
                     تأكيد ملكية الحساب
@@ -211,11 +281,12 @@ function Sellsocial() {
                     onHide={() => setModalShow(false)}
                     onSelectOption={handleCheckboxChange}
                   />
-                   <DescriptionModal1
+                  <DescriptionModal1
                     show={modalShow1}
                     onHide={() => setModalShow1(false)}
-                    text1={text1}
-                    suportcode={suportcode}
+                    social_code={social_code}
+                    handleSubmit={handleSubmit1}
+                    social_username={social_username}
                   />
                 </Form>
               </Col>
@@ -253,7 +324,7 @@ function Sellsocial() {
                   <div className="card__price">
                     <span>السعر</span>
                     <span dir="rtl">
-                      <span className="account_price_previe">${text}</span>
+                      <span className="account_price_previe">${social_Amount}</span>
                     </span>
                   </div>
                 </Card.Link>

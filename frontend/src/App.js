@@ -37,6 +37,9 @@ import Sell from './component/Page/sell/sell';
 import SellSocial from './component/Page/sell/sell.social';
 import Sellgaming from './component/Page/sell/sell.gaming';
 import Sellservice from './component/Page/sell/sell.service';
+import GameEdit from './component/Page/Games/GameEdit';
+
+
 
 function App() {
   const [userdata, setUserdata] = useState({});
@@ -78,7 +81,7 @@ function App() {
           <Route path="/boost" element={<Userboost />} />
           <Route path="/blocks" element={<Blocks />} />
           <Route path="/verify-account" element={<Verifyaccount />} />
-          <Route path="/game-view" element={<Gameview />} />
+          <Route path="/game-view/:id" element={<Gameview isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/Chat" element={<Chat />} />
           <Route path="/notifications" element={<Notifications />} />
@@ -95,6 +98,7 @@ function App() {
           <Route path="/sell/social" element={<SellSocial userdata={userdata} />} />
           <Route path="/sell/gaming" element={<Sellgaming userdata={userdata} />} />
           <Route path="/sell/service" element={<Sellservice userdata={userdata} />} />
+          <Route path="/gameedit/:id" element={<GameEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
         </Routes>
       </Router>
       <Footer />

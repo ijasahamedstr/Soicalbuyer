@@ -1,54 +1,41 @@
+// src/AccountChecker.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert } from 'react-bootstrap';
 
-function PointTransfer() {
+const AccountChecker = () => {
   const [username, setUsername] = useState('');
   const [isValid, setIsValid] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleCheckAccount = async () => {
+  const handleCheck = async () => {
+    setIsValid(null);
+    setError('');
+
     try {
-      const response = await axios.post('http://localhost:8000/api/check-instagram-account', { username });
-      setIsValid(response.data.valid);
-      setError(null);
+      // Replace this URL with your actual API endpoint
+      const response = await axios.get(`http://localhost:8000/check-tiktok-account?username=${username}`);
+      setIsValid(response.data.isValid);
     } catch (err) {
-      setError('Error checking account');
-      setIsValid(null);
+      setError('Error checking account. Please try again.');
     }
   };
 
   return (
     <div>
-      <h2>Check Instagram Account</h2>
-      <Form>
-        <Form.Group controlId="username">
-          <Form.Label>Instagram Username</Form.Label>
-          <Form.Control
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter Instagram username"
-          />
-        </Form.Group>
-        <Button variant="primary" onClick={handleCheckAccount}>
-          Check Account
-        </Button>
-      </Form>
+      <h1>TikTok Account Checker</h1>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter TikTok username"
+      />
+      <button onClick={handleCheck}>Check Account</button>
 
-      {isValid !== null && (
-        <Alert variant={isValid ? 'success' : 'danger'}>
-          {isValid ? 'The Instagram account is valid.' : 'The Instagram account is not valid.'}
-        </Alert>
-      )}
-
-      {error && (
-        <Alert variant="danger">
-          {error}
-        </Alert>
-      )}
+      {isValid === true && <p>Account is valid!</p>}
+      {isValid === false && <p>Account is not valid.</p>}
+      {error && <p>{error}</p>}
     </div>
   );
-}
+};
 
-export default PointTransfer;
+export default AccountChecker;
