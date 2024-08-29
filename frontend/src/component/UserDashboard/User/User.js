@@ -238,7 +238,9 @@ function User({ userdata}) {
                           {data1.map(item => (
                             <Col md={4} key={item._id}>
                               <Card style={{ backgroundColor: '#F2F3F4' }}>
-                                <Card.Img variant="top" src={getImageForPlatform(item.social_type)} />
+                              <Nav.Link href={`/social-media-accounts-view/${item._id}`}>
+                                <Card.Img  variant="top" src={getImageForPlatform(item.social_type)} />
+                                </Nav.Link>
                                 <Card.Body>
                                   <Card.Title>{item.social_username}</Card.Title>
                                   <Card.Text>

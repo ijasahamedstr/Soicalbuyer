@@ -13,13 +13,17 @@ const SocialDBSchema = new mongoose.Schema({
     social_dec: {
         type: String,
     },
+    Promotional_Title: {
+        type: String,
+    },
+    discount: {
+        type: Number,
+    },
     social_amount: {
         type: Number,
-        min: [0, 'Amount must be positive'], // Ensure the amount is positive
     },
     social_code: {
         type: String,
-        min: [0, 'Amount must be positive'], // Ensure the amount is positive
     },
 }, { timestamps: true });
 

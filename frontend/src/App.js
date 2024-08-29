@@ -38,6 +38,7 @@ import SellSocial from './component/Page/sell/sell.social';
 import Sellgaming from './component/Page/sell/sell.gaming';
 import Sellservice from './component/Page/sell/sell.service';
 import GameEdit from './component/Page/Games/GameEdit';
+import Editsocial from './component/Page/SocialMediaAccounts/SocialMediaeditAccountsView';
 
 
 
@@ -86,7 +87,7 @@ function App() {
           <Route path="/Chat" element={<Chat />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/challenges" element={<Challenges />} />
-          <Route path="/social-media-accounts-view" element={<SoiaclAcoountView />} />
+          <Route path="/social-media-accounts-view/:id" element={<SoiaclAcoountView />} />
           <Route path="/UserView" element={<Userview />} />
           <Route path="/Dashboard" element={<Dashboard  userdata={userdata} />} />
           <Route path="/OTP" element={<LoginOTP setIsOTPLoggedIn={setIsOTPLoggedIn} setOTPLoggedUserData={setOTPLoggedUserData} />} />
@@ -99,6 +100,7 @@ function App() {
           <Route path="/sell/gaming" element={<Sellgaming userdata={userdata} />} />
           <Route path="/sell/service" element={<Sellservice userdata={userdata} />} />
           <Route path="/gameedit/:id" element={<GameEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
+          <Route path="/soicaledit/:id" element={<Editsocial isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
         </Routes>
       </Router>
       <Footer />

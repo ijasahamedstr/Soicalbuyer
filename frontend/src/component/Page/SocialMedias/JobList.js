@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
+import { Link } from 'react-router-dom';
 
 const getImageForPlatform = (social_type) => {
   switch (social_type) {
@@ -25,7 +26,7 @@ const JobList = ({ jobs }) => {
         jobs.map((job) => (
           <Col xs={12} sm={6} md={4} lg={3} key={job.id} className="mb-4">
              <Card style={{backgroundColor:'#F2F3F4'}} key={job.id}>
-                <Nav.Link href='/social-media-accounts-view'><Card.Img variant="top" src={getImageForPlatform(job.social_type)} /></Nav.Link>
+                <Nav.Link as={Link} to={`/social-media-accounts-view/${job._id}`}><Card.Img variant="top" src={getImageForPlatform(job.social_type)} /></Nav.Link>
                 <Card.Body>
                 <Card.Title>@{job.social_username}</Card.Title>
                 <Card.Text>

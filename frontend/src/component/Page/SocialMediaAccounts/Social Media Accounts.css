@@ -60,3 +60,10 @@
 .asset__authors {
     flex-direction: row;
 }
+
+
+.iconfont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
