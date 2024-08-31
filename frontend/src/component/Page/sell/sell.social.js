@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { Container, Row, Col, Button, Form, Modal, Card, Nav } from 'react-bootstrap';
 import axios from 'axios';
-import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Card, Nav } from 'react-bootstrap';
 
 // Modal for description configuration
 const DescriptionModal = ({ show, onHide, onSelectOption }) => (
@@ -41,7 +35,7 @@ const DescriptionModal = ({ show, onHide, onSelectOption }) => (
 );
 
 // Modal for ownership confirmation
-const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code,social_username }) => (
+const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_username }) => (
   <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     <Modal.Header closeButton>
       <Modal.Title id="contained-modal-title-vcenter">تأكيد الملكية ومعلومات التسليم</Modal.Title>
@@ -65,7 +59,7 @@ const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code,social_user
 );
 
 const generateReferenceNumber = () => {
-  const randomNumber = Math.floor(Math.random() * 90000) + 10000; // Generates a random number between 10000 and 99999
+  const randomNumber = Math.floor(Math.random() * 90000) + 10000;
   return `CHK${randomNumber}`;
 };
 
@@ -76,15 +70,27 @@ function Sellsocial() {
   const [social_dec, setSocial_dec] = useState("");
   const [social_Amount, setSocial_Amount] = useState("");
   const [userdata, setUserdata] = useState(null);
-  const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [modalShow1, setModalShow1] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [social_code, setSocial_code] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const newReferenceNumber = generateReferenceNumber();
-    setSocial_code(newReferenceNumber);
+    setSocial_code(generateReferenceNumber());
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+      setUserdata(userDetails || {});
+      setUserid(userDetails?._id || "");
+    };
+
+    fetchUserData();
+    const intervalId = setInterval(fetchUserData, 300000); // Fetch every 5 minutes
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleCheckboxChange = (event) => {
@@ -100,51 +106,21 @@ function Sellsocial() {
     setSocial_type(event.target.value);
   };
 
-  const generateText = () => selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`;
-
-  const getImageForPlatform = () => {
-    switch (social_type) {
-      case 'instagram':
-        return 'https://usr.dokan-cdn.com/instagram.png';
-      case 'tiktok':
-        return 'https://usr.dokan-cdn.com/tiktok.png';
-      case 'twitter':
-        return 'https://usr.dokan-cdn.com/twitter.png';
-      case 'steam':
-        return 'https://usr.dokan-cdn.com/steam.png';
-      default:
-        return 'https://usr.dokan-cdn.com/default.png'; // Fallback image
-    }
+  const generateText = () => {
+    return selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`;
   };
 
-  const [formData, setFormData] = useState({
-    social_code: "",
-  });
-
-  useEffect(() => {
-    const fetchUserData = () => {
-      const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-      setUserdata(userDetails || {});
-      setUserid(userDetails?._id || "");
-    };
-
-    fetchUserData();
-    const intervalId = setInterval(fetchUserData, 300000); // Fetch every 5 minutes
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   const handleSubmit1 = async () => {
-    const formdata = new FormData();
-    formdata.append("userid", String(userdata?._id));
-    formdata.append("social_username", social_username);
-    formdata.append("social_type", social_type);
-    formdata.append("social_dec", social_dec);
-    formdata.append("social_Amount", social_Amount);
-    formdata.append("social_code", formData.social_code);
+    const formData = new FormData();
+    formData.append("userid", userid);
+    formData.append("social_username", social_username);
+    formData.append("social_type", social_type);
+    formData.append("social_dec", social_dec);
+    formData.append("social_Amount", social_Amount);
+    formData.append("social_code", social_code);
 
     try {
-      const response = await axios.post("http://localhost:8000/gameaccount", formdata, {
+      const response = await axios.post("http://localhost:8000/social", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       if (response.status === 200) {
@@ -173,16 +149,29 @@ function Sellsocial() {
     setSocial_type("instagram");
     setSocial_dec("");
     setSocial_Amount("");
-    setFormData({
-      social_code: "",
-    });
+    setSocial_code(generateReferenceNumber());
+  };
+
+  const getImageForPlatform = () => {
+    switch (social_type) {
+      case 'instagram':
+        return 'https://usr.dokan-cdn.com/instagram.png';
+      case 'tiktok':
+        return 'https://usr.dokan-cdn.com/tiktok.png';
+      case 'twitter':
+        return 'https://usr.dokan-cdn.com/twitter.png';
+      case 'steam':
+        return 'https://usr.dokan-cdn.com/steam.png';
+      default:
+        return 'https://usr.dokan-cdn.com/default.png'; // Fallback image
+    }
   };
 
   return (
     <Container>
       <Row>
-        <Col xs={12} className="mt-5 mb-3">
-          <h2 className="text-center text-white bg-danger p-3">
+        <Col xs={12}>
+          <h2 className="text-center text-white bg-danger p-3" style={{ fontSize: '20px' }}>
             منصة يوزر لن تطلب منك بيانات الحساب خارج هذه الصفحة بشكل نهائي | ولن تطلب منك تسليم أي بيانات عبر الواتس اب او منصات أخرى
           </h2>
         </Col>
@@ -198,7 +187,7 @@ function Sellsocial() {
                   <p>وضح في الوصف نوع الأيميل الأساسي أيضاً قم بتوضيح إن كان الحساب مربوط برقم هاتف أم لا.</p>
                   <p>*الرجاء كتابة وصف دقيق يذكر جميع مميزات وعيوب الحساب لتجنب حدوث أي مشاكل*</p>
 
-                  <Form.Group className="mb-3" controlId="formGridAddress2">
+                  <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
                     <Form.Control
                       placeholder="الإسم الاول"
                       value={userid}
@@ -208,17 +197,22 @@ function Sellsocial() {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formBasicUsername">
+                  <Form.Group className="mb-3" controlId="formBasicUsername" style={{ width: '100%' }}>
                     <Form.Label>اسم المستخدم</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      value={social_username} 
-                      onChange={e => setSocial_username(e.target.value)} 
-                      placeholder="أدخل اسم المستخدم" 
+                    <Form.Control
+                      type="text"
+                      value={social_username}
+                      onChange={e => setSocial_username(e.target.value)}
+                      placeholder="أدخل اسم المستخدم"
+                      aria-label="اسم المستخدم"
+                      isInvalid={social_username.trim() === ''}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      يرجى إدخال اسم المستخدم
+                    </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-3" style={{ width: '100%' }}>
                     <Form.Label>المنصة</Form.Label>
                     <Form.Select value={social_type} onChange={handlePlatformChange}>
                       <option value="instagram">انستقرام</option>
@@ -232,7 +226,7 @@ function Sellsocial() {
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="descriptionTextarea">
+                  <Form.Group className="mb-3" controlId="descriptionTextarea" style={{ width: '100%' }}>
                     <Form.Label>وصف الحساب</Form.Label>
                     <Form.Control as="textarea" rows={3} value={generateText()} onChange={e => setSocial_dec(e.target.value)} readOnly />
                     <p>لا تقم بوضع أي طريقة تواصل خارج المنصة في الوصف بشكل نهائي لأنها تعرض حسابك للحظر!</p>
@@ -242,30 +236,30 @@ function Sellsocial() {
                     تكوين وصف
                   </Button>
 
-                  <Form.Group className="mb-3" controlId="promoTitle">
+                  <Form.Group className="mb-3" controlId="promoTitle" style={{ width: '100%' }}>
                     <Form.Label>العنوان الترويجي (٢٥ حرف كحد أقصى) (غير إلزامي)</Form.Label>
                     <Form.Control type="text" disabled />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="price">
+                  <Form.Group className="mb-3" controlId="price" style={{ width: '100%' }}>
                     <Form.Label>السعر (بالدولار)</Form.Label>
                     <Form.Control type="number" value={social_Amount} onChange={e => setSocial_Amount(e.target.value)} />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="priceBeforeDiscount">
+                  <Form.Group className="mb-3" controlId="priceBeforeDiscount" style={{ width: '100%' }}>
                     <Form.Label>السعر قبل التخفيض (غير إلزامي) (بالدولار) (فقط شكل, لن يتم بيع الحساب بهذا السعر)</Form.Label>
                     <Form.Control type="text" disabled />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" style={{ color: 'red' }}>
+                  <Form.Group className="mb-3" style={{ color: 'red', width: '100%' }}>
                     <Form.Check type="checkbox" label="أتعهّد بخلو وصف المنتج من أي وسيلة تواصل خارج المنصة بأي طريقة كانت سواء مباشرة أو غير مباشرة" />
                   </Form.Group>
                   
-                  <Form.Group className="mb-3" style={{ color: 'red' }}>
+                  <Form.Group className="mb-3" style={{ color: 'red', width: '100%' }}>
                     <Form.Check type="checkbox" label="أتعهّد بتحمل كامل المسؤولية القانونية بما مضى أو صدر من الحساب المعروض من تاريخ إنشائه أو شرائه إلى تاريخ بيعه بمنصة يوزر وأتعهد بخلوه من أي جرائم إلكترونية" />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" style={{ color: '#00fff7' }}>
+                  <Form.Group className="mb-3" style={{ color: '#00fff7', width: '100%' }}>
                     <Form.Check type="checkbox" label="استقبال عروض" />
                   </Form.Group>
                   

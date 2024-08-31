@@ -8,8 +8,13 @@ import { Link } from 'react-router-dom';
 
 // Utility function to truncate text
 const truncateText = (text, maxLength) => {
-  if (text.length <= maxLength) return text;
-  return `${text.substring(0, maxLength)}...`;
+  if (typeof text !== 'string') {
+    return '';
+  }
+  if (typeof maxLength !== 'number' || maxLength <= 0) {
+    return text;
+  }
+  return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
 };
 
 const JobList = ({ jobs }) => {

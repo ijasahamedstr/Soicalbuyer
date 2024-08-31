@@ -34,3 +34,22 @@ export const ServiceAccountInsert = async (req, res) => {
         res.status(500).json({ error: "An error occurred while creating the service account." });
     }
 };
+
+
+
+// All Account View 
+export const ServiceIndex = async (req, res) => {
+    try {
+        // Fetch all game registrations from the database
+        const seriviceRegisters = await ServiceDB.find();
+
+        // Send the data as JSON response
+        res.json(seriviceRegisters);
+    } catch (error) {
+        // Log the error for debugging purposes
+        logger.error('Error fetching game registrations:', { message: error.message, stack: error.stack });
+
+        // Send a 500 status code and error message
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+};

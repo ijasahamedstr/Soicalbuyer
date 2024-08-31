@@ -142,26 +142,26 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد التحويل الداخلي</p>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>عرض حسابات بقيمة 250$ وما فوق</p><br/>
         </div>
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
             <Form.Control placeholder="الإسم الاول" className="hidden" name="userid" value={userid} onChange={handleChange}  />
         </Form.Group>
         
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>الإسم الاول</Form.Label>
             <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname" value={fname} onChange={handleChange}  />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>الإسم الوسط</Form.Label>
             <Form.Control placeholder="الإسم الوسط" className='sign__input'  name="midname" value={midname} onChange={handleChange}  />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>الإسم الأخير</Form.Label>
             <Form.Control placeholder="الإسم الأخير" className='sign__input' name="lname"  value={lname} onChange={handleChange}  />
         </Form.Group>
         
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>دولة إصدار الوثيقة</Form.Label>
         <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry" value={documentcountry} onChange={handleChange}>
         <option value="BH">مملكة البحرين</option>
@@ -177,7 +177,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         </Form.Select>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>نوع الوثيقة</Form.Label>
         <Form.Select aria-label="Default select example" className='sign__input' name="documenttype" value={documenttype} onChange={handleChange}>
         <option value="passport">جواز السفر</option>
@@ -186,12 +186,12 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         </Form.Select>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>رقم الوثيقة</Form.Label>
             <Form.Control placeholder="رقم وثيقة الإثبات" className='sign__input' name="documentnumber" value={documentnumber} onChange={handleChange}  />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridAddress2">
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
         <Form.Label>وثيقة الإثبات</Form.Label>
             <Form.Control  placeholder="رقم وثيقة الإثبات" className='sign__input' type="file" onChange={handleFileChange} name='photo' />
         </Form.Group>
@@ -199,7 +199,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <h4 >لضمان قبول طلبك الرجاء مراجعة</h4>
         <h5 style={{color:'red'}}>إرشادات الوثيقة</h5>
         <div>
-        <Form.Group className="mb-3" style={{marginTop:'15px',fontFamily:'Noto Kufi Arabic',fontSize:'13px'}}>
+        <Form.Group className="mb-3" style={{marginTop:'15px',fontFamily:'Noto Kufi Arabic',fontSize:'13px' ,width:'100%'}} >
         <Form.Check
           required
           label="أوافق على الشروط والأحكام "
@@ -208,7 +208,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         />
       </Form.Group>
  
-      <Form.Group className="mb-3" style={{fontFamily:'Noto Kufi Arabic',fontSize:'13px',textAlign:'left'}}>
+      <Form.Group className="mb-3" style={{fontFamily:'Noto Kufi Arabic',fontSize:'13px',textAlign:'left',}}>
         <Form.Check
           required
           label="انا مسؤول عن أي بيانات مدخله وأتحمل أي إجراء قانوني "

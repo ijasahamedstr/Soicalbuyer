@@ -2,7 +2,6 @@ import SocialDB from "../models/soical.models.js";
 
 // Insert Social Account Service
 export const socialAccountInsert = async (req, res) => {
-    // Extract fields from the request
     const { userid, social_username, social_type, social_dec, social_amount, social_code } = req.body;
 
     try {
@@ -30,6 +29,7 @@ export const socialAccountInsert = async (req, res) => {
         res.status(500).json({ error: "An error occurred while creating the service account." });
     }
 };
+
 
 
 
@@ -111,4 +111,18 @@ export const SoicalAccountUpdate  = async (req, res) => {
     }
 };
 
+
+// All Acccount Delete
+
+export const soicalAccountDelete = async (req, res) => {
+    const AccountId =  req.params.id;
+    
+    try {
+         await SocialDB.deleteOne({_id: AccountId})
+         res.json({message:"Acoount deleted!"});
+    } catch (error) {
+     res.status(500).json({message:error.message})
+    }
+ };
+ 
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Swal from 'sweetalert2';  // Import SweetAlert2
+import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
@@ -16,14 +16,17 @@ function Sellservice() {
   const [service_Amount, setService_Amount] = useState("");
   const [service_time_houre, setService_time_houre] = useState("");
   const [service_buy_Amount, setService_buy_Amount] = useState("");
-  const [service_Staus, setService_Staus] = useState("");
+  const [service_Staus, setService_Staus] = useState("Pending");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // Fetch user data from localStorage and set interval
   useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-      setUserdata(userDetails || {}); // Fallback to empty object
+      setUserdata(userDetails || {});
     };
 
     fetchUserData();
@@ -67,7 +70,7 @@ function Sellservice() {
     e.preventDefault();
 
     const formData = {
-      userid: String(userdata?._id), // Convert _id to string if necessary
+      userid: String(userdata?._id),
       service_heading,
       service_type,
       service_dec,
@@ -76,7 +79,7 @@ function Sellservice() {
       service_buy_Amount,
       service_Staus,
     };
-    
+
     try {
       const res = await axios.post("http://localhost:8000/service", formData);
       
@@ -103,147 +106,203 @@ function Sellservice() {
     }
   };
 
+  // Fetch job listings
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/service');
+        const userPosts = response.data.filter(item => item.userid === userdata?._id);
+        setData(userPosts);
+      } catch (error) {
+        console.error('Error fetching job listings:', error);
+        setError('Failed to fetch job listings.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [userdata]);
+
   const marginTopValue = '50px';
   const marginBottomValue = '20px';
   
   return (
     <>
-      <Container>
-        <Row>
-          <div
-            style={{
-              marginTop: marginTopValue,
-              marginBottom: marginBottomValue,
-            }}
-          >
-            <h2
-              style={{
-                textAlign: 'center',
-                fontSize: '20px',
-                color: 'white',
-                background: 'red',
-                padding: '15px',
-              }}
-            >
-             منصة يوزر لن تطلب منك بيانات الحساب خارج هذه الصفحة بشكل نهائي | ولن تطلب منك تسليم أي بيانات عبر الواتس اب او منصات أخرى
-            </h2>
-          </div>
-          <Col style={{ backgroundColor: '#FFFFFF' }}>
-            <h4>بيع خدمة</h4>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      
+      {data.filter(item => item.service_Staus === 'Pending').length > 0 ? (
+         <Container>
+         {/* Stack the columns on mobile by making one full-width and the other half-width */}
+         <Row>
+         <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>الطلبات</h2></div>
+           <Col style={{backgroundColor:'#FFFFFF'}}>
+           </Col>
+         </Row>
+         <Row>
+           <Col>
+             <div class="col d-flex align-items-center justify-content-center">
+             <div className="">
+             <div class="col-12">
+             <div class="col-12">
+             <div class="sign">
+             <div class="sign__content">
+             <Form className='sign__form'>
+             <h1 class="page-404__title" style={{fontFamily:'Inter'}}>401</h1>
+             <p class="page-404__text">لديك خدمة قيد المراجعة بالفعل, الرجاء الإنتظار لحين الإنتهاء من مراجعتها</p>
+             <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>           
+              العودة  
+             </Button>
+             </Form>
+             </div>
+             </div>
+             </div>
+             </div>
+             </div>
+             </div>
+           </Col>
+         </Row>
+       </Container>
+      ) : (
+        <Container>
+          <Row>
+            <Col style={{ backgroundColor: '#FFFFFF' }}>
+              <div
+                style={{
+                  marginTop: marginTopValue,
+                  marginBottom: marginBottomValue,
+                }}
+              >
+                <h2
+                  style={{
+                    textAlign: 'center',
+                    fontSize: '20px',
+                    color: 'white',
+                    background: 'red',
+                    padding: '15px',
+                  }}
+                >
+                  منصة يوزر لن تطلب منك بيانات الحساب خارج هذه الصفحة بشكل نهائي | ولن تطلب منك تسليم أي بيانات عبر الواتس اب او منصات أخرى
+                </h2>
+              </div>
 
-            <h6
-              style={{
-                textAlign: 'center',
-                fontSize: '15px',
-                color: 'white',
-                background: '#8037ff',
-                padding: '15px',
-              }}
-            > 
-جديد : هذه الميزة متاحة للمستخدمين العاديين برسوم ١٠٪ , ولمستخدمي باقة لايت برسوم ٥٪ , ولمستخدمي باقة برو برسوم ٣٪</h6>
-            <Container>
-              <Row>
-                <Col style={{ backgroundColor: '#FFFFFF' }}></Col>
-              </Row>
-              <Row style={{ background: '#F7F9F9', padding: '30px' }}>
-                <Col>
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="formBasicHeading">
-                      <Form.Label>عنوان الخدمة</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="service_heading"
-                        value={service_heading}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+              <h4>بيع خدمة</h4>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label>نوع الخدمة </Form.Label>
-                      <Form.Select
-                        name="service_type"
-                        value={service_type}
-                        onChange={handleChange}
-                      >
-                        <option value="1">خدمات المتابعين</option>
-                        <option value="2">خدمات إستضافة</option>
-                        <option value="3">خدمات أخرى</option>
-                        <option value="4">خدمات الالعاب</option>
-                        <option value="5">خدمات البرمجة</option>
-                        <option value="6">خدمات التصميم</option>
-                        <option value="7">خدمات المونتاج</option>
-                        <option value="8">خدمات FiveM</option>
-                      </Form.Select>
-                    </Form.Group>
+              <h6
+                style={{
+                  textAlign: 'center',
+                  fontSize: '15px',
+                  color: 'white',
+                  background: '#8037ff',
+                  padding: '15px',
+                }}
+              >
+                جديد : هذه الميزة متاحة للمستخدمين العاديين برسوم ١٠٪ , ولمستخدمي باقة لايت برسوم ٥٪ , ولمستخدمي باقة برو برسوم ٣٪
+              </h6>
 
-                    <Form.Group className="mb-3" controlId="formBasicDescription">
-                      <Form.Label>وصف الحساب</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={3}
-                        name="service_dec"
-                        value={service_dec}
-                        onChange={handleChange}
-                      />
-                      <p>لاتقم بوضع أي طريقة تواصل خارج المنصة في الوصف بشكل نهائي لأنها قد تعرض حسابك للحظر!</p>
-                    </Form.Group>
+              <Container>
+                <Row style={{ background: '#F7F9F9', padding: '30px' }}>
+                  <Col>
+                    <Form onSubmit={handleSubmit}>
+                      <Form.Group className="mb-3" controlId="formBasicHeading" style={{ width: '100%' }}>
+                        <Form.Label>عنوان الخدمة</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="service_heading"
+                          value={service_heading}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicAmount">
-                      <Form.Label>السعر (بالدولار)</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="service_Amount"
-                        value={service_Amount}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+                      <Form.Group className="mb-3" style={{ width: '100%' }}>
+                        <Form.Label>نوع الخدمة</Form.Label>
+                        <Form.Select
+                          name="service_type"
+                          value={service_type}
+                          onChange={handleChange}
+                        >
+                          <option value="خدمات المتابعين">خدمات المتابعين</option>
+                          <option value="خدمات إستضافة">خدمات إستضافة</option>
+                          <option value="خدمات أخرى">خدمات أخرى</option>
+                          <option value="خدمات الالعاب">خدمات الالعاب</option>
+                          <option value="خدمات البرمجة">خدمات البرمجة</option>
+                          <option value="خدمات التصميم">خدمات التصميم</option>
+                          <option value="خدمات المونتاج">خدمات المونتاج</option>
+                          <option value="خدمات FiveM">خدمات FiveM</option>
+                        </Form.Select>
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicTime">
-                      <Form.Label>كم ساعة يستغرق تسليم الخدمة؟</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="service_time_houre"
-                        value={service_time_houre}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+                      <Form.Group className="mb-3" controlId="formBasicDescription" style={{ width: '100%' }}>
+                        <Form.Label>وصف الحساب</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows={3}
+                          name="service_dec"
+                          value={service_dec}
+                          onChange={handleChange}
+                        />
+                        <p>لاتقم بوضع أي طريقة تواصل خارج المنصة في الوصف بشكل نهائي لأنها قد تعرض حسابك للحظر!</p>
+                      </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicBuyAmount">
-                      <Form.Label>أقصى كمية يمكن العميل شراءها </Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="service_buy_Amount"
-                        value={service_buy_Amount}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+                      <Form.Group className="mb-3" controlId="formBasicAmount" style={{ width: '100%' }}>
+                        <Form.Label>السعر (بالدولار)</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="service_Amount"
+                          value={service_Amount}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
 
-                    <p style={{ textAlign: 'center' }}>المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: 100</p>
+                      <Form.Group className="mb-3" controlId="formBasicTime" style={{ width: '100%' }}>
+                        <Form.Label>كم ساعة يستغرق تسليم الخدمة؟</Form.Label>
+                        <Form.Control
+                          type="number"
+                          name="service_time_houre"
+                          value={service_time_houre}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
 
-                    <Row>
-                      <Col>
-                        <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px',background:'#6164ff' }}>
-                          عرض الخدمة
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button variant="primary" type="button" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px',background:'grey' }}>
-                          إضافة خيارات مدفوعة
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button variant="primary" type="button" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px',background:'#cb910d' }}>
-                          إضافة حقول بيانات
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Form>
-                </Col>
-              </Row>
-            </Container>
-          </Col>
-        </Row>
-      </Container>
+                      <Form.Group className="mb-3" controlId="formBasicBuyAmount" style={{ width: '100%' }}>
+                        <Form.Label>أقصى كمية يمكن العميل شراءها</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="service_buy_Amount"
+                          value={service_buy_Amount}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+
+                      <p style={{ textAlign: 'center' }}>المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: 100</p>
+
+                      <Row>
+                        <Col>
+                          <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#6164ff' }}>
+                            عرض الخدمة
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button variant="primary" type="button" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: 'grey' }}>
+                            إضافة خيارات مدفوعة
+                          </Button>
+                        </Col>
+                        <Col>
+                          <Button variant="primary" type="button" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#cb910d' }}>
+                            إضافة حقول بيانات
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Col>
+                </Row>
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </>
   );
 }

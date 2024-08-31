@@ -108,11 +108,11 @@ function Points() {
         <Form className='sign__form' onSubmit={handleSubmit}>
         <p>تحويل النقاط</p>
         <p>لديك :{userdata?.currentbalance} نقطة</p>
-        <Form.Group className="mb-3" controlId="formGridUsername">
+        <Form.Group className="mb-3" controlId="formGridUsername" style={{width:'100%'}}>
             <Form.Control placeholder="أسم المستخدم" className='sign__input'  value={username} onChange={(e) => setUsername(e.target.value)}  />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formGridPoints">
+        <Form.Group className="mb-3" controlId="formGridPoints" style={{width:'100%'}}>
             <Form.Control type='number' placeholder="عدد النقاط" className='sign__input' value={points}   onChange={(e) => setPoints(e.target.value)}   />
         </Form.Group>
 

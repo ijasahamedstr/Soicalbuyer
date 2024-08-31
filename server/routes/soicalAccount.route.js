@@ -1,5 +1,5 @@
 import express from 'express';
-import { socialAccountInsert, SoicalAccountUpdate, SoicalIndex, soicalSingleDetails } from '../controller/soical.Controller.js';
+import { socialAccountInsert, soicalAccountDelete, SoicalAccountUpdate, SoicalIndex, soicalSingleDetails } from '../controller/soical.Controller.js';
 
 
 const soicalrouter = express.Router();
@@ -15,5 +15,11 @@ soicalrouter.get("/:id",soicalSingleDetails);
 
 //Update Data Register
 soicalrouter.put('/:id',SoicalAccountUpdate);
+
+
+
+//Delete Data Register
+
+soicalrouter.delete('/:id',soicalAccountDelete);
 
 export default soicalrouter;
