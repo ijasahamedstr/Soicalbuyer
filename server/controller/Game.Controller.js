@@ -24,7 +24,6 @@ export const GameAccountInsert = async (req, res) => {
             gametype,
             gamedec,
             gameAmount,
-            
             gamegmail,
             gamepassword,
             gametitle,

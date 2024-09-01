@@ -6,55 +6,88 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './Servicesuser.css';
+import axios from 'axios';
 
 function Servicesuser() {
-  const marginTopValue = '50px',marginBottomValue = '20px';
+  const [userdata, setUserdata] = useState(null);
   const [jobs, setJobs] = useState([]);
-  const [filters, setFilters] = useState({
-    location: '',
-    type: '',
-    level: '',
-    language: ''
-  });
+  const [filters, setFilters] = useState({ location: '' });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Fetch user data from localStorage and set interval
+  useEffect(() => {
+    const fetchUserData = () => {
+      const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+      setUserdata(userDetails || {});
+    };
+
+    fetchUserData();
+    const intervalId = setInterval(fetchUserData, 300000); // Update every 5 minutes
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
+  }, []);
+
+  // Fetch job data from API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Replace with actual API endpoint or local data
-        // const response = await axios.get('https://api.example.com/jobs');
-        const mockData = [
-          { id: 1, title: 'Frontend Developer', location: 'Remote', type: 'Full-time', level: 'Senior', language: 'JavaScript' },
-          { id: 2, title: 'Backend Developer', location: 'New York', type: 'Part-time', level: 'Junior', language: 'Python' },
-          { id: 3, title: 'Backend Developer', location: 'New York', type: 'Part-time', level: 'Junior', language: 'Python' },
-          { id: 4, title: 'Backend Developer', location: 'New York', type: 'Part-time', level: 'Junior', language: 'Python' },
-          // Add more mock data or fetch from API
-        ];
-        setJobs(mockData);
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/service'); // Replace with actual API endpoint
+        setJobs(response.data);
       } catch (error) {
         console.error('Error fetching job listings:', error);
+        setError('Failed to fetch job listings.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
+  // Handle filter changes
   const handleFilterChange = (filterType, value) => {
-    setFilters({ ...filters, [filterType]: value });
+    setFilters(prevFilters => ({ ...prevFilters, [filterType]: value }));
   };
 
-  const filteredJobs = jobs.filter(job =>
-    (filters.location === '' || job.location.toLowerCase().includes(filters.location.toLowerCase())) &&
-    (filters.type === '' || job.type.toLowerCase() === filters.type.toLowerCase()) &&
-    (filters.level === '' || job.level.toLowerCase() === filters.level.toLowerCase()) &&
-    (filters.language === '' || job.language.toLowerCase() === filters.language.toLowerCase())
-  );
+  // Filter jobs based on current filters
+  const filteredJobs = jobs.filter(job => {
+    const jobLocation = job[userdata?.displayName] || ''; // Optional chaining for safety
+    return filters.location === '' || jobLocation.includes(filters.location);
+  });
+
+  // Display loading state
+  if (loading) {
+    return (
+      <Container>
+        <Row>
+          <Col className="text-center mt-5">
+            <p>Loading...</p>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
+  // Display error state
+  if (error) {
+    return (
+      <Container>
+        <Row>
+          <Col className="text-center mt-5">
+            <p>{error}</p>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
     return (
       <>
     <Container>
       {/* Stack the columns on mobile by making one full-width and the other half-width */}
       <Row>
-      <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>حسابات التواصل الإجتماعي</h2></div>
         <Col style={{backgroundColor:'#FFFFFF'}}>
         <Filters filters={filters} onFilterChange={handleFilterChange} />
         </Col>

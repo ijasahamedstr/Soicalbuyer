@@ -3,6 +3,9 @@ import { Card } from 'react-bootstrap';
 import {Row, Col } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 import './Servicesuser.css';
+import { Link } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
+
 
 const JobList = ({ jobs }) => {
   return (
@@ -15,15 +18,15 @@ const JobList = ({ jobs }) => {
                 <div>
                 <Card style={{backgroundColor:'#F2F3F4'}}>
                 <Card.Title><div className='card__likes'><span className='card__likes1'>🚀بوست</span></div></Card.Title>
-                <Card.Title>ارخص و افضل خدمات تيك توك 🔥 ضمان مدى الحياة (متابعين - لايكات - مشاهدات - حفظ - اكسبلور - تعليقات )🔥 هدية رباعي تيك مع كل طلب 🎁
-                </Card.Title>
+                <Nav.Link as={Link} to={`/Service-view/${job._id}`}><Card.Title>{job.service_heading}
+                </Card.Title></Nav.Link>
                 <Card.Body>
-                  <Card.Text> 🔴عرض حتى وصول الخدمة ل 1200طلب|🎁ستحصل دبل(ضعف) طلبك مجانا+ هدية مجانية ولفترة محدودة 🔥|الخدمة الافضل بضمان وتنفيذ فوري 0~24ساعة</Card.Text>
+                  <Card.Text>{job.service_dec}</Card.Text>
                   <Card.Text>
                   </Card.Text>
                 </Card.Body>
                     <ListGroup.Item>
-                    <h3 style={{ color: '#6164ff', fontSize: '24px'}}>$100.00 </h3>
+                    <h3 style={{ color: '#6164ff', fontSize: '24px'}}>${job.service_Amount} </h3>
                     <div class="post__meta">
                     <a class="post__date" href="https://usr.gg/450">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 17">
@@ -33,7 +36,7 @@ const JobList = ({ jobs }) => {
                     @450
                     </a>
                     <span class="post__comments"  dir="rtl" title="الوقت التقريبي لتنفيذ الخدمة">
-                    ⏰ 24 ساعة
+                    ⏰ {job.service_time_houre}
                     </span>
                     <span class="post__comments">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 20">

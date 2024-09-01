@@ -120,7 +120,6 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
   const  marginTopValue = '50px',marginBottomValue = '10px';
   return (
     <Container>
-    {/* Stack the columns on mobile by making one full-width and the other half-width */}
     <Row>
     <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>الطلبات</h2></div>
       <Col style={{backgroundColor:'#FFFFFF'}}>
@@ -135,7 +134,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <div class="col-12">
         <div class="sign">
         <div class="sign__content">
-        <Form className='sign__form' onSubmit={handleSubmit}>
+        <Form  className='sign__form' onSubmit={handleSubmit}>
         <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px',textAlign:'center'}}>تفعيل الحساب بالهوية يمكنك من التالي</h3>
         <div>
         <p style={{textAlign:'center',fontSize:'14px',color:'red',marginBottom:'1px'}}>فتح حد السحب</p>
@@ -240,7 +239,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
         <div class="col-12">
         <div class="sign">
         <div class="sign__content">
-        <Form className='sign__form' style={{width:'400px'}}>
+        <Form className='sign__form' style={{width:'450px'}}>
         <div className="container mt-4">
         <div className="row justify-content-center">
             <img

@@ -39,6 +39,8 @@ import Sellgaming from './component/Page/sell/sell.gaming';
 import Sellservice from './component/Page/sell/sell.service';
 import GameEdit from './component/Page/Games/GameEdit';
 import Editsocial from './component/Page/SocialMediaAccounts/SocialMediaeditAccountsView';
+import Serviceview from './component/Page/Services-user/Service-view';
+import ServiceEdit from './component/Page/Services-user/ServiceEdit';
 
 
 
@@ -101,6 +103,8 @@ function App() {
           <Route path="/sell/service" element={<Sellservice userdata={userdata} />} />
           <Route path="/gameedit/:id" element={<GameEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
           <Route path="/soicaledit/:id" element={<Editsocial isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
+          <Route path="/Service-view/:id" element={<Serviceview isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
+          <Route path="/ServiceEdit/:id" element={<ServiceEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
         </Routes>
       </Router>
       <Footer />

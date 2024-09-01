@@ -11,6 +11,10 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import { LuMessagesSquare } from "react-icons/lu";
+
+
 
 function MyPaymentModal(props) {
   return (
@@ -256,7 +260,30 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
       <MyPaymentModal
       show={modalShow}
       onHide={() => setModalShow(false)}
-      />
+      /> 
+    <Container fluid="md">
+      <Row>
+        <Col>
+        <Form className='sign__form'>
+        <h1 class="page-404__title"  id="xLoader"><LuMessagesSquare /></h1>
+        <p>لايوجد تعليقات</p>
+        <p>الوضع ركود لايوجد اي تعليق</p>
+
+        <Form.Group className="mb-3" controlId="formGridReason" style={{width:'100%'}}>
+        <Form.Control as="textarea" rows={4} className='sign__textarea' placeholder="سبب التحويل" style={{width:'100%'}} />
+        </Form.Group>
+
+        <p>* لاتذكر أي طريقة للتواصل خارج المنصة سيعرض حسابك للحظر مباشرة</p>
+
+        <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic'}}>
+        إرسال
+        </Button>
+      
+        </Form>
+        </Col>
+      </Row>
+    </Container>
+
     </>
   );
 }

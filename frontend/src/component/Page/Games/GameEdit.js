@@ -95,7 +95,7 @@ function GameEdit() {
                     {item?.gameid || ''}
                   </h3>
 
-                  <Form.Group className="mb-3" controlId="formGridGameTitle">
+                  <Form.Group className="mb-3" controlId="formGridGameTitle" style={{width:'100%'}}>
                     <Form.Label>العنوان</Form.Label>
                     <Form.Control
                       className='sign__input'
@@ -109,7 +109,7 @@ function GameEdit() {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formGridDocumentCountry">
+                  <Form.Group className="mb-3" controlId="formGridDocumentCountry" style={{width:'100%'}}>
                     <Form.Label>دولة إصدار الوثيقة</Form.Label>
                     <Form.Select
                       aria-label="Default select example"
@@ -127,7 +127,7 @@ function GameEdit() {
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formGridDocumentType">
+                  <Form.Group className="mb-3" controlId="formGridDocumentType" style={{width:'100%'}}>
                     <Form.Label>نوع الوثيقة</Form.Label>
                     <Form.Select
                       aria-label="Default select example"
@@ -145,7 +145,7 @@ function GameEdit() {
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formGridDocumentNumber">
+                  <Form.Group className="mb-3" controlId="formGridDocumentNumber" style={{width:'100%'}}>
                     <Form.Label>رقم الوثيقة</Form.Label>
                     <Form.Control
                       as="textarea"
@@ -161,7 +161,7 @@ function GameEdit() {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formGridGameAmount">
+                  <Form.Group className="mb-3" controlId="formGridGameAmount" style={{width:'100%'}}>
                     <Form.Label>الكمية</Form.Label>
                     <Form.Control
                       className='sign__input'
@@ -175,7 +175,7 @@ function GameEdit() {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formBasicCheckbox1" style={{ color: 'red' }}>
+                  <Form.Group className="mb-3" controlId="formBasicCheckbox1" style={{ color: 'red',width:'100%' }} >
                     <Form.Check
                       type="checkbox"
                       label="اتعهد بخلو وصف المنتج من أي وسيلة تواصل خارج المنصة بأي طريقة كانت سواء مباشرة أو غير مباشرة"
@@ -187,7 +187,7 @@ function GameEdit() {
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-3" controlId="formBasicCheckbox2" style={{ color: 'red' }}>
+                  <Form.Group className="mb-3" controlId="formBasicCheckbox2" style={{ color: 'red',width:'100%' }}>
                     <Form.Check
                       type="checkbox"
                       label="اتعهد بتحمل كامل المسؤوليه القانونية بما مضى او صدر من الحساب المعروض من تاريخ انشاءه او شراءه الى تاريخ بيعه بمنصة يوزر واتعهد بخلوه من اي جرائم إلكترونيه"
