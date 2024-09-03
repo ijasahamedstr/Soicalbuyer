@@ -22,6 +22,7 @@ import notificationrouter from "./routes/notification.route.js";
 import gamerouter from "./routes/gameaccount.route.js";
 import servicerouter from "./routes/service.route.js";
 import soicalrouter from "./routes/soicalAccount.route.js";
+import feedbackrouter from "./routes/feedback.route.js";
 
 
 
@@ -85,6 +86,9 @@ app.use('/soical', soicalrouter);
 
 // Account Point Transfer
 app.use('/point',pointrouter);
+
+// Account Point Transfer
+app.use('/feedback',feedbackrouter);
 
 
 // User Account User boost

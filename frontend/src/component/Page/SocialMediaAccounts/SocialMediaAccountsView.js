@@ -13,6 +13,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { LuMessagesSquare } from "react-icons/lu";
+import Swal from 'sweetalert2';  // Import SweetAlert2
+import axios from 'axios';
 
 
 
@@ -55,6 +57,8 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [error, setError] = useState(null);
   const  marginTopValue = '50px',marginBottomValue = '10px';
   const [modalShow, setModalShow] = React.useState(false);
+  const [userid, setUserid] = useState('');
+  const [feedback, setFeedback] = useState('');
 
   // Fetch and set user data
   useEffect(() => {
@@ -144,6 +148,40 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/feedback', {
+        userid,
+        feedback,
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Feedback submitted successfully!',
+        });
+        setUserid('');
+        setFeedback('');
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'Submission failed. Please try again.',
+        });
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'An unexpected error occurred. Please try again later.';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: errorMessage,
+      });
+    }
+  };
+
+
   return (
     <>
      <Container>
@@ -160,7 +198,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <div class="col-12">
         <div class="col-12">
         <div class="sign">
-        <div class="sign__content" style={{background:'#222227',borderRadius:'30px',justifyContent:'center'}}>
+        <div class="sign__content" style={{background:'#222227',borderRadius:'30px',justifyContent:'center',height:'950px'}}>
         <Card.Img variant="top" src={getImageForPlatform(item.social_type)}  style={{borderRadius:'30px',width:'50%',marginTop:'0px'}}  />
         </div>
         </div>
@@ -264,13 +302,24 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
     <Container fluid="md">
       <Row>
         <Col>
-        <Form className='sign__form'>
+        <Form className='sign__form' onSubmit={handleSubmit}>
         <h1 class="page-404__title"  id="xLoader"><LuMessagesSquare /></h1>
         <p>لايوجد تعليقات</p>
         <p>الوضع ركود لايوجد اي تعليق</p>
 
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
+        <Form.Control  
+          name="userid" 
+          value={userdata._id || ''} // Handle cases where userdata._id might be undefined
+          onChange={(e) => setUserid(e.target.value)} // Ensure state updates correctly
+          className="hidden"
+        />
+      </Form.Group>
+
+
         <Form.Group className="mb-3" controlId="formGridReason" style={{width:'100%'}}>
-        <Form.Control as="textarea" rows={4} className='sign__textarea' placeholder="سبب التحويل" style={{width:'100%'}} />
+        <Form.Control as="textarea" rows={4} className='sign__textarea' placeholder="سبب التحويل" style={{width:'100%'}} value={feedback}
+          onChange={(e) => setFeedback(e.target.value)} />
         </Form.Group>
 
         <p>* لاتذكر أي طريقة للتواصل خارج المنصة سيعرض حسابك للحظر مباشرة</p>
