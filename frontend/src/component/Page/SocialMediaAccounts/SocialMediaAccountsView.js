@@ -277,8 +277,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         // Render buy button for others
         <Button variant="primary" style={{ textDecoration: 'none', width:'100%' }}  onClick={() => setModalShow(true)} >
         <span>(${item.social_amount})</span>شراء
-        </Button>
-                        
+        </Button>                      
         )}
        
         <div class="a2a_kit a2a_kit_size_32 a2a_default_style mt-3" style={{lineHeight:'32px'}}>
@@ -310,9 +309,8 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
         <Form.Control  
           name="userid" 
-          value={userdata._id || ''} // Handle cases where userdata._id might be undefined
-          onChange={(e) => setUserid(e.target.value)} // Ensure state updates correctly
-          className="hidden"
+          value={userdata?._id || ''} 
+          onChange={(e) => setUserid(e.target.value)}
         />
       </Form.Group>
 

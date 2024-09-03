@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Button, Form, Modal, Card, Nav } from 'react-bootstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -58,17 +58,14 @@ const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_use
   </Modal>
 );
 
-const generateReferenceNumber = () => {
-  const randomNumber = Math.floor(Math.random() * 90000) + 10000;
-  return `CHK${randomNumber}`;
-};
+const generateReferenceNumber = () => `CHK${Math.floor(Math.random() * 90000) + 10000}`;
 
 function Sellsocial() {
   const [userid, setUserid] = useState("");
   const [social_username, setSocial_username] = useState("");
   const [social_type, setSocial_type] = useState("instagram");
   const [social_dec, setSocial_dec] = useState("");
-  const [social_Amount, setSocial_Amount] = useState("");
+  const [social_amount, setSocial_amount] = useState("");
   const [userdata, setUserdata] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [modalShow1, setModalShow1] = useState(false);
@@ -93,22 +90,22 @@ function Sellsocial() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = useCallback((event) => {
     const value = event.target.value;
     setSelectedOptions(prevSelected =>
       prevSelected.includes(value)
         ? prevSelected.filter(item => item !== value)
         : [...prevSelected, value]
     );
-  };
+  }, []);
 
-  const handlePlatformChange = (event) => {
+  const handlePlatformChange = useCallback((event) => {
     setSocial_type(event.target.value);
-  };
+  }, []);
 
-  const generateText = () => {
-    return selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`;
-  };
+  const generateText = useCallback(() => (
+    selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`
+  ), [selectedOptions]);
 
   const handleSubmit1 = async () => {
     const formData = new FormData();
@@ -116,13 +113,14 @@ function Sellsocial() {
     formData.append("social_username", social_username);
     formData.append("social_type", social_type);
     formData.append("social_dec", social_dec);
-    formData.append("social_Amount", social_Amount);
+    formData.append("social_amount", social_amount);
     formData.append("social_code", social_code);
 
     try {
-      const response = await axios.post("http://localhost:8000/social", formData, {
+      const response = await axios.post("http://localhost:8000/soical", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
+
       if (response.status === 200) {
         resetForm();
         Swal.fire({
@@ -148,24 +146,20 @@ function Sellsocial() {
     setSocial_username("");
     setSocial_type("instagram");
     setSocial_dec("");
-    setSocial_Amount("");
+    setSocial_amount("");
     setSocial_code(generateReferenceNumber());
   };
 
-  const getImageForPlatform = () => {
-    switch (social_type) {
-      case 'instagram':
-        return 'https://usr.dokan-cdn.com/instagram.png';
-      case 'tiktok':
-        return 'https://usr.dokan-cdn.com/tiktok.png';
-      case 'twitter':
-        return 'https://usr.dokan-cdn.com/twitter.png';
-      case 'steam':
-        return 'https://usr.dokan-cdn.com/steam.png';
-      default:
-        return 'https://usr.dokan-cdn.com/default.png'; // Fallback image
-    }
-  };
+  const getImageForPlatform = useCallback(() => {
+    const images = {
+      instagram: 'https://usr.dokan-cdn.com/instagram.png',
+      tiktok: 'https://usr.dokan-cdn.com/tiktok.png',
+      twitter: 'https://usr.dokan-cdn.com/twitter.png',
+      steam: 'https://usr.dokan-cdn.com/steam.png',
+      default: 'https://usr.dokan-cdn.com/default.png'
+    };
+    return images[social_type] || images.default;
+  }, [social_type]);
 
   return (
     <Container>
@@ -205,11 +199,7 @@ function Sellsocial() {
                       onChange={e => setSocial_username(e.target.value)}
                       placeholder="أدخل اسم المستخدم"
                       aria-label="اسم المستخدم"
-                      isInvalid={social_username.trim() === ''}
                     />
-                    <Form.Control.Feedback type="invalid">
-                      يرجى إدخال اسم المستخدم
-                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group className="mb-3" style={{ width: '100%' }}>
@@ -243,7 +233,7 @@ function Sellsocial() {
 
                   <Form.Group className="mb-3" controlId="price" style={{ width: '100%' }}>
                     <Form.Label>السعر (بالدولار)</Form.Label>
-                    <Form.Control type="number" value={social_Amount} onChange={e => setSocial_Amount(e.target.value)} />
+                    <Form.Control type="number" value={social_amount} onChange={e => setSocial_amount(e.target.value)} />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="priceBeforeDiscount" style={{ width: '100%' }}>
@@ -264,7 +254,7 @@ function Sellsocial() {
                   </Form.Group>
                   
                   <p>ستتمكن من استقبال عروض مالية على الحساب من المستخدمين الآخرين (سومات) وبإمكانك قبول عرض بسهولة تامة*</p>
-                  <p className="text-center">المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: ${social_Amount}</p>
+                  <p className="text-center">المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: ${social_amount}</p>
                  
                   <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px' }} onClick={() => setModalShow1(true)}>
                     تأكيد ملكية الحساب
@@ -318,7 +308,7 @@ function Sellsocial() {
                   <div className="card__price">
                     <span>السعر</span>
                     <span dir="rtl">
-                      <span className="account_price_previe">${social_Amount}</span>
+                      <span className="account_price_previe">${social_amount}</span>
                     </span>
                   </div>
                 </Card.Link>

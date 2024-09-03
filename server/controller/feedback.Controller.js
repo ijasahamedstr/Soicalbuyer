@@ -20,3 +20,17 @@ export const feedbackCreate = async (req, res) => {
         res.status(400).json({ error: "Invalid Details", details: error.message });
     }
 };
+
+
+// All Acccount View 
+export const FeedbackIndex = async (req, res) => {
+    try {
+
+        const feedbackRegister = await feedbackactive.find();
+
+        res.json(feedbackRegister);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

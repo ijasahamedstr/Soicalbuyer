@@ -117,6 +117,47 @@ app.use('/Accountimage', express.static(path.join(__dirname, 'Accountimage')));
 app.use("/user/api",userrouter);
 
 
+
+/******************************************************************** */
+
+
+// Dummy access token; in a real application, you would store this securely
+const ACCESS_TOKEN = 'your_real_access_token';
+
+// Endpoint to get the access token
+app.get('/api/get-access-token', (req, res) => {
+  try {
+    res.json({ access_token: ACCESS_TOKEN });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get access token' });
+  }
+});
+
+// Endpoint to proxy TikTok API requests
+app.get('/api/tiktok/user-info', async (req, res) => {
+  try {
+    const response = await axios.get('https://open.tiktokapis.com/v2/user/info/', {
+      params: { fields: 'open_id,union_id,avatar_url,display_name' },
+      headers: {
+        Authorization: `Bearer ${ACCESS_TOKEN}`
+      }
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({
+      error: error.response?.data?.error?.message || 'Failed to fetch user data'
+    });
+  }
+});
+/******************************************************************** */
+
+
+
+
+
+
+
+
 // Start the Express server
 const port = 8000;
 app.listen(port, () => {
