@@ -8,20 +8,27 @@ import { useNavigate } from 'react-router-dom';
 function MyVerticallyCenteredModal(props) {
   const [isAdditionalFieldsVisible, setIsAdditionalFieldsVisible] = useState(false);
   const [additionalFields, setAdditionalFields] = useState([]);
+  const [additionalFields1, setAdditionalFields1] = useState([]);
 
   const handleToggleAdditionalFields = () => {
     setIsAdditionalFieldsVisible(!isAdditionalFieldsVisible);
   };
 
   const handleAddField = () => {
-    setAdditionalFields([...additionalFields, { id: Date.now() }]); // Add a new field with a unique id
+    setAdditionalFields([...additionalFields, { id: Date.now() }]);
   };
 
+  const handleAddField1 = () => {
+    setAdditionalFields1([...additionalFields1, { id: Date.now() }]);
+  };
 
   const handleRemoveField = (id) => {
-    setAdditionalFields(additionalFields.filter(field => field.id !== id)); // Remove field by id
+    setAdditionalFields(additionalFields.filter(field => field.id !== id));
   };
 
+  const handleRemoveField1 = (id) => {
+    setAdditionalFields1(additionalFields1.filter(field => field.id !== id));
+  };
 
   return (
     <Modal
@@ -42,77 +49,77 @@ function MyVerticallyCenteredModal(props) {
         <p>الخيارات الإضافية المدفوعة</p>
 
         <Container style={{ width: '50%' }}>
-          {isAdditionalFieldsVisible && (
-            <Row className="my-4">
-              <Col className="d-flex align-items-center justify-content-center">
-                <Form>
-                  <h5 className="text-center">تفعيل الحساب بالهوية يمكنك من التالي</h5>
-                  <Form.Group className="mb-3" controlId="formAdditionalField1">
-                    <Form.Label>عنوان الحقل</Form.Label>
-                    <Form.Control className='sign__input' name="additionalField1" />
-                  </Form.Group>
+          {additionalFields1.map(field => (
+            <div key={field.id}>
+              <Row className="my-4">
+                <Col className="d-flex align-items-center justify-content-center">
+                  <Form>
+                    <h5 className="text-center">تفعيل الحساب بالهوية يمكنك من التالي</h5>
+                    <Form.Group className="mb-3" controlId={`formAdditionalField1-${field.id}`}>
+                      <Form.Label>عنوان الحقل</Form.Label>
+                      <Form.Control className='sign__input' name={`additionalField1-${field.id}`} />
+                    </Form.Group>
 
-                  {additionalFields.map(field => (
-                    <>
-                      <div key={field.id}>
-                      <hr />
-                      <Form.Group className="mb-3" controlId="formAdditionalField2">
-                        <Form.Label>عنوان الحقل</Form.Label>
-                        <Form.Control className='sign__input' name="additionalField2" />
-                      </Form.Group>
+                    {additionalFields.map(innerField => (
+                      <div key={innerField.id}>
+                        <hr />
+                        <Form.Group className="mb-3" controlId={`formAdditionalField2-${innerField.id}`}>
+                          <Form.Label>عنوان الحقل</Form.Label>
+                          <Form.Control className='sign__input' name={`additionalField2-${innerField.id}`} />
+                        </Form.Group>
 
-                      <Form.Group className="mb-3" controlId="formAdditionalField3">
-                        <Form.Label>عنوان الحقل</Form.Label>
-                        <Form.Control className='sign__input' name="additionalField3" type='number' />
-                      </Form.Group>
+                        <Form.Group className="mb-3" controlId={`formAdditionalField3-${innerField.id}`}>
+                          <Form.Label>عنوان الحقل</Form.Label>
+                          <Form.Control className='sign__input' name={`additionalField3-${innerField.id}`} type='number' />
+                        </Form.Group>
 
-                      <Button
-                        variant="danger"
-                        type="button"
-                        className="w-100"
-                        style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#bb1839' }}
-                        onClick={() => handleRemoveField(field.id)}
-                      >
-                        حذف حقل الخيار
-                      </Button>
-                      <hr />
+                        <Button
+                          variant="danger"
+                          type="button"
+                          className="w-100"
+                          style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#bb1839' }}
+                          onClick={() => handleRemoveField(innerField.id)}
+                        >
+                          حذف حقل الخيار
+                        </Button>
+                        <hr />
                       </div>
-                    </>
                     ))}
 
-                  <Button
-                    variant="danger"
-                    type="button"
-                    className="w-100"
-                    style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#6f18bb' }}
-                    onClick={handleAddField}
-                  >
-                    إضافة خيار
-                  </Button>
-                  <br />
-                  <br />
-                  <Button
-                    variant="danger"
-                    type="button"
-                    className="w-100"
-                    style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#bb1839' }}
-                    onClick={handleToggleAdditionalFields}
-                  >
-                    حذف حقل الخيار
-                  </Button>
-                </Form>
-              </Col>
-            </Row>
-          )}
-        </Container>
+                    <Button
+                      variant="danger"
+                      type="button"
+                      className="w-100"
+                      style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#6f18bb' }}
+                      onClick={handleAddField}
+                    >
+                      إضافة خيار
+                    </Button>
+                    <br />
+                    <br />
+                    <Button
+                      variant="danger"
+                      type="button"
+                      className="w-100"
+                      style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#bb1839' }}
+                      onClick={() => handleRemoveField1(field.id)}
+                    >
+                      {isAdditionalFieldsVisible ? 'إخفاء الحقول' : 'عرض الحقول'}
+                    </Button>
+                  </Form>
+                </Col>
+              </Row>
+            </div>
+          ))}
 
-        <Button
-          variant="primary"
-          style={{ background: '#bb3e18', width: '100%', border: 'none' }}
-          onClick={handleToggleAdditionalFields}
-        >
-          {isAdditionalFieldsVisible ? 'حذف الحقل' : 'إضافة بيانات إضافية'}
-        </Button>
+          <Button
+            variant="primary"
+            style={{ background: '#bb3e18', width: '100%', border: 'none' }}
+            onClick={handleAddField1}
+          >
+            {isAdditionalFieldsVisible ? 'حذف الحقل' : 'إضافة بيانات إضافية'}
+          </Button>
+        </Container>
       </Modal.Body>
     </Modal>
   );

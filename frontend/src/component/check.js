@@ -1,60 +1,88 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
-const UserProfile = () => {
-  const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+// Create a Context for form data
+const FormContext = createContext();
+
+// Custom hook to use form context
+const useFormContext = () => useContext(FormContext);
+
+// Provider component to manage form data
+const FormProvider = ({ children }) => {
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch access token from backend securely
-        const tokenResponse = await axios.get('/api/get-access-token');
-        const accessToken = tokenResponse.data.access_token;
-
-        // Make API request to TikTok using the access token
-        const response = await axios.get('https://open.tiktokapis.com/v2/user/info/?fields=open_id,union_id,avatar_url,display_name', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-
-        // Set user data
-        setUserData(response.data.data.user);
-      } catch (err) {
-        // Improved error handling
-        if (err.response) {
-          // Server responded with an error
-          const errorMessage = err.response.data?.error?.message || 'An error occurred while fetching user data.';
-          setError(errorMessage);
-        } else if (err.request) {
-          // No response received from the server
-          setError('No response received from the server.');
-        } else {
-          // Error occurred while setting up the request
-          setError(err.message || 'An unexpected error occurred.');
-        }
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
-    };
-
-    fetchData();
+    // Fetch initial form data from API
+    axios.get('http://localhost:8000/api/formData')
+      .then(response => setFormData(response.data || {}))
+      .catch(error => console.error('Error fetching form data:', error));
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!userData) return <div>No user data found</div>;
+  const updateFormData = (data) => {
+    axios.post('http://localhost:8000/api/formData', data)
+      .then(response => setFormData(response.data))
+      .catch(error => console.error('Error updating form data:', error));
+  };
+
+  return (
+    <FormContext.Provider value={{ formData, updateFormData }}>
+      {children}
+    </FormContext.Provider>
+  );
+};
+
+// Form component to handle user input
+const FormComponent = () => {
+  const { formData, updateFormData } = useFormContext();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    updateFormData({ [name]: value });
+  };
+
+  return (
+    <form>
+      <input
+        type="text"
+        name="firstName"
+        value={formData.firstName || ''}
+        onChange={handleChange}
+        placeholder="First Name"
+      />
+      <input
+        type="text"
+        name="lastName"
+        value={formData.lastName || ''}
+        onChange={handleChange}
+        placeholder="Last Name"
+      />
+      {/* Add more fields as needed */}
+    </form>
+  );
+};
+
+// Display component to show form data
+const DisplayComponent = () => {
+  const { formData } = useFormContext();
 
   return (
     <div>
-      <h1>User Profile</h1>
-      <img src={userData.avatar_url} alt={userData.display_name} style={{ width: 168, height: 168 }} />
-      <p>Display Name: {userData.display_name}</p>
-      <p>Open ID: {userData.open_id}</p>
-      <p>Union ID: {userData.union_id}</p>
+      <h3>Form Data:</h3>
+      <pre>{JSON.stringify(formData, null, 2)}</pre>
     </div>
+  );
+};
+
+// Main component to render FormProvider and components
+const UserProfile = () => {
+  return (
+    <FormProvider>
+      <div>
+        <h1>Form Example</h1>
+        <FormComponent />
+        <DisplayComponent />
+      </div>
+    </FormProvider>
   );
 };
 

@@ -23,6 +23,7 @@ import gamerouter from "./routes/gameaccount.route.js";
 import servicerouter from "./routes/service.route.js";
 import soicalrouter from "./routes/soicalAccount.route.js";
 import feedbackrouter from "./routes/feedback.route.js";
+import mongoose from 'mongoose';
 
 
 
@@ -121,35 +122,50 @@ app.use("/user/api",userrouter);
 /******************************************************************** */
 
 
-// Dummy access token; in a real application, you would store this securely
-const ACCESS_TOKEN = 'your_real_access_token';
+const ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'; // Replace with your access token
 
-// Endpoint to get the access token
-app.get('/api/get-access-token', (req, res) => {
-  try {
-    res.json({ access_token: ACCESS_TOKEN });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to get access token' });
-  }
-});
-
-// Endpoint to proxy TikTok API requests
-app.get('/api/tiktok/user-info', async (req, res) => {
-  try {
-    const response = await axios.get('https://open.tiktokapis.com/v2/user/info/', {
-      params: { fields: 'open_id,union_id,avatar_url,display_name' },
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`
-      }
-    });
-    res.json(response.data);
-  } catch (error) {
-    res.status(error.response?.status || 500).json({
-      error: error.response?.data?.error?.message || 'Failed to fetch user data'
-    });
-  }
+app.get('/api/instagram/user/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const url = `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${ACCESS_TOKEN}`;
+    
+    try {
+        const response = await axios.get(url);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 /******************************************************************** */
+
+//****************************************************************** */
+
+const formDataSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String
+});
+
+const FormData = mongoose.model('FormData', formDataSchema);
+
+app.post('/api/formData', async (req, res) => {
+  const data = req.body;
+  try {
+    const formData = await FormData.findOneAndUpdate({}, data, { upsert: true, new: true });
+    res.json(formData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/formData', async (req, res) => {
+  try {
+    const formData = await FormData.findOne();
+    res.json(formData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/******************************************************************* */
 
 
 
