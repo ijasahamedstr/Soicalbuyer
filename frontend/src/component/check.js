@@ -1,89 +1,60 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
-// Create a Context for form data
-const FormContext = createContext();
+const InstagramUserInfo = () => {
+    const [userId, setUserId] = useState('');
+    const [userInfo, setUserInfo] = useState(null);
+    const [error, setError] = useState(null);
 
-// Custom hook to use form context
-const useFormContext = () => useContext(FormContext);
+    const fetchUserInfo = async () => {
+        if (!userId) {
+            setError('Please enter a user ID');
+            return;
+        }
 
-// Provider component to manage form data
-const FormProvider = ({ children }) => {
-  const [formData, setFormData] = useState({});
+        try {
+            const response = await fetch(`/api/instagram/user/${userId}`);
+            
+            if (!response.ok) {
+                // Read response text for more details
+                const errorText = await response.text();
+                throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorText}`);
+            }
 
-  useEffect(() => {
-    // Fetch initial form data from API
-    axios.get('http://localhost:8000/api/formData')
-      .then(response => setFormData(response.data || {}))
-      .catch(error => console.error('Error fetching form data:', error));
-  }, []);
+            try {
+                const data = await response.json();
+                setUserInfo(data);
+                setError(null);
+            } catch (jsonError) {
+                // Handle JSON parsing errors
+                throw new Error('Error parsing JSON response. Please ensure the server is returning valid JSON.');
+            }
+            
+        } catch (error) {
+            // Set the error state with a message
+            setError(`An error occurred: ${error.message}`);
+            setUserInfo(null);
+        }
+    };
 
-  const updateFormData = (data) => {
-    axios.post('http://localhost:8000/api/formData', data)
-      .then(response => setFormData(response.data))
-      .catch(error => console.error('Error updating form data:', error));
-  };
-
-  return (
-    <FormContext.Provider value={{ formData, updateFormData }}>
-      {children}
-    </FormContext.Provider>
-  );
+    return (
+        <div>
+            <input
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                placeholder="Enter Instagram User ID"
+            />
+            <button onClick={fetchUserInfo}>Get User Info</button>
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+            {userInfo && (
+                <div>
+                    <p><strong>ID:</strong> {userInfo.id}</p>
+                    <p><strong>Username:</strong> {userInfo.username}</p>
+                    <p><strong>Account Type:</strong> {userInfo.account_type}</p>
+                </div>
+            )}
+        </div>
+    );
 };
 
-// Form component to handle user input
-const FormComponent = () => {
-  const { formData, updateFormData } = useFormContext();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    updateFormData({ [name]: value });
-  };
-
-  return (
-    <form>
-      <input
-        type="text"
-        name="firstName"
-        value={formData.firstName || ''}
-        onChange={handleChange}
-        placeholder="First Name"
-      />
-      <input
-        type="text"
-        name="lastName"
-        value={formData.lastName || ''}
-        onChange={handleChange}
-        placeholder="Last Name"
-      />
-      {/* Add more fields as needed */}
-    </form>
-  );
-};
-
-// Display component to show form data
-const DisplayComponent = () => {
-  const { formData } = useFormContext();
-
-  return (
-    <div>
-      <h3>Form Data:</h3>
-      <pre>{JSON.stringify(formData, null, 2)}</pre>
-    </div>
-  );
-};
-
-// Main component to render FormProvider and components
-const UserProfile = () => {
-  return (
-    <FormProvider>
-      <div>
-        <h1>Form Example</h1>
-        <FormComponent />
-        <DisplayComponent />
-      </div>
-    </FormProvider>
-  );
-};
-
-export default UserProfile;
+export default InstagramUserInfo;

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 
+
 function MyVerticallyCenteredModal(props) {
   const [isAdditionalFieldsVisible, setIsAdditionalFieldsVisible] = useState(false);
   const [additionalFields, setAdditionalFields] = useState([]);
@@ -126,20 +127,32 @@ function MyVerticallyCenteredModal(props) {
 }
 
 
+
+
 function MyVerticallyCenteredModal1(props) {
   const [isAdditionalFieldsVisible, setIsAdditionalFieldsVisible] = useState(false);
   const [additionalFields, setAdditionalFields] = useState([]);
 
   const handleAddField = () => {
-    setAdditionalFields([...additionalFields, { id: Date.now() }]); // Add a new field with a unique id
+    setAdditionalFields([...additionalFields, { id: Date.now(), title: '', documentType: '' }]);
   };
 
   const handleRemoveField = (id) => {
-    setAdditionalFields(additionalFields.filter(field => field.id !== id)); // Remove field by id
+    setAdditionalFields(additionalFields.filter(field => field.id !== id));
+  };
+
+  const handleChangeField = (id, e) => {
+    const { name, value } = e.target;
+    setAdditionalFields(additionalFields.map(field => field.id === id ? { ...field, [name]: value } : field));
   };
 
   const handleToggleAdditionalFields = () => {
     setIsAdditionalFieldsVisible(!isAdditionalFieldsVisible);
+  };
+
+  const handleSave = () => {
+    props.handleAdditionalFieldsChange(additionalFields);
+    props.onHide();
   };
 
   return (
@@ -171,14 +184,25 @@ function MyVerticallyCenteredModal1(props) {
                     <div key={field.id}>
                       <Form.Group className="mb-3" controlId={`formAdditionalField-${field.id}`}>
                         <Form.Label>عنوان الحقل</Form.Label>
-                        <Form.Control className='sign__input' name={`additionalField-${field.id}`} />
+                        <Form.Control
+                          className='sign__input'
+                          name="title"
+                          value={field.title}
+                          onChange={(e) => handleChangeField(field.id, e)}
+                        />
                       </Form.Group>
                       <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                      <Form.Label>نوع الوثيقة</Form.Label>
-                      <Form.Select aria-label="Default select example" className='sign__input' name="documenttype">
-                      <option value="passport">نصي</option>
-                      <option value="id">رقمي</option>
-                      </Form.Select>
+                        <Form.Label>نوع الوثيقة</Form.Label>
+                        <Form.Select
+                          aria-label="Default select example"
+                          className='sign__input'
+                          name="documentType"
+                          value={field.documentType}
+                          onChange={(e) => handleChangeField(field.id, e)}
+                        >
+                          <option value="نصي">نصي</option>
+                          <option value="رقمي">رقمي</option>
+                        </Form.Select>
                       </Form.Group>
                       <Button
                         variant="danger"
@@ -187,7 +211,7 @@ function MyVerticallyCenteredModal1(props) {
                         style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#bb1839' }}
                         onClick={() => handleRemoveField(field.id)}
                       >
-                         حذف الحقل 
+                        حذف الحقل 
                       </Button>
                       <hr />
                     </div>
@@ -200,22 +224,26 @@ function MyVerticallyCenteredModal1(props) {
                     style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px', background: '#17b643' }}
                     onClick={handleAddField}
                   >
-                     إضافة حقل إضافي
+                    إضافة حقل إضافي
                   </Button>
                 </Form>
               </Col>
             </Row>
           )}
-        </Container>
 
-        <Button
-          variant="primary"
-          style={{ background: '#bb3e18', width: '100%', border: 'none' }}
-          onClick={handleToggleAdditionalFields}
-        >
-          {isAdditionalFieldsVisible ? 'حذف الحقل' : 'إضافة بيانات إضافية'}
-        </Button>
+          <Button
+            variant="primary"
+            style={{ background: '#bb3e18', width: '100%', border: 'none' }}
+            onClick={handleToggleAdditionalFields}
+          >
+            {isAdditionalFieldsVisible ? 'حذف الحقل' : 'إضافة بيانات إضافية'}
+          </Button>
+        </Container>
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>إغلاق</Button>
+        <Button variant="primary" onClick={handleSave}>حفظ</Button>
+      </Modal.Footer>
     </Modal>
   );
 }
@@ -229,7 +257,8 @@ function Sellservice() {
     service_Amount: '',
     service_time_houre: '',
     service_buy_Amount: '',
-    service_Staus: 'Pending'
+    service_Staus: 'Pending',
+    additionalFields: [] // Add additional fields to the state
   });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -255,6 +284,13 @@ function Sellservice() {
     setFormState(prevState => ({
       ...prevState,
       [name]: value
+    }));
+  };
+
+  const handleAdditionalFieldsChange = (fields) => {
+    setFormState(prevState => ({
+      ...prevState,
+      additionalFields: fields
     }));
   };
 
@@ -447,6 +483,7 @@ function Sellservice() {
                           <MyVerticallyCenteredModal1
                             show={modalShow1}
                             onHide={() => setModalShow1(false)}
+                            handleAdditionalFieldsChange={handleAdditionalFieldsChange}
                           />
                         </Col>
                       </Row>

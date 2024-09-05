@@ -24,6 +24,8 @@ import servicerouter from "./routes/service.route.js";
 import soicalrouter from "./routes/soicalAccount.route.js";
 import feedbackrouter from "./routes/feedback.route.js";
 import mongoose from 'mongoose';
+import axios from 'axios';
+
 
 
 
@@ -122,8 +124,10 @@ app.use("/user/api",userrouter);
 /******************************************************************** */
 
 
-const ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'; // Replace with your access token
+// Replace with your actual Instagram access token
+const ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 
+// Endpoint to get Instagram user details
 app.get('/api/instagram/user/:userId', async (req, res) => {
     const { userId } = req.params;
     const url = `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${ACCESS_TOKEN}`;
@@ -132,9 +136,25 @@ app.get('/api/instagram/user/:userId', async (req, res) => {
         const response = await axios.get(url);
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        if (error.response) {
+            // Instagram API responded with an error
+            res.status(error.response.status).json({
+                error: error.response.data.error.message || 'An error occurred'
+            });
+        } else if (error.request) {
+            // No response received from Instagram API
+            res.status(500).json({
+                error: 'No response received from Instagram API'
+            });
+        } else {
+            // Error setting up the request
+            res.status(500).json({
+                error: error.message
+            });
+        }
     }
 });
+
 /******************************************************************** */
 
 //****************************************************************** */
@@ -166,6 +186,7 @@ app.get('/api/formData', async (req, res) => {
 });
 
 /******************************************************************* */
+
 
 
 
