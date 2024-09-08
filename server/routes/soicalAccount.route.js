@@ -5,10 +5,10 @@ import { socialAccountInsert, soicalAccountDelete, SoicalAccountUpdate, SoicalIn
 const soicalrouter = express.Router();
 
 // User routes
-soicalrouter.post('/', socialAccountInsert);
+soicalrouter.post('/',socialAccountInsert);
 
 // View the Data Register
-soicalrouter.get('/', SoicalIndex);
+soicalrouter.get('/',SoicalIndex);
 
 // View the Single Data Register
 soicalrouter.get("/:id",soicalSingleDetails);

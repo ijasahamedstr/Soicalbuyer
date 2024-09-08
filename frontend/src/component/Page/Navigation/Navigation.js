@@ -72,9 +72,10 @@ function OffcanvasExample({isOTPLoggedIn, OTPLoggedUserData}) {
   const logoutFuntion = () => {
     localStorage.clear();
     console.log('logout');
-    
     window.location.reload();
+    navigate('/'); 
   };
+  
 
   const user = {
     avatar: 'https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png',

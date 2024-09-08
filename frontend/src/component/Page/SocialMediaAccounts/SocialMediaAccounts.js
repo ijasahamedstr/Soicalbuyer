@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 function Soicalaccount() {
   const [userdata, setUserdata] = useState({});
   const [jobs, setJobs] = useState([]);
+  const [userinfo, setUserinfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,6 +46,25 @@ function Soicalaccount() {
 
     fetchData();
   }, []);
+
+
+    // Fetch job data from API
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+          setUserinfo(response.data);
+        } catch (error) {
+          console.error('Error fetching job listings:', error);
+          setError('Failed to fetch job listings.');
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
 
 
@@ -100,6 +120,9 @@ function Soicalaccount() {
         return 'https://usr.dokan-cdn.com/default.png';
     }
   };
+
+  
+  
     return (
       <>
       <div className="container">

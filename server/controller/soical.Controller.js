@@ -1,10 +1,14 @@
 import SocialDB from "../models/soical.models.js";
 
+
 // Insert Social Account Service
 export const socialAccountInsert = async (req, res) => {
-    const { userid, social_username, social_type, social_dec, social_amount, social_code } = req.body;
+    const { userid, social_username, social_type, social_dec, social_amount, social_code, sstatus } = req.body;
 
     try {
+        // Input validation
+       
+
         // Check if a service with the same social_username exists
         const existingService = await SocialDB.findOne({ social_username });
         if (existingService) {
@@ -18,19 +22,18 @@ export const socialAccountInsert = async (req, res) => {
             social_type,
             social_dec,
             social_amount,
-            social_code
+            social_code,
+            sstatus
         });
 
         // Save the document to the database
         await newSocialAccount.save();
         res.status(201).json({ message: "Service account successfully created", userData: newSocialAccount });
     } catch (error) {
-        console.error("Error in socialAccountInsert:", error);
-        res.status(500).json({ error: "An error occurred while creating the service account." });
+        console.error("Error in socialAccountInsert:", error.message); // Log only the error message for better readability
+        res.status(500).json({ error: "An error occurred while creating the service account. Please try again later." });
     }
 };
-
-
 
 
 // All Account View 

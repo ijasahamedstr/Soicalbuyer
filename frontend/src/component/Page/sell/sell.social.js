@@ -1,40 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Button, Form, Modal, Card, Nav } from 'react-bootstrap';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-// Modal for description configuration
-const DescriptionModal = ({ show, onHide, onSelectOption }) => (
-  <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-    <Modal.Header closeButton>
-      <Modal.Title id="contained-modal-title-vcenter">تكوين وصف</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <h4>
-        حرصاً منا على تسهيل عملية البيع يمكنك اختيار مواصفات الحساب بشكل تلقائي وسيتم إضافتها إلى الوصف بشكل مرتب.
-      </h4>
-      <p style={{ color: 'red' }}>
-        هذه الميزة تجريبية ولاتغنيك عن كتابة الوصف. الرجاء كتابة وصف دقيق لتجنب المشاكل.
-      </p>
-      {["الحساب مع الأيميل الأساسي", "الحساب بدون الأيميل الأساسي", "الحساب مربوط برقم هاتف", "الحساب غير مربوط برقم هاتف"].map(option => (
-        <Form.Check
-          key={option}
-          type="checkbox"
-          id={`switch-${option}`}
-          label={option}
-          value={option}
-          onChange={onSelectOption}
-        />
-      ))}
-    </Modal.Body>
-    <Modal.Footer>
-      <Button onClick={onHide}>إغلاق</Button>
-    </Modal.Footer>
-  </Modal>
-);
-
-// Modal for ownership confirmation
+// Ownership Confirmation Modal
 const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_username }) => (
   <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     <Modal.Header closeButton>
@@ -61,94 +31,38 @@ const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_use
 const generateReferenceNumber = () => `CHK${Math.floor(Math.random() * 90000) + 10000}`;
 
 function Sellsocial() {
-  const [userid, setUserid] = useState("");
-  const [social_username, setSocial_username] = useState("");
-  const [social_type, setSocial_type] = useState("instagram");
-  const [social_dec, setSocial_dec] = useState("");
-  const [social_amount, setSocial_amount] = useState("");
   const [userdata, setUserdata] = useState(null);
-  const [modalShow, setModalShow] = useState(false);
+  const [userid, setUserid] = useState("");
+  const [social_code, setSocial_code] = useState(generateReferenceNumber());
+  const [social_username, setSocial_username] = useState('');
+  const [social_type, setSocial_type] = useState('instagram');
+  const [social_amount, setSocial_amount] = useState('');
+  const [social_dec, setSocial_dec] = useState('');
   const [modalShow1, setModalShow1] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [social_code, setSocial_code] = useState('');
-  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
 
-  useEffect(() => {
-    setSocial_code(generateReferenceNumber());
-  }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem('userDetails'));
       setUserdata(userDetails || {});
-      setUserid(userDetails?._id || "");
     };
 
     fetchUserData();
-    const intervalId = setInterval(fetchUserData, 300000); // Fetch every 5 minutes
+    const intervalId = setInterval(fetchUserData, 300000); // 5 minutes interval
 
     return () => clearInterval(intervalId);
   }, []);
 
-  const handleCheckboxChange = useCallback((event) => {
-    const value = event.target.value;
-    setSelectedOptions(prevSelected =>
-      prevSelected.includes(value)
-        ? prevSelected.filter(item => item !== value)
-        : [...prevSelected, value]
-    );
-  }, []);
-
-  const handlePlatformChange = useCallback((event) => {
-    setSocial_type(event.target.value);
-  }, []);
-
-  const generateText = useCallback(() => (
-    selectedOptions.length === 0 ? 'No options selected.' : `${selectedOptions.join(', ')}`
-  ), [selectedOptions]);
-
-  const handleSubmit1 = async () => {
-    const formData = new FormData();
-    formData.append("userid", userid);
-    formData.append("social_username", social_username);
-    formData.append("social_type", social_type);
-    formData.append("social_dec", social_dec);
-    formData.append("social_amount", social_amount);
-    formData.append("social_code", social_code);
-
-    try {
-      const response = await axios.post("http://localhost:8000/soical", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-
-      if (response.status === 200) {
-        resetForm();
-        Swal.fire({
-          title: 'Success!',
-          text: 'Your operation was successful.',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
-        navigate("/");
-      }
-    } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: error.response?.data.error || "An error occurred",
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+  useEffect(() => {
+    if (userdata?._id) {
+      setUserid(String(userdata._id));
     }
-  };
-
-  const resetForm = () => {
-    setUserid("");
-    setSocial_username("");
-    setSocial_type("instagram");
-    setSocial_dec("");
-    setSocial_amount("");
-    setSocial_code(generateReferenceNumber());
-  };
+  }, [userdata]);
 
   const getImageForPlatform = useCallback(() => {
     const images = {
@@ -161,7 +75,166 @@ function Sellsocial() {
     return images[social_type] || images.default;
   }, [social_type]);
 
+  const handlePlatformChange = (e) => {
+    setSocial_type(e.target.value);
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    setSocial_dec(prev => checked ? `${prev ? `${prev}, ` : ''}${value}` : prev.replace(`, ${value}`, '').replace(value, ''));
+  };
+
+  const generateText = () => social_dec;
+
+  const handleSubmit = async () => {
+    if (!social_username || !social_amount || !social_dec) {
+      Swal.fire({
+        title: 'تنبيه',
+        text: 'يرجى ملء جميع الحقول المطلوبة',
+        icon: 'warning',
+        confirmButtonText: 'موافق'
+      });
+      return;
+    }
+
+    try {
+      const formData = {
+        userid,
+        social_code,
+        social_username,
+        social_type,
+        social_amount,
+        social_dec,
+        sstatus: 'Pending'
+      };
+
+      const response = await axios.post('http://localhost:8000/soical', formData);
+
+      if (response.status === 201) {
+        Swal.fire({
+          title: 'تأكيد الملكية',
+          text: 'تم تأكيد الملكية بنجاح!',
+          icon: 'success',
+          confirmButtonText: 'موافق'
+        });
+
+        navigate('/'); // Redirect after successful submission
+      } else {
+        throw new Error('حدث خطأ أثناء إرسال البيانات');
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'خطأ',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'موافق'
+      });
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/soical');
+        const userPosts = response.data.filter(item => item.userid === userdata?._id);
+        setData(userPosts);
+      } catch (error) {
+        console.error('Error fetching job listings:', error);
+        setError('Failed to fetch job listings.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userdata) {
+      fetchData();
+    }
+  }, [userdata]);
+
   return (
+<>
+  {loading && <p>Loading...</p>}
+  {error && <p>{error}</p>}
+  {data.some(item => item.sstatus === 'Pending') ? (
+    <Container>
+      <Row>
+        <Col style={{ marginTop: '50px' }}>
+          <Form className='sign__form'>
+            <h1 className="page-404__title" style={{ fontFamily: 'Inter' }}>401</h1>
+            <p className="page-404__text">لديك خدمة قيد المراجعة بالفعل, الرجاء الإنتظار لحين الإنتهاء من مراجعتها</p>
+            <Button variant="primary" type="button" style={{ fontFamily: 'Noto Kufi Arabic' }}>العودة</Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  ) : data.some(item => item.sstatus === 'Nextprocess') ? (
+    <Container>
+    <Row>
+      <Col style={{backgroundColor:'#FFFFFF'}}>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <div class="col d-flex align-items-center justify-content-center">
+        <div className="">
+        <div class="col-12">
+        <h2 style={{textAlign:'center',fontFamily:'Noto Kufi Arabic',marginTop:'1.5rem'}}>تأكيد الملكية ومعلومات التسليم</h2>
+        <div class="col-12">
+        <div class="sign">
+        <div class="sign__content">
+        <Form  className='sign__form' onSubmit={handleSubmit}>
+        <p>حرصاً منا على تقديم بيئة أمنة لبيع وشراء الحسابات يجب</p>
+       <p>عليك إتمام الخطوات أدناه لكي تتمكن من إضافة الحساب</p>
+       <p></p>
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+            <Form.Control placeholder="الإسم الاول" className="hidden" name="userid"   />
+        </Form.Group>
+        
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+        <Form.Label>الإسم الاول</Form.Label>
+            <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname" />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+        <Form.Label>الإسم الوسط</Form.Label>
+            <Form.Control placeholder="الإسم الوسط" className='sign__input'  name="midname" />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+        <Form.Label>الإسم الأخير</Form.Label>
+            <Form.Control placeholder="الإسم الأخير" className='sign__input' name="lname"   />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+        <Form.Label>نوع الوثيقة</Form.Label>
+        <Form.Select aria-label="Default select example" className='sign__input' name="documenttype">
+        <option value="passport">جواز السفر</option>
+        <option value="id">بطاقة الهوية</option>
+        <option value="driving_license">رخصة القيادة</option>
+        </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
+        <Form.Label>رقم الوثيقة</Form.Label>
+            <Form.Control placeholder="رقم وثيقة الإثبات" className='sign__input' name="documentnumber"  />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" style={{fontFamily:'Noto Kufi Arabic',fontSize:'13px',background:'red'}}>
+        مشاهدة إرشادات الوثيقة لإرسال الطلب 
+        </Button>
+    
+        </Form>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+      </Col>
+    </Row>
+  </Container>
+  ) : (
     <Container>
       <Row>
         <Col xs={12}>
@@ -175,20 +248,8 @@ function Sellsocial() {
             <Row className="bg-light p-4">
               <Col>
                 <Form>
-                  <p>(التيك توك) : يمنع منعاً باتاً عرض الحسابات (المكررة, الأرقام, العربية, المزخرفة, المنسوخة, القلم الأحمر والتي لا رابط لها).</p>
-                  <p>(إنستقرام) : يمنع منعاً باتاً عرض الحسابات (العربية, المزخرفة, المنسوخة, التي لا رابط لها).</p>
-                  <p>(سناب شات) : يمنع منعاً باتاً عرض الحسابات (العربية). يُحظر عرض حسابات سناب شات التي تتضمن مشاكل. في حالة اكتشاف مشكلة في الحساب، يُمنح المستخدم مهلة لا تتجاوز 24 ساعة لإصلاح المشكلة. في حال عدم حل المشكلة خلال المهلة المحددة، سيتم إلغاء الطلب.</p>
-                  <p>وضح في الوصف نوع الأيميل الأساسي أيضاً قم بتوضيح إن كان الحساب مربوط برقم هاتف أم لا.</p>
-                  <p>*الرجاء كتابة وصف دقيق يذكر جميع مميزات وعيوب الحساب لتجنب حدوث أي مشاكل*</p>
-
                   <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
-                    <Form.Control
-                      placeholder="الإسم الاول"
-                      value={userid}
-                      onChange={e => setUserid(e.target.value)}
-                      aria-label="First name"
-                      className="hidden"
-                    />
+                    <Form.Control placeholder="الإسم الاول" name="userid" className="hidden" value={userid} readOnly />
                   </Form.Group>
 
                   <Form.Group className="mb-3" controlId="formBasicUsername" style={{ width: '100%' }}>
@@ -218,13 +279,9 @@ function Sellsocial() {
 
                   <Form.Group className="mb-3" controlId="descriptionTextarea" style={{ width: '100%' }}>
                     <Form.Label>وصف الحساب</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={generateText()} onChange={e => setSocial_dec(e.target.value)} readOnly />
+                    <Form.Control as="textarea" rows={3} value={generateText()} onChange={e => setSocial_dec(e.target.value)} />
                     <p>لا تقم بوضع أي طريقة تواصل خارج المنصة في الوصف بشكل نهائي لأنها تعرض حسابك للحظر!</p>
                   </Form.Group>
-
-                  <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px' }} onClick={() => setModalShow(true)}>
-                    تكوين وصف
-                  </Button>
 
                   <Form.Group className="mb-3" controlId="promoTitle" style={{ width: '100%' }}>
                     <Form.Label>العنوان الترويجي (٢٥ حرف كحد أقصى) (غير إلزامي)</Form.Label>
@@ -260,16 +317,11 @@ function Sellsocial() {
                     تأكيد ملكية الحساب
                   </Button>
                   
-                  <DescriptionModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                    onSelectOption={handleCheckboxChange}
-                  />
                   <DescriptionModal1
                     show={modalShow1}
                     onHide={() => setModalShow1(false)}
                     social_code={social_code}
-                    handleSubmit={handleSubmit1}
+                    handleSubmit={handleSubmit}
                     social_username={social_username}
                   />
                 </Form>
@@ -285,15 +337,15 @@ function Sellsocial() {
                 <Card.Img variant="top" src={getImageForPlatform()} style={{ width: '100%' }} />
               </Nav.Link>
               <Card.Body>
-                <Card.Title>{userdata?.displayName || 'اسم غير متوفر'}</Card.Title>
+                <Card.Title>{social_username || 'اسم الحساب غير متوفر'}</Card.Title>
                 <Card.Text>
                   <div className="card__author card__author--verified">
                     <img
-                      src={`http://localhost:8000/uploads/${userdata?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                      src={`http://localhost:8000/uploads/${social_username || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
                       alt="User Avatar"
                     />
-                    <a href={`https://usr.gg/${userdata?.username || 'unknown'}`}>
-                      @{userdata?.username || 'اسم المستخدم غير متوفر'}
+                    <a href={`https://usr.gg/${social_username || 'unknown'}`}>
+                      @{social_username || 'اسم المستخدم غير متوفر'}
                     </a>
                   </div>
                 </Card.Text>
@@ -318,6 +370,8 @@ function Sellsocial() {
         </Col>
       </Row>
     </Container>
+  )}
+</>
   );
 }
 

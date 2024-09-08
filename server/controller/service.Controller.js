@@ -4,11 +4,13 @@ import ServiceDB from "../models/service.models.js";
 export const ServiceAccountInsert = async (req, res) => {
     // Extract fields from the request
     try {
-        const newServiceDB = new ServiceDB(req.body);
-        await newServiceDB.save();
-        res.status(200).send({ status: 'Success', data: newServiceDB });
+        const serviceData = req.body;
+        const newService = new ServiceDB(serviceData);
+        await newService.save();
+        res.status(200).json({ status: 'success', message: 'Service added successfully.' });
       } catch (error) {
-        res.status(500).send({ status: 'Error', message: error.message });
+        console.error('Error saving service:', error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
       }
 };
 

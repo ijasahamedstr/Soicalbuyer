@@ -25,7 +25,7 @@ import soicalrouter from "./routes/soicalAccount.route.js";
 import feedbackrouter from "./routes/feedback.route.js";
 import mongoose from 'mongoose';
 import axios from 'axios';
-
+import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
 
 
 
@@ -84,7 +84,7 @@ app.use('/service',servicerouter);
 
 
 // Game Account Post 
-app.use('/soical', soicalrouter);
+app.use('/soical',soicalrouter);
 
 
 // Account Point Transfer
@@ -121,41 +121,209 @@ app.use("/user/api",userrouter);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /******************************************************************** */
 
 
-// Replace with your actual Instagram access token
-const ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
+// Retrieve environment variables
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const USER_ID = process.env.USER_ID;
 
-// Endpoint to get Instagram user details
-app.get('/api/instagram/user/:userId', async (req, res) => {
-    const { userId } = req.params;
-    const url = `https://graph.instagram.com/${userId}?fields=id,username,account_type&access_token=${ACCESS_TOKEN}`;
-    
-    try {
-        const response = await axios.get(url);
-        res.json(response.data);
-    } catch (error) {
-        if (error.response) {
-            // Instagram API responded with an error
-            res.status(error.response.status).json({
-                error: error.response.data.error.message || 'An error occurred'
-            });
-        } else if (error.request) {
-            // No response received from Instagram API
-            res.status(500).json({
-                error: 'No response received from Instagram API'
-            });
-        } else {
-            // Error setting up the request
-            res.status(500).json({
-                error: error.message
-            });
-        }
+// Ensure environment variables are set
+if (!ACCESS_TOKEN || !USER_ID) {
+  console.error('Missing environment variables. Please check your .env file.');
+  process.exit(1);
+}
+
+app.use(express.json());
+
+app.get('/api/instagram-info', async (req, res) => {
+  try {
+    // Fetch data from Instagram Graph API
+    const response = await axios.get(`https://graph.instagram.com/${USER_ID}`, {
+      params: {
+        fields: 'id,username,account_type,media_count,followers_count,follows_count,bio',
+        access_token: ACCESS_TOKEN
+      }
+    });
+
+    // Validate the response
+    const { data } = response;
+    if (!data || !data.username) {
+      console.error('Invalid response data:', data);
+      throw new Error('Invalid response from Instagram API');
     }
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching Instagram information:', error.response ? error.response.data : error.message);
+    res.status(500).json({
+      error: 'Failed to fetch Instagram information',
+      details: error.response ? error.response.data : error.message
+    });
+  }
 });
 
+
 /******************************************************************** */
+
+// Retrieve environment variables
+const TIKTOK_API_KEY = process.env.TIKTOK_API_KEY;
+
+// Ensure environment variables are set
+if (!TIKTOK_API_KEY) {
+  console.error('Missing TikTok API key. Please check your .env file.');
+  process.exit(1);
+}
+
+app.use(express.json());
+
+// Endpoint to resolve TikTok username to user ID
+app.get('/api/resolve-username/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    // Placeholder: Replace with actual API call or logic to get user ID from username
+    // Example:
+    const response = await axios.get(`https://api.tiktok.com/username_to_id?username=${username}`, {
+      headers: {
+        'Authorization': `Bearer ${TIKTOK_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const userId = response.data.userId;
+
+    if (!userId) {
+      return res.status(404).json({ error: 'User ID not found' });
+    }
+
+    res.json({ userId });
+  } catch (error) {
+    console.error('Error resolving username:', error.message);
+    res.status(500).json({ error: 'Failed to resolve username' });
+  }
+});
+
+// Endpoint to fetch TikTok user information by user ID
+app.get('/api/tiktok-info/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const response = await axios.get(`https://api.tiktok.com/user_info?user_id=${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${TIKTOK_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.status === 200) {
+      res.json(response.data);
+    } else {
+      console.error('Unexpected response status:', response.status);
+      res.status(response.status).json({ error: 'Failed to fetch TikTok information' });
+    }
+  } catch (error) {
+    console.error('Error fetching TikTok information:', error.message);
+    res.status(500).json({ error: 'Failed to fetch TikTok information' });
+  }
+});
+
+
+
+
+
+
+const {
+  TWITTER_API_KEY,
+  TWITTER_API_SECRET_KEY,
+  TWITTER_ACCESS_TOKEN,
+  TWITTER_ACCESS_TOKEN_SECRET
+} = process.env;
+
+if (!TWITTER_API_KEY || !TWITTER_API_SECRET_KEY || !TWITTER_ACCESS_TOKEN || !TWITTER_ACCESS_TOKEN_SECRET) {
+  console.error('Missing Twitter API credentials. Please check your .env file.');
+  process.exit(1);
+}
+
+const twitterClient = new TwitterApi({
+  appKey: TWITTER_API_KEY,
+  appSecret: TWITTER_API_SECRET_KEY,
+  accessToken: TWITTER_ACCESS_TOKEN,
+  accessSecret: TWITTER_ACCESS_TOKEN_SECRET,
+});
+
+app.use(express.json());
+
+let userCache = {};
+let cacheTimestamp = Date.now();
+
+const CACHE_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+app.get('/api/twitter-info/:username', async (req, res) => {
+  const { username } = req.params;
+
+  if (userCache[username] && (Date.now() - cacheTimestamp < CACHE_DURATION_MS)) {
+    return res.json(userCache[username]);
+  }
+
+  try {
+    const user = await twitterClient.v2.userByUsername(username);
+
+    if (!user.data) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    userCache[username] = {
+      username: user.data.username,
+      name: user.data.name,
+      description: user.data.description,
+      public_metrics: user.data.public_metrics
+    };
+
+    cacheTimestamp = Date.now(); // Update cache timestamp
+
+    res.json(userCache[username]);
+  } catch (error) {
+    if (error.code === 429) { // Rate limit error
+      console.error('Rate limit exceeded, try again later.');
+      res.status(429).json({ error: 'Rate limit exceeded, try again later.' });
+    } else {
+      console.error('Error fetching Twitter user information:', error.message);
+      res.status(500).json({ error: 'Failed to fetch Twitter user information' });
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //****************************************************************** */
 

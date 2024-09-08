@@ -43,7 +43,7 @@ const LoginOTP = ({setIsOTPLoggedIn,setOTPLoggedUserData}) => {
         setIsOTPLoggedIn(true)
         setOTPLoggedUserData(response.data)
         setTimeout(() => {
-          navigate("/Dashboard")
+          navigate("/")
         }, 5000)
       } else {
         toast.error(response.response.data.error)

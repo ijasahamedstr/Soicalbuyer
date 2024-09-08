@@ -1,60 +1,64 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const InstagramUserInfo = () => {
-    const [userId, setUserId] = useState('');
-    const [userInfo, setUserInfo] = useState(null);
-    const [error, setError] = useState(null);
+const TwitterInfo = () => {
+  const [username, setUsername] = useState('');
+  const [info, setInfo] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    const fetchUserInfo = async () => {
-        if (!userId) {
-            setError('Please enter a user ID');
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try {
-            const response = await fetch(`/api/instagram/user/${userId}`);
-            
-            if (!response.ok) {
-                // Read response text for more details
-                const errorText = await response.text();
-                throw new Error(`HTTP error! Status: ${response.status}. Details: ${errorText}`);
-            }
+    if (!username) {
+      setError('Username is required');
+      return;
+    }
 
-            try {
-                const data = await response.json();
-                setUserInfo(data);
-                setError(null);
-            } catch (jsonError) {
-                // Handle JSON parsing errors
-                throw new Error('Error parsing JSON response. Please ensure the server is returning valid JSON.');
-            }
-            
-        } catch (error) {
-            // Set the error state with a message
-            setError(`An error occurred: ${error.message}`);
-            setUserInfo(null);
-        }
-    };
+    setLoading(true);
+    setError(null);
 
-    return (
+    try {
+      const response = await axios.get(`http://localhost:8000/api/twitter-info/${username}`);
+      console.log('API Response:', response.data); // Debugging line
+      setInfo(response.data);
+    } catch (err) {
+      console.error('Error fetching Twitter data:', err.message);
+      setError('Failed to load Twitter information. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Twitter Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter Twitter Username"
+          />
+        </label>
+        <button type="submit">Fetch User Info</button>
+      </form>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {info && (
         <div>
-            <input
-                type="text"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                placeholder="Enter Instagram User ID"
-            />
-            <button onClick={fetchUserInfo}>Get User Info</button>
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            {userInfo && (
-                <div>
-                    <p><strong>ID:</strong> {userInfo.id}</p>
-                    <p><strong>Username:</strong> {userInfo.username}</p>
-                    <p><strong>Account Type:</strong> {userInfo.account_type}</p>
-                </div>
-            )}
+          <h2>Twitter User Information</h2>
+          <p><strong>Username:</strong> {info.username || 'N/A'}</p>
+          <p><strong>Name:</strong> {info.name || 'N/A'}</p>
+          <p><strong>Bio:</strong> {info.description || 'N/A'}</p>
+          <p><strong>Followers Count:</strong> {info.public_metrics?.followers_count ?? 'N/A'}</p>
+          <p><strong>Following Count:</strong> {info.public_metrics?.following_count ?? 'N/A'}</p>
+          <p><strong>Tweets Count:</strong> {info.public_metrics?.tweet_count ?? 'N/A'}</p>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
-export default InstagramUserInfo;
+export default TwitterInfo;

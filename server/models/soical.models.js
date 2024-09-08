@@ -25,6 +25,13 @@ const SocialDBSchema = new mongoose.Schema({
     social_code: {
         type: String,
     },
+    sstatus: {
+        type: String,
+    },
+    imgpath: {
+        type: String,
+    },
+    displayName:String,
 }, { timestamps: true });
 
 // Model
