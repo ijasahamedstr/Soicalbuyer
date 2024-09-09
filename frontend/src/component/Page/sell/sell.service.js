@@ -7,12 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
-  const [fields, setFields] = useState([]);
   const [fields1, setFields1] = useState([]);
 
   // Handle adding a new field1
   const handleAddField1 = () => {
-    setFields1([...fields1, { id: Date.now(), title: '' }]);
+    setFields1([...fields1, { id: Date.now(), title: '', fields: [] }]);
   };
 
   // Handle removing a field1 by id
@@ -28,27 +27,36 @@ function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
     ));
   };
 
-  // Handle adding a new field
-  const handleAddField = () => {
-    setFields([...fields, { id: Date.now(), title: '', amount: '' }]);
+  // Handle adding a new field to a specific field1
+  const handleAddField = (sectionId) => {
+    setFields1(fields1.map(field1 =>
+      field1.id === sectionId ? { ...field1, fields: [...field1.fields, { id: Date.now(), title: '', amount: '' }] } : field1
+    ));
   };
 
-  // Handle removing a field by id
-  const handleRemoveField = (id) => {
-    setFields(fields.filter(field => field.id !== id));
+  // Handle removing a field by id from a specific field1
+  const handleRemoveField = (sectionId, fieldId) => {
+    setFields1(fields1.map(field1 =>
+      field1.id === sectionId ? { ...field1, fields: field1.fields.filter(field => field.id !== fieldId) } : field1
+    ));
   };
 
-  // Handle field value change
-  const handleChangeField = (id, e) => {
+  // Handle field value change within a specific field1
+  const handleChangeField = (sectionId, fieldId, e) => {
     const { name, value } = e.target;
-    setFields(fields.map(field =>
-      field.id === id ? { ...field, [name]: value } : field
+    setFields1(fields1.map(field1 =>
+      field1.id === sectionId ? {
+        ...field1,
+        fields: field1.fields.map(field =>
+          field.id === fieldId ? { ...field, [name]: value } : field
+        )
+      } : field1
     ));
   };
 
   // Handle save button click
   const handleSave = () => {
-    handleFieldsChange(fields);
+    handleFieldsChange(fields1);
     onHide();
   };
 
@@ -70,7 +78,7 @@ function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
           {fields1.length > 0 ? fields1.map(field1 => (
             <div key={field1.id}>
               <Form.Group className="mb-3">
-                <Form.Label>Field Title</Form.Label>
+                <Form.Label>Section Title</Form.Label>
                 <Form.Control
                   name='title'
                   value={field1.title}
@@ -78,14 +86,14 @@ function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
                 />
               </Form.Group>
 
-              {fields.length > 0 ? fields.map(field => (
+              {field1.fields.length > 0 ? field1.fields.map(field => (
                 <div key={field.id}>
                   <Form.Group className="mb-3">
                     <Form.Label>Field Title</Form.Label>
                     <Form.Control
                       name='title'
                       value={field.title}
-                      onChange={(e) => handleChangeField(field.id, e)}
+                      onChange={(e) => handleChangeField(field1.id, field.id, e)}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
@@ -94,14 +102,14 @@ function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
                       type='number'
                       name="amount"
                       value={field.amount}
-                      onChange={(e) => handleChangeField(field.id, e)}
+                      onChange={(e) => handleChangeField(field1.id, field.id, e)}
                     />
                   </Form.Group>
                   <Button
                     variant="danger"
                     type="button"
                     className="w-100 mb-2"
-                    onClick={() => handleRemoveField(field.id)}
+                    onClick={() => handleRemoveField(field1.id, field.id)}
                   >
                     Remove Field
                   </Button>
@@ -113,7 +121,7 @@ function MyVerticallyCenteredModal({ show, onHide, handleFieldsChange }) {
                 variant="success"
                 type="button"
                 className="w-100"
-                onClick={handleAddField}
+                onClick={() => handleAddField(field1.id)}
                 style={{ background: '#bb3e18' }}
               >
                 Add Field
