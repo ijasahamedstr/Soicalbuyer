@@ -26,6 +26,7 @@ import feedbackrouter from "./routes/feedback.route.js";
 import mongoose from 'mongoose';
 import axios from 'axios';
 import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
+import bankrouter from "./routes/bank.route.js";
 
 
 
@@ -100,6 +101,10 @@ app.use('/boost',Accountboostrouter);
 
 // User Account User notification
 app.use('/notification',notificationrouter);
+
+
+// User Account User notification
+app.use('/bank',bankrouter);
 
 
 // Get __dirname equivalent for ES modules
