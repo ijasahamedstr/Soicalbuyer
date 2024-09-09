@@ -113,8 +113,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   }
 
   // Check if the current user is the owner of the item
-  const isOwner = userdata?._id === item?.userid
-  ;
+  const isOwner = userdata?._id === item?.userid;
 
   const getImageForPlatform = (social_type) => {
     switch (social_type) {
