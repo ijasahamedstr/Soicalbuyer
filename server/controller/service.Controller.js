@@ -1,16 +1,16 @@
 import ServiceDB from "../models/service.models.js";
 
+
+
 // Image upload
 export const ServiceAccountInsert = async (req, res) => {
     // Extract fields from the request
     try {
-        const serviceData = req.body;
-        const newService = new ServiceDB(serviceData);
+        const newService = new ServiceDB(req.body);
         await newService.save();
-        res.status(200).json({ status: 'success', message: 'Service added successfully.' });
+        res.status(201).json({ message: 'Service created successfully!', data: newService });
       } catch (error) {
-        console.error('Error saving service:', error);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
+        res.status(400).json({ message: 'Error creating service', error });
       }
 };
 
