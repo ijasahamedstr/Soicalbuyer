@@ -24,6 +24,7 @@ const truncateText = (text, maxLength) => {
 function Game() {
   const [userdata, setUserdata] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [userinfo, setUserinfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -57,6 +58,30 @@ function Game() {
 
     fetchData();
   }, []);
+
+   // Fetch user info from API
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        setUserinfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setError('Failed to fetch user info.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filter jobs based on user ownership
+  const filteredJobs = jobs.filter(job =>
+    userinfo.some(user => user._id === job.userid)
+  );
+  
 
   const marginLeftValue = '15px', marginTopValue = '50px',marginBottomValue = '20px';
   var settings = {
@@ -102,7 +127,7 @@ function Game() {
       <div className="slider-container">
       <div style={{ marginLeft: marginLeftValue,marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>🚀 حسابات ألعاب مميزة</h2></div>
       <Slider {...settings}>
-      {jobs.map((job, index) => (
+      {filteredJobs.map((job) => (
         <div className="col-12 col-sm-6 col-md-4 col-lg-3">
           <div className="p-3">
           <div className='feature'>
@@ -114,8 +139,17 @@ function Game() {
               {truncateText(job.gamedec, 150)}
               </Card.Text>
               <Card.Text>
-              <span><div class="card__author  card__author--verified  ">
-              <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" /><a href="https://usr.gg/meshari">@Ijas Ahamed</a></div></span>
+              <span>
+                {userinfo.find(user => user._id === job.userid) && (
+                  <div className="card__author card__author--verified">
+                    <img
+                      src={`http://localhost:8000/uploads/${userinfo.find(user => user._id === job.userid).imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                      alt="Owner Avatar"
+                      />
+                      <a href="https://usr.gg/meshari">@{userinfo.find(user => user._id === job.userid).displayName}</a>
+                      </div>
+                      )}
+                    </span>
               </Card.Text>
             </Card.Body>
                 <ListGroup.Item>

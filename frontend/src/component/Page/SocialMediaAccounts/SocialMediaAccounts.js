@@ -131,7 +131,7 @@ function Soicalaccount() {
               <h2 className='entry-title'>🔥 حسابات تواصل إجتماعي مميزة</h2>
             </div>
             <Slider {...settings}>
-              {filteredJobs.map((job) => (
+            {filteredJobs.map((job) => (
                 <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={job._id}>
                   <div className="p-3">
                     <div className='feature'>

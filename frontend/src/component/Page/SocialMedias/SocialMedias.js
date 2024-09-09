@@ -10,6 +10,7 @@ import './SocialMedias.css';
 function Social() {
   const [userdata, setUserdata] = useState({});
   const [jobs, setJobs] = useState([]);
+  const [userinfo, setUserinfo] = useState([]);
   const [filters, setFilters] = useState({ location: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,6 +45,32 @@ function Social() {
 
     fetchData();
   }, []);
+
+     // Fetch user info from API
+     useEffect(() => {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+          setUserinfo(response.data);
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+          setError('Failed to fetch user info.');
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+    // Filter jobs based on user ownership
+    const filteredJobs1 = jobs.filter(job =>
+      userinfo.some(user => user._id === job.userid)
+    );
+
+
+    console.log(filteredJobs1,"ffffffffffffffffffffff")
   
 
   // Handle filter changes
