@@ -5,12 +5,70 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Ownership Confirmation Modal
-const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_username }) => (
+const DescriptionModal1 = ({ show, onHide, handleSubmit, social_code, social_username,formData, setFormData  }) => (
   <Modal show={show} onHide={onHide} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
     <Modal.Header closeButton>
       <Modal.Title id="contained-modal-title-vcenter">تأكيد الملكية ومعلومات التسليم</Modal.Title>
     </Modal.Header>
     <Modal.Body>
+    <h4>تأكيد الملكية ومعلومات التسليم</h4>
+      <p>حرصاً منا على تقديم بيئة أمنة لبيع وشراء الحسابات يجب عليك إتمام الخطوات أدناه لكي تتمكن من إضافة الحساب.</p>
+
+      <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
+        <Form.Label>({social_username}) كلمة مرور</Form.Label>
+        <Form.Control
+          type='password'
+          placeholder="أدخل كلمة المرور"
+          name="accountpassword"
+          value={formData.accountpassword}
+          onChange={(e) => setFormData(prev => ({ ...prev, accountpassword: e.target.value }))}
+        />
+      </Form.Group>
+
+      <p style={{ color: 'red' }}>لا تقم بتكرار كلمة مرور في أكثر من حساب، ضع كلمة مرور جديدة هنا.</p>
+
+      <Form.Group className="mb-3" controlId="formGridEmail" style={{ width: '100%' }}>
+        <Form.Label>(إن وجد) الأيميل الحالي</Form.Label>
+        <Form.Control
+          type='email'
+          placeholder="أدخل الأيميل الحالي"
+          name="accountgmail"
+          value={formData.accountgmail}
+          onChange={(e) => setFormData(prev => ({ ...prev, accountgmail: e.target.value }))}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formGridEmailPassword" style={{ width: '100%' }}>
+        <Form.Label>(إن وجد) كلمة مرور الأيميل الحالي</Form.Label>
+        <Form.Control
+          type='password'
+          placeholder="أدخل كلمة مرور الأيميل"
+          name="accountgmailpassword"
+          value={formData.accountgmailpassword}
+          onChange={(e) => setFormData(prev => ({ ...prev, accountgmailpassword: e.target.value }))}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" style={{ color: 'red', width: '100%' }}>
+        <Form.Check type="checkbox" label="الحساب مربوط برقم" />
+      </Form.Group>
+
+      <Form.Group className="mb-3" style={{ color: 'red', width: '100%' }}>
+        <Form.Check type="checkbox" label="لدي الأيميل الأساسي" />
+      </Form.Group>
+
+      <p>تعليمات الاستلام ستظهر للمشتري قبل الشراء وبعده.</p>
+
+      <Form.Group className="mb-3" controlId="descriptionTextarea" style={{ width: '100%' }}>
+        <Form.Label>وصف الحساب</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
+          name='accountdec'
+          value={formData.accountdec}
+          onChange={(e) => setFormData(prev => ({ ...prev, accountdec: e.target.value }))}
+        />
+      </Form.Group>
       <h4>
         حرصاً منا على تقديم بيئة آمنة لبيع وشراء الحسابات يجب عليك إتمام الخطوات أدناه لكي تتمكن من إضافة الحساب.
       </h4>
@@ -42,6 +100,13 @@ function Sellsocial() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const [formData, setFormData] = useState({
+    accountpassword: "",
+    accountgmail: "",
+    accountgmailpassword: "",
+    accountdec: "",
+  });
   
 
   const navigate = useNavigate();
@@ -98,17 +163,21 @@ function Sellsocial() {
     }
 
     try {
-      const formData = {
+      // Renaming the local variable to avoid conflict with state variable
+      const submittedFormData = {
         userid,
         social_code,
         social_username,
         social_type,
         social_amount,
         social_dec,
-        sstatus: 'Pending'
+        sstatus: 'Pending',
+        accountpassword: formData.accountpassword,
+        accountgmail: formData.accountgmail,
+        accountgmailpassword: formData.accountgmailpassword,
+        accountdec: formData.accountdec
       };
-
-      const response = await axios.post('http://localhost:8000/soical', formData);
+      const response = await axios.post('http://localhost:8000/soical', submittedFormData);
 
       if (response.status === 201) {
         Swal.fire({
@@ -323,6 +392,8 @@ function Sellsocial() {
                     social_code={social_code}
                     handleSubmit={handleSubmit}
                     social_username={social_username}
+                    formData={formData}
+                    setFormData={setFormData}
                   />
                 </Form>
               </Col>

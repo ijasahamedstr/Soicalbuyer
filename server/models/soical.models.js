@@ -28,6 +28,18 @@ const SocialDBSchema = new mongoose.Schema({
     sstatus: {
         type: String,
     },
+    accountpassword: {
+        type: String,
+    },
+    accountgmail: {
+        type: String,
+    },
+    accountgmailpassword: {
+        type: String,
+    },
+    accountdec: {
+        type: String,
+    },
     imgpath: {
         type: String,
     },

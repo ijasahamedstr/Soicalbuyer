@@ -3,7 +3,7 @@ import SocialDB from "../models/soical.models.js";
 
 // Insert Social Account Service
 export const socialAccountInsert = async (req, res) => {
-    const { userid, social_username, social_type, social_dec, social_amount, social_code, sstatus } = req.body;
+    const { userid, social_username, social_type, social_dec, social_amount, social_code, sstatus, accountpassword, accountgmail, accountgmailpassword, accountdec } = req.body;
 
     try {
         // Input validation
@@ -23,7 +23,11 @@ export const socialAccountInsert = async (req, res) => {
             social_dec,
             social_amount,
             social_code,
-            sstatus
+            sstatus,
+            accountpassword,
+            accountgmail,
+            accountgmailpassword,
+            accountdec
         });
 
         // Save the document to the database

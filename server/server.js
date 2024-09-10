@@ -148,41 +148,21 @@ app.use("/user/api",userrouter);
 
 
 // Retrieve environment variables
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
-const USER_ID = process.env.USER_ID;
+// Replace with your Instagram Access Token
+const ACCESS_TOKEN = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
 
-// Ensure environment variables are set
-if (!ACCESS_TOKEN || !USER_ID) {
-  console.error('Missing environment variables. Please check your .env file.');
-  process.exit(1);
-}
+app.get('/api/instagram-info/:username', async (req, res) => {
+  const { username } = req.params;
 
-app.use(express.json());
-
-app.get('/api/instagram-info', async (req, res) => {
   try {
-    // Fetch data from Instagram Graph API
-    const response = await axios.get(`https://graph.instagram.com/${USER_ID}`, {
-      params: {
-        fields: 'id,username,account_type,media_count,followers_count,follows_count,bio',
-        access_token: ACCESS_TOKEN
-      }
-    });
-
-    // Validate the response
-    const { data } = response;
-    if (!data || !data.username) {
-      console.error('Invalid response data:', data);
-      throw new Error('Invalid response from Instagram API');
-    }
-
-    res.json(data);
+    // Instagram API URL to get user profile info
+    const response = await axios.get(`https://graph.instagram.com/${username}?fields=id,username,media_count,account_type,full_name,biography,profile_picture_url&access_token=${ACCESS_TOKEN}`);
+    
+    // Return user profile data
+    res.json(response.data);
   } catch (error) {
-    console.error('Error fetching Instagram information:', error.response ? error.response.data : error.message);
-    res.status(500).json({
-      error: 'Failed to fetch Instagram information',
-      details: error.response ? error.response.data : error.message
-    });
+    console.error('Error fetching Instagram data:', error.message);
+    res.status(500).json({ error: 'Failed to fetch Instagram information' });
   }
 });
 
