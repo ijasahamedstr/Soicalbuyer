@@ -45,6 +45,7 @@ function Review() {
     fetchData();
   }, []);
   
+  
   const marginTopValue = '50px',marginBottomValue = '20px';
   var settings = {
     dots: true,

@@ -69,6 +69,7 @@ function Soicalaccount() {
     userinfo.some(user => user._id === job.userid)
   );
 
+
   const getImageForPlatform = (social_type) => {
     switch (social_type) {
       case 'instagram':

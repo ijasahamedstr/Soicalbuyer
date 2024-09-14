@@ -13,6 +13,9 @@ import { IoCardOutline } from "react-icons/io5";
 import { FaBitcoin } from "react-icons/fa";
 import { BsBank } from "react-icons/bs";
 import axios from 'axios'; // or your preferred method for API requests
+import { RiBankFill } from "react-icons/ri";
+import { BsPaypal } from "react-icons/bs";
+import { SiBitcoinsv } from "react-icons/si";
 
 function MyVerticallyCenteredModal(props) {
   const [userdata, setUserdata] = useState(null);
@@ -62,6 +65,7 @@ function MyVerticallyCenteredModal(props) {
       setLoading(false);
     }
   };
+
 
   return (
     <Modal
@@ -331,6 +335,12 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
 };
 
 
+  const [showContent, setShowContent] = useState(false); // State to track content visibility
+
+  const handleButtonClick = () => {
+    setShowContent(true); // Set content to show and hide the button
+  };
+
 
 
 
@@ -422,8 +432,10 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                               <Card.Text>
                                 قم بسحب رصيدك إلى طريقة السحب المفضلة لديك
                               </Card.Text>
-                              <Row>
+                              {!showContent && (
+                              <Row  onClick={handleButtonClick}>
                                 <Col>
+                         
                                   <Card className="text-center" style={{ background: '#F7F9F9' }}>
                                     <Card.Body>
                                       <Card.Title><MdOutlineAccessTime /></Card.Title>
@@ -435,6 +447,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                                       </Card.Text>
                                     </Card.Body>
                                   </Card>
+                                
                                 </Col>
                                 <Col>
                                   <Card className="text-center" style={{ background: '#F7F9F9' }}>
@@ -450,7 +463,139 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                                   </Card>
                                 </Col>
                               </Row>
+                              )}
                             </Card.Body>
+                            {showContent && (
+                            <div >
+                               <Tabs
+                                defaultActiveKey="profile"
+                                id="uncontrolled-tab-example"
+                                className="mb-3"
+                              >
+                                <Tab 
+                                  eventKey="home" 
+                                  title={
+                                    <>
+                                      <RiBankFill /> بنكي
+                                      <br />
+                                      <small>6.15 / 57.5 ريال</small>
+                                    </>
+                                  }
+                                >
+                                  <div>
+                                  <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>الحساب البنكي</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>المبلغ ($)</Form.Label>
+                                  <Form.Control
+                                    type="number"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+                                <p>المبلغ المتوقع إستلامه:</p>
+                                <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic',width:'100%' }}>
+                                😎 تنفيذ البوست
+                              </Button>
+                                  </div>
+                                </Tab>
+                                <Tab 
+                                  eventKey="profile" 
+                                  title={
+                                    <>
+                                      <BsPaypal  /> بايبال
+                                      <br />
+                                      <small>$1 ≈ 0.9590</small>
+                                    </>
+                                  }
+                                >
+                                  <div><div>
+                                  <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>الحساب البنكي</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>المبلغ ($)</Form.Label>
+                                  <Form.Control
+                                    type="number"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+                                <p>المبلغ المتوقع إستلامه:</p>
+                                <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic',width:'100%' }}>
+                                😎 تنفيذ البوست
+                              </Button>
+                                  </div>
+                                  </div>
+                                </Tab>
+                                <Tab 
+                                  eventKey="ijas" 
+                                  title={
+                                    <>
+                                      <SiBitcoinsv  /> Crypto
+                                      <br />
+                                      <small>$1 ≈ 0.9375</small>
+                                    </>
+                                  }
+                                >
+                                  <div>
+                                  <div>
+                                <Form.Group className="mb-3" controlId="reason">
+                                <Form.Label>سبب التحويل</Form.Label>
+                                <Form.Select
+                                  value={reason}
+                                  onChange={(e) => setReason(e.target.value)}
+                                  required
+                                >
+                                  <option value="" disabled>اختار سبب التحويل</option> {/* Placeholder option */}
+                                  <option value="تحويل رصيد">تحويل رصيد</option>
+                                  <option value="مدفوعات">مدفوعات</option>
+                                  <option value="شراء منتجات">شراء منتجات</option>
+                                  <option value="خدمة">خدمة</option>
+                                  {/* Add more options as needed */}
+                                </Form.Select>
+                              </Form.Group>
+
+                                  <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>الحساب البنكي</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="username">
+                                  <Form.Label>المبلغ ($)</Form.Label>
+                                  <Form.Control
+                                    type="number"
+                                    value={username} onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                  />
+                                </Form.Group>
+                                <p>المبلغ المتوقع إستلامه:</p>
+                                <Button variant="primary" type="submit" style={{ fontFamily: 'Noto Kufi Arabic',width:'100%' }}>
+                                😎 تنفيذ البوست
+                              </Button>
+                                  </div>
+                                  </div>
+                                </Tab>
+                              </Tabs>
+                            </div>
+                          )}
                             <Card.Footer className="text-muted"> <PiWarningCircle />تعليمات هامة بخصوص طلبات السحب</Card.Footer>
                           </Card>
                         </Tab>
@@ -543,7 +688,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
                           </div>
                         </Tab>
                         <Tab eventKey="بنكي" title="بنكي">
-                          <Card style={{ width: '32rem', background: '#F7F9F9' }}>
+                          <Card style={{ background: '#F7F9F9' }}>
                             <Card.Body>
                               <Row>
                                 <Col><Card.Subtitle className="mb-2 text-muted"> <BsBank />حساباتي البنكية</Card.Subtitle></Col>

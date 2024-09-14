@@ -101,8 +101,9 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
   }
 
   // Check if the current user is the owner of the item
-  const isOwner = userdata?._id === item?.userid
-  ;
+  const isOwner = userdata?._id === item?.userid;
+
+  
   return (
     <>
       <Container>
@@ -139,6 +140,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
                             <div className="asset__author">
                               <a href="https://usr.gg/gaming?game=2">{item.service_type}</a>
                             </div>
+                            
                           </li>
                           <li style={{ paddingTop: '13px' }}>
                             <span>الوقت التقريبي لتنفيذ الخدمة</span>
