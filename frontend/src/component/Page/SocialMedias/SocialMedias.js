@@ -30,7 +30,7 @@ function Social() {
 
   // Fetch job data from API
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchJobsData = async () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:8000/soical'); // Ensure endpoint is correct
@@ -43,35 +43,26 @@ function Social() {
       }
     };
 
-    fetchData();
+    fetchJobsData();
   }, []);
 
-     // Fetch user info from API
-     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          setLoading(true);
-          const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
-          setUserinfo(response.data);
-        } catch (error) {
-          console.error('Error fetching user info:', error);
-          setError('Failed to fetch user info.');
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, []);
-  
-    // Filter jobs based on user ownership
-    const filteredJobs1 = jobs.filter(job =>
-      userinfo.some(user => user._id === job.userid)
-    );
+  // Fetch user info from API
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        setUserinfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setError('Failed to fetch user info.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-
-    console.log(filteredJobs1,"ffffffffffffffffffffff")
-  
+    fetchUserInfo();
+  }, []);
 
   // Handle filter changes
   const handleFilterChange = (filterType, value) => {
@@ -80,8 +71,11 @@ function Social() {
 
   // Filter jobs based on current filters
   const filteredJobs = jobs.filter(job => {
-    const jobLocation = job[userdata?.displayName] || ''; // Optional chaining for safety
-    return filters.location === '' || jobLocation.includes(filters.location);
+    const jobLocation = job.location || ''; // Ensure job.location is defined
+    const isLocationMatch = filters.location === '' || jobLocation.includes(filters.location);
+    const isUserMatch = userinfo.some(user => user._id === job.userid);
+
+    return isLocationMatch && isUserMatch;
   });
 
   // Display loading state
@@ -123,7 +117,7 @@ function Social() {
       </Row>
       <Row>
         <Col>
-          <JobList jobs={filteredJobs} />
+          <JobList jobs={filteredJobs} userinfo={userinfo} />
         </Col>
       </Row>
     </Container>

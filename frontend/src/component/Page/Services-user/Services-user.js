@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import JobList from './JobList';
 import Filters from './Filters';
@@ -11,6 +10,7 @@ import axios from 'axios';
 function Servicesuser() {
   const [userdata, setUserdata] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [userinfo, setUserinfo] = useState([]);
   const [filters, setFilters] = useState({ location: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +30,7 @@ function Servicesuser() {
 
   // Fetch job data from API
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchJobs = async () => {
       try {
         setLoading(true);
         const response = await axios.get('http://localhost:8000/service'); // Replace with actual API endpoint
@@ -43,7 +43,25 @@ function Servicesuser() {
       }
     };
 
-    fetchData();
+    fetchJobs();
+  }, []);
+
+  // Fetch user info from API
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        setUserinfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setError('Failed to fetch user info.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   // Handle filter changes
@@ -53,8 +71,11 @@ function Servicesuser() {
 
   // Filter jobs based on current filters
   const filteredJobs = jobs.filter(job => {
-    const jobLocation = job[userdata?.displayName] || ''; // Optional chaining for safety
-    return filters.location === '' || jobLocation.includes(filters.location);
+    const jobLocation = job.location || ''; // Adjust this to the correct property in the job object
+    const isLocationMatch = filters.location === '' || jobLocation.includes(filters.location);
+    const isUserMatch = userinfo.some(user => user._id === job.userid);
+
+    return isLocationMatch && isUserMatch;
   });
 
   // Display loading state
@@ -83,24 +104,22 @@ function Servicesuser() {
     );
   }
 
-    return (
-      <>
-    <Container>
-      {/* Stack the columns on mobile by making one full-width and the other half-width */}
-      <Row>
-        <Col style={{backgroundColor:'#FFFFFF'}}>
-        <Filters filters={filters} onFilterChange={handleFilterChange} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-        <JobList jobs={filteredJobs} />
-        </Col>
-      </Row>
-    </Container>
-    
-      </>
-    );
-  }
-  
-  export default Servicesuser;
+  return (
+    <>
+      <Container>
+        <Row>
+          <Col style={{ backgroundColor: '#FFFFFF' }}>
+            <Filters filters={filters} onFilterChange={handleFilterChange} />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <JobList jobs={filteredJobs} userinfo={userinfo} /> {/* Pass userinfo here */}
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+}
+
+export default Servicesuser;

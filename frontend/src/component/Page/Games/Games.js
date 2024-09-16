@@ -10,15 +10,18 @@ import './Game.css';
 function Gamesaccount() {
   const [userdata, setUserdata] = useState(null);
   const [jobs, setJobs] = useState([]);
+  const [userinfo, setUserinfo] = useState([]);
   const [filters, setFilters] = useState({ location: '' });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [jobsLoading, setJobsLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
+  const [jobsError, setJobsError] = useState(null);
+  const [usersError, setUsersError] = useState(null);
 
   // Fetch user data from localStorage and set interval
   useEffect(() => {
     const fetchUserData = () => {
       const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-      setUserdata(userDetails || {});
+      setUserdata(userDetails || {}); // Handle case where there's no data
     };
 
     fetchUserData();
@@ -29,20 +32,38 @@ function Gamesaccount() {
 
   // Fetch job data from API
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchJobData = async () => {
       try {
-        setLoading(true);
+        setJobsLoading(true);
         const response = await axios.get('http://localhost:8000/gameaccount'); // Replace with actual API endpoint
-        setJobs(response.data);
+        setJobs(response.data || []);
       } catch (error) {
         console.error('Error fetching job listings:', error);
-        setError('Failed to fetch job listings.');
+        setJobsError('Failed to fetch job listings.');
       } finally {
-        setLoading(false);
+        setJobsLoading(false);
       }
     };
 
-    fetchData();
+    fetchJobData();
+  }, []);
+
+  // Fetch user info from API
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setUsersLoading(true);
+        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        setUserinfo(response.data || []);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setUsersError('Failed to fetch user info.');
+      } finally {
+        setUsersLoading(false);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   // Handle filter changes
@@ -52,12 +73,20 @@ function Gamesaccount() {
 
   // Filter jobs based on current filters
   const filteredJobs = jobs.filter(job => {
-    const jobLocation = job[userdata?.displayName] || ''; // Optional chaining for safety
-    return filters.location === '' || jobLocation.includes(filters.location);
+    const jobLocation = job.location || ''; // Ensure job.location is defined
+    const isLocationMatch = filters.location === '' || jobLocation.includes(filters.location);
+    const isUserMatch = userinfo.some(user => user._id === job.userid);
+
+    return isLocationMatch && isUserMatch;
   });
 
-  // Display loading state
-  if (loading) {
+  const Filters = ({ location = {} }) => {
+  const { pathname } = location;
+  // Your component logic
+};
+
+  // Loading states for jobs and userinfo
+  if (jobsLoading || usersLoading) {
     return (
       <Container>
         <Row>
@@ -69,13 +98,13 @@ function Gamesaccount() {
     );
   }
 
-  // Display error state
-  if (error) {
+  // Error states for jobs and userinfo
+  if (jobsError || usersError) {
     return (
       <Container>
         <Row>
           <Col className="text-center mt-5">
-            <p>{error}</p>
+            <p>{jobsError || usersError}</p>
           </Col>
         </Row>
       </Container>
@@ -87,19 +116,19 @@ function Gamesaccount() {
     <Container>
       <Row>
         <div style={{ marginTop: '50px', marginBottom: '20px' }}>
-          <h2 className='entry-title'>حسابات الألعاب</h2>
+          <h2 className="entry-title">حسابات الألعاب</h2>
         </div>
         <Col style={{ backgroundColor: '#FFFFFF' }}>
-          <Filters filters={filters} onFilterChange={handleFilterChange} />
+          <Filters jobs={filteredJobs} onFilterChange={handleFilterChange} />
         </Col>
       </Row>
       <Row>
         <Col>
-          <JobList jobs={filteredJobs} />
+          <JobList jobs={filteredJobs} userinfo={userinfo} />
         </Col>
       </Row>
     </Container>
   );
 }
 
-export default Gamesaccount;;
+export default Gamesaccount;
