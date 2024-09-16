@@ -59,6 +59,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [modalShow, setModalShow] = React.useState(false);
   const [userid, setUserid] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [userinfo, setUserInfo] = useState(null);
 
   // Fetch and set user data
   useEffect(() => {
@@ -81,6 +82,32 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   }, []);
 
   // Fetch item data
+  useEffect(() => {
+    const getUserId=localStorage.getItem("socialMediaAccountViewId")
+    const fetchItem = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/register/${getUserId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
+        setUserInfo(data);        
+      } catch (error) {
+        setError(error.message);
+        // console.log('====================================');
+        // console.log("error");
+        // console.log('====================================');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, []);
+
   useEffect(() => {
     const fetchItem = async () => {
       try {
@@ -220,7 +247,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <div className="asset__author  ">
         <img src="https://usr.dokan-cdn.com/public/avatars/3b52091ca7cb11c5ec3ca045ac4874b6.jpg" alt=""/>
         <div style={{display:'grid'}}>
-            <div>@tzi</div>
+            <div>@{userinfo.displayName}</div>
             <div class="star-rating">
             <i className="fas fa-star"></i>
             <i className="fas fa-star"></i>
@@ -308,8 +335,9 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
         <Form.Control  
           name="userid" 
-          value={userdata?._id || ''} 
+          value={userdata?._id} 
           onChange={(e) => setUserid(e.target.value)}
+          className="hidden"
         />
       </Form.Group>
 

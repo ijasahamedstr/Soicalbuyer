@@ -1,76 +1,55 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
-const InstagramUserDetails = () => {
-  const [username, setUsername] = useState('');
-  const [accountInfo, setAccountInfo] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+const UserProfile = () => {
+  const [username, setUsername] = useState(''); // State to store the input username
+  const [userData, setUserData] = useState(null); // State to store user data
+  const [loading, setLoading] = useState(false); // State to track loading status
+  const [error, setError] = useState(null); // State to track errors
 
-  const handleFetchUserDetails = async () => {
-    if (!username.trim()) {
-      setError('Username cannot be empty');
-      return;
-    }
-
-    setError(null);
+  const handleFetchUserData = async () => {
     setLoading(true);
-    
+    setError(null);
+
     try {
-      // Ensure the API endpoint and query parameter match your backend setup
-      const response = await axios.get(
-        `http://localhost:8000/api/instagram/user`,
-        { params: { username } }
-      );
-      
-      // Safeguard against missing fields in the response
-      const data = response.data;
-      setAccountInfo({
-        id: data.id || 'N/A',
-        username: data.username || 'N/A',
-        fullName: data.full_name || 'N/A',
-        bio: data.biography || 'N/A',
-        followers: data.followers_count || 'N/A',
-        following: data.follows_count || 'N/A',
-        profilePicture: data.profile_picture_url || 'N/A'
-      });
+      const response = await fetch(`http://localhost:8000/api/users/${username}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      setUserData(data); // Store the fetched data in state
     } catch (err) {
-      console.error(err); // Log the actual error for debugging
-      setError('Error fetching user details. Please check the console for more information.');
-      setAccountInfo(null);
+      setError(err.message); // Store any errors that occur
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false once the request completes
     }
   };
 
   return (
-    <div>
+    <div className="user-profile">
       <input
         type="text"
+        placeholder="Enter username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter Instagram username"
       />
-      <button onClick={handleFetchUserDetails} disabled={loading}>
-        {loading ? 'Loading...' : 'Get User Details'}
-      </button>
-      {accountInfo && (
-        <div className="account-info">
-          <h2>Account Information</h2>
-          <p><strong>Username:</strong> {accountInfo.username}</p>
-          <p><strong>Full Name:</strong> {accountInfo.fullName}</p>
-          <p><strong>Bio:</strong> {accountInfo.bio}</p>
-          <p><strong>Followers:</strong> {accountInfo.followers}</p>
-          <p><strong>Following:</strong> {accountInfo.following}</p>
-          <p><strong>Profile Picture:</strong></p>
-          {accountInfo.profilePicture !== 'N/A' && (
-            <img src={accountInfo.profilePicture} alt={`${accountInfo.username}'s profile`} />
-          )}
+      <button onClick={handleFetchUserData}>Fetch User Data</button>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {userData && (
+        <div>
+          <img src={userData.profile_picture} alt={`${userData.username}'s profile`} />
+          <h2>{userData.username}</h2>
+          <p>{userData.bio}</p>
+          <p>Followers: {userData.followers}</p>
+          <p>Following: {userData.following}</p>
+          <p>Posts: {userData.posts}</p>
         </div>
       )}
-      {error && <p>{error}</p>}
     </div>
   );
 };
 
-export default InstagramUserDetails;
+export default UserProfile;

@@ -28,7 +28,9 @@ const JobList = ({ jobs, userinfo }) => {
           return (
             <Col xs={12} sm={6} md={4} lg={3} key={job._id} className="mb-4">
               <Card style={{ backgroundColor: '#F2F3F4' }}>
-                <Nav.Link as={Link} to={`/social-media-accounts-view/${job._id}`}>
+                <Nav.Link as={Link} to={`/social-media-accounts-view/${job._id}`} onClick={()=>{
+                  localStorage.setItem("socialMediaAccountViewId", job.userid)
+                }}>
                   <Card.Img variant="top" src={getImageForPlatform(job.social_type)} />
                 </Nav.Link>
                 <Card.Body>

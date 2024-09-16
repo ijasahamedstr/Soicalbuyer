@@ -129,44 +129,35 @@ app.use("/user/api",userrouter);
 
 
 /* ************************************************************* */
-app.get('/api/instagram/user', async (req, res) => {
-  const { username } = req.query;
-
-  if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
-  }
+app.get('/api/users/:username', async (req, res) => {
+  const { username } = req.params;
 
   try {
-    // Fetch access token from environment variables
-    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+    const response = await fetch(
+      `https://api.instagram.com/v1/users/search?q=${username}&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`
+    );
 
-    if (!accessToken) {
-      return res.status(500).json({ error: 'Access token is not configured' });
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error response from Instagram API:', errorData); // Log detailed error response
+      return res.status(response.status).json({ error: errorData.error_message || 'Failed to fetch user data' });
     }
 
-    // Example endpoint; adjust based on Instagram API documentation
-    const response = await axios.get(`https://graph.instagram.com/${username}`, {
-      params: {
-        fields: 'id,username,full_name,biography,followers_count,follows_count,profile_picture_url',
-        access_token: accessToken
-      }
-    });
+    const data = await response.json();
 
-    const data = response.data;
-    res.json({
-      id: data.id,
-      username: data.username,
-      full_name: data.full_name,
-      biography: data.biography,
-      followers_count: data.followers_count,
-      follows_count: data.follows_count,
-      profile_picture_url: data.profile_picture_url
-    });
+    // Process and return user data
+    const user = data.data && data.data.length > 0 ? data.data[0] : null;
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(user);
   } catch (error) {
-    console.error('Error fetching user details:', error.response ? error.response.data : error.message);
-    res.status(error.response?.status || 500).json({ error: 'Failed to fetch user details' });
+    console.error('Server-side error:', error); // Log server-side error
+    res.status(500).json({ error: 'Server error' });
   }
 });
+
 /* ************************************************************* */
 
 
