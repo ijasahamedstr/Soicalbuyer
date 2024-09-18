@@ -211,6 +211,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
                             {item.additionalFields.map((field, index) => (
                               <React.Fragment key={index}>
                                 <Form.Group className="mb-3" controlId={`formGridAddress${index}`} style={{ width: '100%' }}>
+                                <Form.Label>{field.title}</Form.Label>
                                   <Form.Select aria-label="Default select example" className='sign__input' name={`documentcountry${index}`}>
                                     {Array.isArray(field?.fields) && field.fields.length > 0 ? (
                                       field.fields.map((optionField, i) => (
