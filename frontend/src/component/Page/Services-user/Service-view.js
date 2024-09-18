@@ -44,6 +44,15 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalShow, setModalShow] = React.useState(false);
+  const [userinfo, setUserInfo] = useState(null);
+
+  const [quantity, setQuantity] = useState(1);
+
+  // Step 2: Handle input changes
+  const handleInputChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
 
   // Fetch and set user data
   useEffect(() => {
@@ -63,6 +72,29 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
     const intervalId = setInterval(fetchUserData, 300000); // 5 minutes interval
 
     return () => clearInterval(intervalId);
+  }, []);
+
+
+  
+  // Fetch item data
+  useEffect(() => {
+    const getUserId=localStorage.getItem("socialMediaAccountViewId")
+    const fetchItem = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/register/${getUserId}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setUserInfo(data);        
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
   }, []);
 
   // Fetch item data
@@ -131,8 +163,10 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
                           <li>
                             <span>البائع</span>
                             <div className="asset__author" style={{ justifyContent: 'center' }}>
-                              <img src="https://usr.dokan-cdn.com/public/avatars/51bd4f061c48feac5d6054f551f03b48.jpg" alt="" />
-                              <a href="https://usr.gg/madmon">@madmon</a>
+                              <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                              <a href="#" style={{ fontSize: '12px' }}>
+                                @{userinfo?.displayName}
+                              </a>
                             </div>
                           </li>
                           <li style={{ paddingTop: '13px' }}>
@@ -150,208 +184,67 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
                           </li>
                         </ul>
                         <Form className='sign__form' style={{width:'100%',padding:'30px'}}>
-                        <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px',textAlign:'center'}}>تفاصيل طلب الخدمة</h3>
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>الإسم الاول</Form.Label>
-                            <Form.Control placeholder="الإسم الاول" className='sign__input' name="fname"   />
-                        </Form.Group>
-                        <h3 style={{marginBottom:'30px',color:'rgb(97, 100, 255)',fontSize:'23px',textAlign:'center'}}>خيارات إضافية مدفوعة</h3>
-                        <p>العروض مستمرة الى نهاية الشهر 😍 لا تشمل عروض الاضعاف ، لا تشمل عرض دبل المتابعين ، لا تشمل عرض زيادة المتابعين</p>
-      
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
+                        {Array.isArray(item?.additionalFields1) && item.additionalFields1.length > 0 ? (
+                            item.additionalFields1.map((field, index) => (
+                                <React.Fragment key={index}>
+                                    <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
+                                        تفاصيل طلب الخدمة
+                                    </h3>
+                                    <Form.Group className="mb-3" controlId={`formGridField${index}`} style={{ width: '100%' }}>
+                                        <Form.Label>{field.title}</Form.Label>
+                                        <Form.Control placeholder="الإسم الاول" className='sign__input' name={`field${index}`} />
+                                    </Form.Group>
+                                </React.Fragment>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                      {Array.isArray(item?.additionalFields) && item.additionalFields.length > 0 ? (
+                          <React.Fragment>
+                              <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
+                                  خيارات إضافية مدفوعة
+                              </h3>
+                              <p>
+                                  العروض مستمرة الى نهاية الشهر 😍 لا تشمل عروض الاضعاف ، لا تشمل عرض دبل المتابعين ، لا تشمل عرض زيادة المتابعين
+                              </p>
+                              {item.additionalFields.map((field, index) => (
+                                  <React.Fragment key={index}>
+                                    <Form.Label>{field.title}</Form.Label>
+                                      <Form.Group className="mb-3" controlId={`formGridAddress${index}`} style={{ width: '100%' }}>
+                                          <Form.Select aria-label="Default select example" className='sign__input' name={`documentcountry${index}`}>
+                                              <option value="BH">مملكة البحرين</option>
+                                              <option value="SA">المملكة العربية السعودية</option>
+                                              <option value="AE">الإمارات العربية المتحدة</option>
+                                              <option value="QA">قطر</option>
+                                              <option value="OM">عمان</option>
+                                              <option value="KW">الكويت</option>
+                                              <option value="EG">مصر</option>
+                                              <option value="JO">الأردن</option>
+                                              <option value="IQ">العراق</option>
+                                              <option value="SY">سوريا</option>
+                                          </Form.Select>
+                                      </Form.Group>
+                                  </React.Fragment>
+                              ))}
+                          </React.Fragment>
+                      ) : (
+                          <p>No additional fields available</p>
+                      )}
 
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>لا يفوتك عرض 10 اضعاف 🔥😍</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>متابعين ضمان مدى الحياة تيك توك</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>لايكات تيك توك</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>مشاركة - share - علامه الاكسبلور تيك توك</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>مشاهدات تيك توك</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>SAVE - حفظ تيك توك</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>متابعين انستقرام الافضل بمدة ضمان مدى الحياه</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>مشاهدات انستقرام</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>لايكات انستقرام</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                          
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>دولة إصدار الوثيقة</Form.Label>
-                        <Form.Select aria-label="Default select example" className='sign__input'  name="documentcountry">
-                        <option value="BH">مملكة البحرين</option>
-                        <option value="SA">المملكة العربية السعودية</option>
-                        <option value="AE">الإمارات العربية المتحدة</option>
-                        <option value="QA">قطر</option>
-                        <option value="OM">عمان</option>
-                        <option value="KW">الكويت</option>
-                        <option value="EG">مصر</option>
-                        <option value="JO">الأردن</option>
-                        <option value="IQ">العراق</option>
-                        <option value="SY">سوريا</option>
-                        </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{width:'100%'}}>
-                        <Form.Label>رقم الوثيقة</Form.Label>
-                            <Form.Control placeholder="رقم وثيقة الإثبات" className='sign__input' name="documentnumber" type='number'  />
-                        </Form.Group>
+                        
+                     
+                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
+                        <Form.Label>الكمية</Form.Label>
+                        {/* Step 3: Set the value to state and allow changes */}
+                        <Form.Control
+                          placeholder="رقم وثيقة الإثبات"
+                          className='sign__input'
+                          name="documentnumber"
+                          type='number'
+                          value={quantity}          // Controlled input with state
+                          onChange={handleInputChange}  // Update state on input change
+                        />
+                      </Form.Group>
 
           
                         <div>

@@ -129,32 +129,39 @@ app.use("/user/api",userrouter);
 
 
 /* ************************************************************* */
-app.get('/api/users/:username', async (req, res) => {
-  const { username } = req.params;
+const INSTAGRAM_API_URL = 'https://graph.instagram.com';
+const ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN; // Ensure this is defined in your .env file
+
+app.use(cors());
+
+// Endpoint to fetch Instagram bio based on user ID
+app.get('/api/instagram/:userId', async (req, res) => {
+  const { userId } = req.params;
 
   try {
-    const response = await fetch(
-      `https://api.instagram.com/v1/users/search?q=${username}&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`
-    );
+    const response = await axios.get(`${INSTAGRAM_API_URL}/${userId}?fields=bio&access_token=${ACCESS_TOKEN}`);
+    
+    // Check if bio exists in the response
+    const { bio } = response.data;
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error response from Instagram API:', errorData); // Log detailed error response
-      return res.status(response.status).json({ error: errorData.error_message || 'Failed to fetch user data' });
+    if (!bio) {
+      return res.status(404).json({ error: 'Bio not found' });
     }
 
-    const data = await response.json();
-
-    // Process and return user data
-    const user = data.data && data.data.length > 0 ? data.data[0] : null;
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json(user);
+    res.json({ bio });
   } catch (error) {
-    console.error('Server-side error:', error); // Log server-side error
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error fetching Instagram bio:', error.response ? error.response.data : error.message);
+    
+    // Handle different types of errors
+    if (error.response) {
+      if (error.response.status === 401) {
+        return res.status(401).json({ error: 'Unauthorized access' });
+      } else if (error.response.status === 404) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+    }
+    
+    res.status(500).json({ error: 'Failed to fetch Instagram bio' });
   }
 });
 

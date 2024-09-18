@@ -1,55 +1,63 @@
 import React, { useState, useEffect } from 'react';
 
-const UserProfile = () => {
-  const [username, setUsername] = useState(''); // State to store the input username
-  const [userData, setUserData] = useState(null); // State to store user data
-  const [loading, setLoading] = useState(false); // State to track loading status
-  const [error, setError] = useState(null); // State to track errors
+const InstagramBio = () => {
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleFetchUserData = async () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchInstagramBio();
+  };
+
+  const fetchInstagramBio = async () => {
+    if (!username) return;
+
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/users/${username}`);
+      // Replace this with your actual API call
+      const response = await fetch(`http://localhost:8000/api/instagram/${username}`);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        throw new Error('Failed to fetch bio');
       }
 
       const data = await response.json();
-      setUserData(data); // Store the fetched data in state
+      setBio(data.bio);
     } catch (err) {
-      setError(err.message); // Store any errors that occur
+      setError(err.message);
     } finally {
-      setLoading(false); // Set loading to false once the request completes
+      setLoading(false);
     }
   };
 
   return (
-    <div className="user-profile">
-      <input
-        type="text"
-        placeholder="Enter username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <button onClick={handleFetchUserData}>Fetch User Data</button>
+    <div>
+      <h1>Instagram Bio Checker</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter Instagram username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button type="submit">Check Bio</button>
+      </form>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p>Loading bio...</p>}
       {error && <p>Error: {error}</p>}
-      {userData && (
+      {bio && (
         <div>
-          <img src={userData.profile_picture} alt={`${userData.username}'s profile`} />
-          <h2>{userData.username}</h2>
-          <p>{userData.bio}</p>
-          <p>Followers: {userData.followers}</p>
-          <p>Following: {userData.following}</p>
-          <p>Posts: {userData.posts}</p>
+          <h2>{username}'s Instagram Bio</h2>
+          <p>{bio}</p>
         </div>
       )}
     </div>
   );
 };
 
-export default UserProfile;
+export default InstagramBio;
+

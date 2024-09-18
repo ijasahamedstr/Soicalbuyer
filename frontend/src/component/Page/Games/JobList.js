@@ -33,7 +33,9 @@ const JobList = ({ jobs, userinfo }) => {
                     <span className='card__likes1'>🚀بوست</span>
                   </div>
                 </Card.Title>
-                <Nav.Link as={Link} to={`/game-view/${job._id}`}>
+                <Nav.Link as={Link} to={`/game-view/${job._id}`} onClick={()=>{
+                  localStorage.setItem("socialMediaAccountViewId", job.userid)
+                }}>
                   <Card.Title>{job.gametitle}</Card.Title>
                 </Nav.Link>
                 <Card.Body>

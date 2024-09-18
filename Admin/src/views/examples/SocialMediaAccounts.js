@@ -32,8 +32,30 @@ import {
   } from "reactstrap";
   // core components
   import Header from "components/Headers/Header.js";
-  
+  import { useEffect,useState } from "react";
+  import axios from 'axios';
+
   const SocialMediaAccounts = ({ isAccountActive = false }) => {
+    const [AccountUser,setAccountUser] = useState({});
+
+    useEffect(() => {
+      const fetchData = async () => {
+          try {
+            const response = await axios.get('http://localhost:8000/soical');
+            setAccountUser(response.data);
+          } catch (error) {
+              console.error('Error fetching data: ', error);
+          }
+      };
+
+      fetchData();
+  }, []); 
+
+  const truncateText = (text, maxLength) => {
+    if (typeof text !== 'string') return '';
+    return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
+  };
+
     return (
       <>
         <Header />
@@ -53,18 +75,18 @@ import {
                 >
                   <thead className="thead-dark">
                     <tr>
-                      <th scope="col">Account Seller Name</th>
+                      <th scope="col">Account UserName</th>
                       <th scope="col">Account Type</th>
-                      <th scope="col">Account Email</th>
-                      <th scope="col">secondary Email</th>
-                      <th scope="col">Link Number</th>
-                      <th scope="col">Followers</th>
-                      <th scope="col">Following</th>
-                      <th scope="col">Status</th>
+                      <th scope="col">Account description</th>
+                      <th scope="col">social Amount</th>
+                      <th scope="col">social Check code</th>
+                      <th scope="col">Promotional_Title</th>
+                      <th scope="col">discount</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
+                  {Array.isArray(AccountUser) && AccountUser.map(item => (
                     <tr>
                       <th scope="row">
                         <Media className="align-items-center">
@@ -80,88 +102,33 @@ import {
                           </a>
                           <Media>
                             <span className="mb-0 text-sm">
-                              Abdul Rasool Ijas Ahamed
+                              {item.social_username}
                             </span>
                           </Media>
                         </Media>
                       </th>
-                      <td>Instagram</td>
+                      <td> {item.social_type}</td>
                       <td>
                         <Badge color="" className="badge-dot mr-4">
                           <i className="bg-warning" />
-                          ijasrock8696@gmail.com
+                          {truncateText(item.social_dec, 50)}
                         </Badge>
                       </td>
-                      <td>No</td>
-                      <td>+966571882145</td>
-                      <td>10</td>
-                      <td>20</td>
-                      <td>
-                      {isAccountActive ? 
-                      
-                      <Button
-                      color="success"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      Active
-                    </Button>
-                      
-                      :
-                      <Button
-                      color="danger"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      Deactivate
-                    </Button>
-                      
-                      }
-                    
-                      </td>
+                      <td>{item.social_amount}</td>
+                      <td>{item.social_code}</td>
+                      <td>{item.Promotional_Title}</td>
+                      <td>{item.discount}</td>
                       <td className="text-right">
-                        <UncontrolledDropdown>
-                          <DropdownToggle
-                            className="btn-icon-only text-light"
-                            href="#pablo"
-                            role="button"
-                            size="sm"
-                            color=""
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <i className="fas fa-ellipsis-v" />
-                          </DropdownToggle>
-                          <DropdownMenu className="dropdown-menu-arrow" right>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              View Profile
-                            </DropdownItem>
-                            {isAccountActive ? 
-                            
-                            <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Deactivate Account
-                          </DropdownItem>
-                            
-                            :
-                            
-                            <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Active Acoount
-                          </DropdownItem>                           
-                            }
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
+                      <Button
+                        color="success"
+                        href="#pablo"
+                        size="sm"
+                        >
+                        View More
+                     </Button>
                       </td>
                     </tr>
+                    ))}
                   </tbody>
                 </Table>
               </Card>

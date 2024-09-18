@@ -44,6 +44,7 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalShow, setModalShow] = React.useState(false);
+  const [userinfo, setUserInfo] = useState(null);
 
   // Fetch and set user data
   useEffect(() => {
@@ -65,8 +66,31 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
     return () => clearInterval(intervalId);
   }, []);
 
+
+    // Fetch item data
+    useEffect(() => {
+      const getUserId=localStorage.getItem("socialMediaAccountViewId")
+      const fetchItem = async () => {
+        try {
+          const response = await fetch(`http://localhost:8000/register/${getUserId}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setUserInfo(data);        
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchItem();
+    }, []);
+
   // Fetch item data
   useEffect(() => {
+    const getUserId=localStorage.getItem("socialMediaAccountViewId")
     const fetchItem = async () => {
       try {
         const response = await fetch(`http://localhost:8000/gameaccount/${id}`);
@@ -149,8 +173,8 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
                           <li>
                             <span>البائع</span>
                             <div className="asset__author" style={{ justifyContent: 'center' }}>
-                              <img src="https://usr.dokan-cdn.com/public/avatars/51bd4f061c48feac5d6054f551f03b48.jpg" alt="" />
-                              <a href="https://usr.gg/madmon">@madmon</a>
+                              <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                              <a href="https://usr.gg/madmon">@{userinfo?.displayName}</a>
                             </div>
                           </li>
                           <li style={{ paddingTop: '13px' }}>

@@ -91,15 +91,9 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log('====================================');
-        console.log(data);
-        console.log('====================================');
         setUserInfo(data);        
       } catch (error) {
         setError(error.message);
-        // console.log('====================================');
-        // console.log("error");
-        // console.log('====================================');
       } finally {
         setLoading(false);
       }
@@ -245,9 +239,9 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <li>
         <span>البائع</span>
         <div className="asset__author  ">
-        <img src="https://usr.dokan-cdn.com/public/avatars/3b52091ca7cb11c5ec3ca045ac4874b6.jpg" alt=""/>
+        <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt=""/>
         <div style={{display:'grid'}}>
-            <div>@{userinfo.displayName}</div>
+            <div>@{userinfo?.displayName}</div>
             <div class="star-rating">
             <i className="fas fa-star"></i>
             <i className="fas fa-star"></i>

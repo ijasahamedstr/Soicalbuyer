@@ -21,7 +21,9 @@ const JobList = ({ jobs, userinfo }) => {
                       <span className="card__likes1">🚀بوست</span>
                     </div>
                   </Card.Title>
-                  <Nav.Link as={Link} to={`/Service-view/${job._id}`}>
+                  <Nav.Link as={Link} to={`/Service-view/${job._id}`} onClick={()=>{
+                  localStorage.setItem("socialMediaAccountViewId", job.userid)
+                }}>
                     <Card.Title>{job.service_heading}</Card.Title>
                   </Nav.Link>
                   <Card.Body>
