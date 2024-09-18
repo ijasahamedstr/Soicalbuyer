@@ -199,40 +199,35 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData, jobs }) {
                         ) : (
                             <></>
                         )}
-                      {Array.isArray(item?.additionalFields) && item.additionalFields.length > 0 ? (
-                          <React.Fragment>
-                              <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
-                                  خيارات إضافية مدفوعة
-                              </h3>
-                              <p>
-                                  العروض مستمرة الى نهاية الشهر 😍 لا تشمل عروض الاضعاف ، لا تشمل عرض دبل المتابعين ، لا تشمل عرض زيادة المتابعين
-                              </p>
-                              {item.additionalFields.map((field, index) => (
-                                  <React.Fragment key={index}>
-                                    <Form.Label>{field.title}</Form.Label>
-                                      <Form.Group className="mb-3" controlId={`formGridAddress${index}`} style={{ width: '100%' }}>
-                                          <Form.Select aria-label="Default select example" className='sign__input' name={`documentcountry${index}`}>
-                                              <option value="BH">مملكة البحرين</option>
-                                              <option value="SA">المملكة العربية السعودية</option>
-                                              <option value="AE">الإمارات العربية المتحدة</option>
-                                              <option value="QA">قطر</option>
-                                              <option value="OM">عمان</option>
-                                              <option value="KW">الكويت</option>
-                                              <option value="EG">مصر</option>
-                                              <option value="JO">الأردن</option>
-                                              <option value="IQ">العراق</option>
-                                              <option value="SY">سوريا</option>
-                                          </Form.Select>
-                                      </Form.Group>
-                                  </React.Fragment>
-                              ))}
-                          </React.Fragment>
-                      ) : (
-                          <p>No additional fields available</p>
-                      )}
 
-                        
-                     
+                        {Array.isArray(item?.additionalFields) && item.additionalFields.length > 0 ? (
+                          <React.Fragment>
+                            <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
+                              خيارات إضافية مدفوعة
+                            </h3>
+                            <p>
+                              العروض مستمرة الى نهاية الشهر 😍 لا تشمل عروض الاضعاف ، لا تشمل عرض دبل المتابعين ، لا تشمل عرض زيادة المتابعين
+                            </p>
+                            {item.additionalFields.map((field, index) => (
+                              <React.Fragment key={index}>
+                                <Form.Group className="mb-3" controlId={`formGridAddress${index}`} style={{ width: '100%' }}>
+                                  <Form.Select aria-label="Default select example" className='sign__input' name={`documentcountry${index}`}>
+                                    {Array.isArray(field?.fields) && field.fields.length > 0 ? (
+                                      field.fields.map((optionField, i) => (
+                                        <option value="BH" key={i}>{optionField.title}</option>
+                                      ))
+                                    ) : (
+                                      <option disabled>No additional fields available</option>
+                                    )}
+                                  </Form.Select>
+                                </Form.Group>
+                              </React.Fragment>
+                            ))}
+                          </React.Fragment>
+                        ) : (
+                          <p>No additional fields available</p>
+                        )}
+                    
                         <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
                         <Form.Label>الكمية</Form.Label>
                         {/* Step 3: Set the value to state and allow changes */}
