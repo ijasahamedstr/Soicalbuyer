@@ -27,6 +27,7 @@ import mongoose from 'mongoose';
 import axios from 'axios';
 import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
 import bankrouter from "./routes/bank.route.js";
+import servicerequestrouter from "./routes/servicerequest.routes.js";
 
 
 
@@ -107,6 +108,10 @@ app.use('/notification',notificationrouter);
 app.use('/bank',bankrouter);
 
 
+// User Account User notification
+app.use('/servicerequest',servicerequestrouter);
+
+
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -139,18 +144,10 @@ app.get('/api/instagram/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const response = await axios.get(`${INSTAGRAM_API_URL}/${userId}?fields=bio&access_token=${ACCESS_TOKEN}`);
-    
-    // Check if bio exists in the response
-    const { bio } = response.data;
-
-    if (!bio) {
-      return res.status(404).json({ error: 'Bio not found' });
-    }
-
-    res.json({ bio });
+    const response = await axios.get(`https://graph.instagram.com/ijas75408?fields=id,username&access_token=${ACCESS_TOKEN}`);
+    console.log(response.data);
   } catch (error) {
-    console.error('Error fetching Instagram bio:', error.response ? error.response.data : error.message);
+    console.error('Error fetching Instagram bio:', error);
     
     // Handle different types of errors
     if (error.response) {
@@ -160,12 +157,89 @@ app.get('/api/instagram/:userId', async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
       }
     }
-    
-    res.status(500).json({ error: 'Failed to fetch Instagram bio' });
+    res.status(500).json({ url:error });
+
   }
 });
 
 /* ************************************************************* */
+
+
+const {
+  TWITTER_API_KEY,
+  TWITTER_API_SECRET_KEY,
+  TWITTER_ACCESS_TOKEN,
+  TWITTER_ACCESS_TOKEN_SECRET
+} = process.env;
+
+if (!TWITTER_API_KEY || !TWITTER_API_SECRET_KEY || !TWITTER_ACCESS_TOKEN || !TWITTER_ACCESS_TOKEN_SECRET) {
+  console.error('Missing Twitter API credentials. Please check your .env file.');
+  process.exit(1);
+}
+
+const twitterClient = new TwitterApi({
+  appKey: TWITTER_API_KEY,
+  appSecret: TWITTER_API_SECRET_KEY,
+  accessToken: TWITTER_ACCESS_TOKEN,
+  accessSecret: TWITTER_ACCESS_TOKEN_SECRET,
+});
+
+app.use(express.json());
+
+let userCache = {};
+let cacheTimestamp = Date.now();
+
+const CACHE_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+app.get('/api/twitter-info/:username', async (req, res) => {
+  const { username } = req.params; 
+  if (userCache[username] && (Date.now() - cacheTimestamp < CACHE_DURATION_MS)) {
+    return res.json(userCache[username]);
+  }
+
+  try {
+    const user = await twitterClient.v2.userByUsername(username, {
+      'user.fields': 'description', // Specify that we want the description field
+    });
+
+    if (!user.data) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    userCache[username] = {
+      username: user.data.username,
+      name: user.data.name,
+      description: user.data.description,
+      public_metrics: user.data.public_metrics
+    };
+
+    cacheTimestamp = Date.now(); // Update cache timestamp
+
+    res.json(userCache[username]);
+  } catch (error) {
+    if (error.code === 429) { // Rate limit error
+      console.error('Rate limit exceeded, try again later.');
+      res.status(429).json({ error: 'Rate limit exceeded, try again later.' });
+    } else {
+      console.error('Error fetching Twitter user information:', error.message);
+      res.status(500).json({ error: 'Failed to fetch Twitter user information' });
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Start the Express server
