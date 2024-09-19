@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Modal, Spinner } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function MyPaymentModal({ show, onHide }) {
   return (
@@ -46,6 +47,8 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [userinfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOTPLoggedIn) {
@@ -125,6 +128,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
     try {
       const response = await axios.post('http://localhost:8000/servicerequest', formData);
       console.log(response.data);
+      navigate("/الخدمات");
       // Optionally show success message or handle form reset here
     } catch (error) {
       console.error('Error saving form data:', error);
