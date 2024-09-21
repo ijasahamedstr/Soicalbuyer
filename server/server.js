@@ -164,7 +164,7 @@ app.get('/api/instagram/:userId', async (req, res) => {
 
 /* ************************************************************* */
 
-
+/*************************************************************** */
 const {
   TWITTER_API_KEY,
   TWITTER_API_SECRET_KEY,
@@ -186,7 +186,6 @@ const twitterClient = new TwitterApi({
 
 app.use(express.json());
 
-let userCache = {};
 let cacheTimestamp = Date.now();
 
 const CACHE_DURATION_MS = 15 * 60 * 1000; // 15 minutes
@@ -226,21 +225,64 @@ app.get('/api/twitter-info/:username', async (req, res) => {
     }
   }
 });
+/********************************************************************************* */
 
+/********************************************************************************* */
 
+// Simple in-memory cache
+const userCache = new Map();
+const infoCache = new Map();
 
+// Middleware
+app.use(express.json());
 
+// Resolve username to user ID
+app.get('/api/resolve-username/:username', async (req, res) => {
+  const { username } = req.params;
+  
+  if (userCache.has(username)) {
+    return res.json({ userId: userCache.get(username) });
+  }
+  
+  try {
+    // Replace with actual API or service to resolve username to user ID
+    const response = await axios.get(`https://some-tiktok-api.com/resolve-username/v2/user/info/${username}`);
+    const userId = response.data.userId;
+    
+    // Cache the user ID
+    userCache.set(username, userId);
+    
+    res.json({ userId });
+  } catch (error) {
+    console.error('Error resolving username:', error.message);
+    res.status(500).json({ error: 'Failed to resolve username' });
+  }
+});
 
+// Fetch TikTok user info by user ID
+app.get('/api/tiktok-info/:userId', async (req, res) => {
+  const { userId } = req.params;
 
+  if (infoCache.has(userId)) {
+    return res.json(infoCache.get(userId));
+  }
+  
+  try {
+    // Replace with actual API call to fetch user info
+    const response = await axios.get(`https://developers.tiktok.com/doc/tiktok-api-v2-get-user-info/${userId}`);
+    const userInfo = response.data;
+    
+    // Cache the user info
+    infoCache.set(userId, userInfo);
+    
+    res.json(userInfo);
+  } catch (error) {
+    console.error('Error fetching user info:', error.message);
+    res.status(500).json({ error: 'Failed to fetch TikTok information' });
+  }
+});
 
-
-
-
-
-
-
-
-
+/************************************************************************************ */
 
 // Start the Express server
 const port = 8000;

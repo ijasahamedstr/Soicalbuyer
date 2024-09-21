@@ -100,6 +100,7 @@ function Sellsocial() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
 
   const [formData, setFormData] = useState({
     accountpassword: "",
@@ -151,55 +152,100 @@ function Sellsocial() {
 
   const generateText = () => social_dec;
 
-  const handleSubmit = async () => {
-    if (!social_username || !social_amount || !social_dec) {
-      Swal.fire({
-        title: 'تنبيه',
-        text: 'يرجى ملء جميع الحقول المطلوبة',
-        icon: 'warning',
-        confirmButtonText: 'موافق'
-      });
-      return;
+  const handleFetchInfo = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+        const response = await getEndpointForPlatform();
+        setInfo(response.data);
+        return response.data; // Return the fetched data for further validation
+    } catch (err) {
+        console.error('Error fetching data:', err.message);
+        setError('Failed to load information. Please try again later.');
+    } finally {
+        setLoading(false);
+    }
+};
+
+const getEndpointForPlatform = useCallback(async () => {
+    const endpoints = {
+        instagram: `http://localhost:8000/api/instagram-info/${social_username}`,
+        tiktok: `http://localhost:8000/api/tiktok-info/${social_username}`,
+        twitter: `http://localhost:8000/api/twitter-info/${social_username}`,
+        steam: `http://localhost:8000/api/steam-info/${social_username}`,
+    };
+
+    const endpoint = endpoints[social_type] || endpoints.twitter;
+    return await axios.get(endpoint);
+}, [social_type, social_username]);
+
+const handleSubmit = async () => {
+    if (!social_username) {
+        setError('Username is required');
+        return;
+    }
+
+    const fetchedData = await handleFetchInfo();
+
+    // Check if fetched data exists and if description matches social_code
+    if (!fetchedData || fetchedData.description !== social_code) {
+        Swal.fire({
+            title: 'تنبيه',
+            text: 'الوصف المسترجع لا يتطابق مع الرمز الاجتماعي.',
+            icon: 'warning',
+            confirmButtonText: 'موافق'
+        });
+        return;
+    }
+
+    if (!social_amount || !social_dec) {
+        Swal.fire({
+            title: 'تنبيه',
+            text: 'يرجى ملء جميع الحقول المطلوبة',
+            icon: 'warning',
+            confirmButtonText: 'موافق'
+        });
+        return;
     }
 
     try {
-      // Renaming the local variable to avoid conflict with state variable
-      const submittedFormData = {
-        userid,
-        social_code,
-        social_username,
-        social_type,
-        social_amount,
-        social_dec,
-        sstatus: 'Pending',
-        accountpassword: formData.accountpassword,
-        accountgmail: formData.accountgmail,
-        accountgmailpassword: formData.accountgmailpassword,
-        accountdec: formData.accountdec
-      };
-      const response = await axios.post('http://localhost:8000/soical', submittedFormData);
+        const submittedFormData = {
+            userid,
+            social_code,
+            social_username,
+            social_type,
+            social_amount,
+            social_dec,
+            accountpassword: formData.accountpassword,
+            accountgmail: formData.accountgmail,
+            accountgmailpassword: formData.accountgmailpassword,
+            accountdec: formData.accountdec
+        };
+        const response = await axios.post('http://localhost:8000/soical', submittedFormData);
 
-      if (response.status === 201) {
-        Swal.fire({
-          title: 'تأكيد الملكية',
-          text: 'تم تأكيد الملكية بنجاح!',
-          icon: 'success',
-          confirmButtonText: 'موافق'
-        });
+        if (response.status === 201) {
+            Swal.fire({
+                title: 'تأكيد الملكية',
+                text: 'تم تأكيد الملكية بنجاح!',
+                icon: 'success',
+                confirmButtonText: 'موافق'
+            });
 
-        navigate('/'); // Redirect after successful submission
-      } else {
-        throw new Error('حدث خطأ أثناء إرسال البيانات');
-      }
+            navigate('/'); // Redirect after successful submission
+        } else {
+            throw new Error('حدث خطأ أثناء إرسال البيانات');
+        }
     } catch (error) {
-      Swal.fire({
-        title: 'خطأ',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'موافق'
-      });
+        Swal.fire({
+            title: 'خطأ',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'موافق'
+        });
     }
-  };
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -382,7 +428,7 @@ function Sellsocial() {
                   <p>ستتمكن من استقبال عروض مالية على الحساب من المستخدمين الآخرين (سومات) وبإمكانك قبول عرض بسهولة تامة*</p>
                   <p className="text-center">المبلغ الذي سيتم إيداعه في حسابك في المنصة بعد البيع: ${social_amount}</p>
                  
-                  <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px' }} onClick={() => setModalShow1(true)}>
+                  <Button variant="primary" style={{ fontFamily: 'Noto Kufi Arabic', fontSize: '13px' }} onSubmit={handleFetchInfo} onClick={() => setModalShow1(true)}>
                     تأكيد ملكية الحساب
                   </Button>
                   

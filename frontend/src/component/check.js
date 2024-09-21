@@ -1,34 +1,37 @@
-import React, { useState, useEffect } from 'react';
+// src/TikTokInfo.js
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const InstagramBio = () => {
+const TikTokInfo = () => {
   const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [info, setInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetchInstagramBio();
-  };
 
-  const fetchInstagramBio = async () => {
-    if (!username) return;
+    if (!username) {
+      setError('Username is required');
+      return;
+    }
 
     setLoading(true);
     setError(null);
 
     try {
-      // Replace this with your actual API call
-      const response = await fetch(`http://localhost:8000/api/instagram/${username}`);
+      // Convert username to user ID (if necessary)
+      // Here you might need to use an API or service to resolve username to user ID
+      // For the sake of this example, assume we have an API to do this:
+      const userIdResponse = await axios.get(`http://localhost:8000/api/resolve-username/${username}`);
+      const userId = userIdResponse.data.userId;
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch bio');
-      }
-
-      const data = await response.json();
-      setBio(data.bio);
+      // Fetch user information using the resolved user ID
+      const response = await axios.get(`http://localhost:8000/api/tiktok-info/${userId}`);
+      setInfo(response.data);
     } catch (err) {
-      setError(err.message);
+      console.error('Error fetching TikTok data:', err.message);
+      setError('Failed to load TikTok information. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -36,28 +39,33 @@ const InstagramBio = () => {
 
   return (
     <div>
-      <h1>Instagram Bio Checker</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter Instagram username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <button type="submit">Check Bio</button>
+        <label>
+          TikTok Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter TikTok Username"
+          />
+        </label>
+        <button type="submit">Fetch User Info</button>
       </form>
-
-      {loading && <p>Loading bio...</p>}
-      {error && <p>Error: {error}</p>}
-      {bio && (
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {info && (
         <div>
-          <h2>{username}'s Instagram Bio</h2>
-          <p>{bio}</p>
+          <h2>TikTok User Information</h2>
+          <p><strong>Username:</strong> {info.username}</p>
+          <p><strong>Full Name:</strong> {info.full_name}</p>
+          <p><strong>Bio:</strong> {info.bio}</p>
+          <p><strong>Followers Count:</strong> {info.followers_count}</p>
+          <p><strong>Following Count:</strong> {info.following_count}</p>
+          <p><strong>Likes Count:</strong> {info.likes_count}</p>
         </div>
       )}
     </div>
   );
 };
 
-export default InstagramBio;
-
+export default TikTokInfo;
