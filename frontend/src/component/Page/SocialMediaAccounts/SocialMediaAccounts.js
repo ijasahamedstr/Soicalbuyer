@@ -51,7 +51,7 @@ function Soicalaccount() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        const response = await axios.get('https://soicalbuyer-hzpn.vercel.app/register'); // Ensure endpoint is correct
         setUserinfo(response.data);
       } catch (error) {
         console.error('Error fetching user info:', error);
