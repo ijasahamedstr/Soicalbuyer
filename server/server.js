@@ -45,10 +45,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+// app.use(cors({
+//   origin:"http://localhost:3000",
+//   methods:"GET,POST,PUT,DELETE",
+//   credentials:true
+// }));
+
 app.use(cors({
-  origin:"http://localhost:3000",
-  methods:"GET,POST,PUT,DELETE",
-  credentials:true
+  origin: "https://soicalbuyer.vercel.app",
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
 }));
 
 
@@ -134,31 +140,36 @@ app.use("/user/api",userrouter);
 
 
 /* ************************************************************* */
+// Your Instagram API access token and endpoint
 const INSTAGRAM_API_URL = 'https://graph.instagram.com';
-const ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN; // Ensure this is defined in your .env file
+const ACCESS_TOKEN = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
 
-app.use(cors());
-
-// Endpoint to fetch Instagram bio based on user ID
-app.get('/api/instagram/:userId', async (req, res) => {
-  const { userId } = req.params;
+app.get('/api/instagram/user', async (req, res) => {
+  const { username } = req.query;
 
   try {
-    const response = await axios.get(`https://graph.instagram.com/ijas75408?fields=id,username&access_token=${ACCESS_TOKEN}`);
-    console.log(response.data);
-  } catch (error) {
-    console.error('Error fetching Instagram bio:', error);
-    
-    // Handle different types of errors
-    if (error.response) {
-      if (error.response.status === 401) {
-        return res.status(401).json({ error: 'Unauthorized access' });
-      } else if (error.response.status === 404) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-    }
-    res.status(500).json({ url:error });
+    // Assuming you have a way to convert username to user ID
+    const userIdResponse = await axios.get(`${INSTAGRAM_API_URL}/v10.0/ig_user_search`, {
+      params: {
+        username,
+        access_token: ACCESS_TOKEN,
+      },
+    });
 
+    const userId = userIdResponse.data.data[0].id; // Adjust based on response structure
+
+    // Fetching user details
+    const userResponse = await axios.get(`${INSTAGRAM_API_URL}/${userId}`, {
+      params: {
+        fields: 'id,username,account_type,biography,followers_count,follows_count,profile_picture_url',
+        access_token: ACCESS_TOKEN,
+      },
+    });
+
+    res.json(userResponse.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch user details' });
   }
 });
 

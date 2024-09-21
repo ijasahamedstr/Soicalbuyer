@@ -1,71 +1,56 @@
-// src/TikTokInfo.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const TikTokInfo = () => {
+const InstagramUserDetails = () => {
   const [username, setUsername] = useState('');
-  const [info, setInfo] = useState(null);
+  const [accountInfo, setAccountInfo] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!username) {
-      setError('Username is required');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
+  const handleFetchUserDetails = async () => {
     try {
-      // Convert username to user ID (if necessary)
-      // Here you might need to use an API or service to resolve username to user ID
-      // For the sake of this example, assume we have an API to do this:
-      const userIdResponse = await axios.get(`http://localhost:8000/api/resolve-username/${username}`);
-      const userId = userIdResponse.data.userId;
-
-      // Fetch user information using the resolved user ID
-      const response = await axios.get(`http://localhost:8000/api/tiktok-info/${userId}`);
-      setInfo(response.data);
+      // Assuming you need to send the username to the backend
+      const response = await axios.get(
+        `http://localhost:8000/api/instagram/user`, 
+        { params: { username } } // Sending username as a query parameter if needed
+      );
+      setAccountInfo({
+        id: response.data.id,
+        username: response.data.username,
+        fullName: response.data.full_name,
+        bio: response.data.biography, // Assuming the correct field name is 'biography'
+        followers: response.data.followers_count,
+        following: response.data.follows_count,
+        profilePicture: response.data.profile_picture_url
+      });
+      setError(null);
     } catch (err) {
-      console.error('Error fetching TikTok data:', err.message);
-      setError('Failed to load TikTok information. Please try again later.');
-    } finally {
-      setLoading(false);
+      console.error(err); // Log the actual error for debugging
+      setError('Error fetching user details. Please check the console for more information.');
+      setAccountInfo(null);
     }
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          TikTok Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter TikTok Username"
-          />
-        </label>
-        <button type="submit">Fetch User Info</button>
-      </form>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {info && (
-        <div>
-          <h2>TikTok User Information</h2>
-          <p><strong>Username:</strong> {info.username}</p>
-          <p><strong>Full Name:</strong> {info.full_name}</p>
-          <p><strong>Bio:</strong> {info.bio}</p>
-          <p><strong>Followers Count:</strong> {info.followers_count}</p>
-          <p><strong>Following Count:</strong> {info.following_count}</p>
-          <p><strong>Likes Count:</strong> {info.likes_count}</p>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter Instagram username"
+      />
+      <button onClick={handleFetchUserDetails}>Get User Details</button>
+      {accountInfo && (
+        <div className="account-info">
+          <h2>Account Information</h2>
+          <p><strong>Username:</strong> {accountInfo.username}</p>
+          <p><strong>Full Name:</strong> {accountInfo.fullName}</p>
+          <p><strong>Bio:</strong> {accountInfo.bio}</p>
         </div>
       )}
+      {error && <p>{error}</p>}
     </div>
+
   );
 };
 
-export default TikTokInfo;
+export default InstagramUserDetails;
