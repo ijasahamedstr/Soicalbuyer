@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { AccountActivecreate, AccountActiveDelete, AccountActiveUpdate, AccountActiveView } from '../controller/AccountActive.Controller.js';
+import { AccountActivecreate, AccountActiveDelete, AccountActiveUpdate, AccountActiveView, AccountSingleActiveDetails } from '../controller/AccountActive.Controller.js';
 
 // Create a new router instance
 const AccountActiverouter = express.Router();
@@ -42,6 +42,9 @@ AccountActiverouter.delete('/:id',AccountActiveDelete);
 
 //Update Data Register
 AccountActiverouter.put('/:id',upload.single('photo'), AccountActiveUpdate);
+
+// View the Single Data Register
+AccountActiverouter.get("/:id",AccountSingleActiveDetails)
 
 
 export default AccountActiverouter;

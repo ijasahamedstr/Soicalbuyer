@@ -111,3 +111,21 @@ export const AccountActiveUpdate = async (req, res) => {
 };
 
 
+
+// single Acccount View 
+
+export const AccountSingleActiveDetails = async (req, res) => {
+    try {
+        const AccountsActive = await Accountactive.findById(req.params.id);
+        if (AccountsActive == null) {
+            return res.status(404).json({ message: "Cannot Find Acoount" });
+        }
+        else {
+            res.json(AccountsActive);
+
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+

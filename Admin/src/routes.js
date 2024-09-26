@@ -1,30 +1,18 @@
-/*!
 
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import Index from "views/Index.js";
 import Profile from "views/examples/Profile.js";
-// import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import SocialMediaAccounts from "views/examples/SocialMediaAccounts";
 import ViewProfile from "views/examples/ViewProfile";
 import UserList from "views/examples/UserList";
-// import Icons from "views/examples/Icons.js";
+import ActiveAccountList from "views/examples/ActiveAccountList";
+import ActiveAccountListView from "views/examples/ActiveAccountListView";
+import UserAccountsView from "views/examples/UserAccountsView";
+import SocialMediaAccountsView from "views/examples/SocialMediaAccountsView";
+import GameAccounts from "views/examples/GameAccounts";
+import GameAccountsView from "views/examples/GameAccountsView";
 
 
 
@@ -44,6 +32,13 @@ var routes = [
     layout: "/admin",
   },
   {
+    path: "/ActiveAccountList",
+    name: " User Active Accounts",
+    icon: "ni ni-circle-08 text-green",
+    component: <ActiveAccountList/>,
+    layout: "/admin",
+  },
+  {
     path: "/Social-Media-Accounts",
     name: "Social Media Accounts",
     icon: "ni ni-atom text-orange",
@@ -52,9 +47,9 @@ var routes = [
   },
   {
     path: "/user-profile",
-    name: "User Accounts Active",
+    name: "Games Accounts",
     icon: "ni ni-single-02 text-yellow",
-    component: <Profile />,
+    component: < GameAccounts/>,
     layout: "/admin",
   },
   {
@@ -81,6 +76,29 @@ var routes = [
   {
     path: "/View-Profile",
     component: <ViewProfile/>,
+    layout: "/admin",
+  },
+
+
+
+  {
+    path: "/user/:id",
+    component: <UserAccountsView/>,
+    layout: "/admin",
+  },
+  {
+    path: "/activeAccountList/:id",
+    component: <ActiveAccountListView/>,
+    layout: "/admin",
+  },
+  {
+    path: "/soicalAccountView/:id",
+    component: <SocialMediaAccountsView/>,
+    layout: "/admin",
+  },
+  {
+    path: "/GameAccountView/:id",
+    component: <GameAccountsView/>,
     layout: "/admin",
   },
   

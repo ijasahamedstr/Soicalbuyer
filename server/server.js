@@ -28,7 +28,8 @@ import axios from 'axios';
 import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
 import bankrouter from "./routes/bank.route.js";
 import servicerequestrouter from "./routes/servicerequest.routes.js";
-
+import adminfeedbackrouter from "./routes/adminfeedback.route.js";
+import * as cheerio from 'cheerio';
 
 
 // Create an instance of Express
@@ -45,17 +46,17 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// app.use(cors({
-//   origin:"http://localhost:3000",
-//   methods:"GET,POST,PUT,DELETE",
-//   credentials:true
-// }));
-
 app.use(cors({
-  origin: "https://soicalbuyer.vercel.app",
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  origin:"http://localhost:3000",
+  methods:"GET,POST,PUT,DELETE",
+  credentials:true
 }));
+
+// app.use(cors({
+//   origin: "https://soicalbuyer.vercel.app",
+//   methods: "GET,POST,PUT,DELETE",
+//   credentials: true
+// }));
 
 
 //Data understanding middleware
@@ -102,6 +103,11 @@ app.use('/point',pointrouter);
 app.use('/feedback',feedbackrouter);
 
 
+// Account Point Transfer
+app.use('/adminfeedback', adminfeedbackrouter);
+
+
+
 // User Account User boost
 app.use('/boost',Accountboostrouter);
 
@@ -140,38 +146,120 @@ app.use("/user/api",userrouter);
 
 
 /* ************************************************************* */
-// Your Instagram API access token and endpoint
-const INSTAGRAM_API_URL = 'https://graph.instagram.com';
-const ACCESS_TOKEN = 'YOUR_INSTAGRAM_ACCESS_TOKEN';
+// Middleware to parse JSON requests
+app.use(express.json());
 
-app.get('/api/instagram/user', async (req, res) => {
+
+async function getUserIdFromUsername(username) {
+  try {
+    // Fetch the Instagram profile page
+    const response = await axios.get(`https://www.instagram.com/${username}/`);
+    const html = response.data;
+
+    // Load the HTML using Cheerio
+    const $ = cheerio.load(html);
+
+    // Look for script tags that contain the user ID (it's often embedded in one of these)
+    const scriptTag = $('script[type="application/ld+json"]').html();
+
+    if (!scriptTag) {
+      throw new Error('Unable to locate user information in the HTML');
+    }
+
+    // Parse the JSON data from the script tag
+    const userData = JSON.parse(scriptTag);
+
+    // Extract the user ID (if it exists in the metadata)
+    const userId = userData.mainEntityofPage && userData.mainEntityofPage['@id'];
+    if (!userId) {
+      throw new Error('Unable to find user ID in the page data');
+    }
+
+    return userId.split('/').pop(); // Extract the numeric ID from the URL
+  } catch (error) {
+    console.error('Error fetching Instagram user ID:', error);
+    return null;
+  }
+}
+ // app.get('/api/instagram-info', async (req, res) => {
+//   const { username } = req.query;
+
+//   console.log(username);
+//   if (!username) {
+//     return res.status(400).json({ error: 'Username is required' });
+//   }
+
+//   try {
+//     const accessToken = 'IGQWRNdnQ5LVZAXTW5CNlp1c3lvRjFOYnhmUVEyZAW1BbHN5TDdCZAEhNM3R1Tm5EdTJFV1dIekpPVHFrYXpKS05Pcm1TTVFpNXBUeW14U1l0VnptOTJlOVFDRFEyVE52QVFLdFE2YmlvSVBDcGFHaUpVdHhtVVpvQjQZD'; // Replace with your actual access token
+
+//     // This endpoint does not support username search directly; you need the user ID instead.
+//     // Here, we're going to assume you have the user ID corresponding to the username.
+//     // You would generally look up the user ID based on your own logic or stored data.
+
+//     // Replace this with your logic to find user ID based on username
+//     // const userId = await getUserIdFromUsername(username); // Placeholder function
+
+//     if (!userId) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
+
+//     const userDetailsResponse = await axios.get(`https://graph.instagram.com/${userId}`, {
+//       params: {
+//         fields: 'id,username,full_name,biography',
+//         access_token: accessToken,
+//       },
+//     });
+
+//     res.json(userDetailsResponse.data);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error fetching user details' });
+//   }
+// });
+
+// Placeholder function for fetching user ID based on username
+// async function getUserIdFromUsername(username) {
+//   // Implement your logic here to retrieve the user ID for the given username
+//   // This might involve a database lookup or a mapping you maintain
+//   return null; // Replace with actual user ID if found
+// }
+
+
+app.get('/api/instagram-info', async (req, res) => {
   const { username } = req.query;
 
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
   try {
-    // Assuming you have a way to convert username to user ID
-    const userIdResponse = await axios.get(`${INSTAGRAM_API_URL}/v10.0/ig_user_search`, {
+    const accessToken = 'IGQWRNdnQ5LVZAXTW5CNlp1c3lvRjFOYnhmUVEyZAW1BbHN5TDdCZAEhNM3R1Tm5EdTJFV1dIekpPVHFrYXpKS05Pcm1TTVFpNXBUeW14U1l0VnptOTJlOVFDRFEyVE52QVFLdFE2YmlvSVBDcGFHaUpVdHhtVVpvQjQZD'; // Replace with your actual access token
+
+    // First, use Instagram Basic Display API to get the user ID based on the username
+    const userIdResponse = await axios.get(`https://graph.instagram.com/v12.0/${username}`, {
       params: {
-        username,
-        access_token: ACCESS_TOKEN,
+        access_token: accessToken,
+        fields: 'id',  // Get the user ID
       },
     });
 
-    const userId = userIdResponse.data.data[0].id; // Adjust based on response structure
+    const userId = userIdResponse.data.id;
 
-    // Fetching user details
-    const userResponse = await axios.get(`${INSTAGRAM_API_URL}/${userId}`, {
+    // Now that we have the user ID, fetch the user details, including the bio
+    const userDetailsResponse = await axios.get(`https://graph.instagram.com/${userId}`, {
       params: {
-        fields: 'id,username,account_type,biography,followers_count,follows_count,profile_picture_url',
-        access_token: ACCESS_TOKEN,
+        fields: 'id,username,account_type,media_count,biography',
+        access_token: accessToken,
       },
     });
 
-    res.json(userResponse.data);
+    res.json(userDetailsResponse.data);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch user details' });
+    console.error('Error fetching Instagram user details:', error);
+    res.status(500).json({ error: 'Error fetching user details' });
   }
 });
+
 
 /* ************************************************************* */
 
