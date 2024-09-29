@@ -13,6 +13,10 @@ import UserAccountsView from "views/examples/UserAccountsView";
 import SocialMediaAccountsView from "views/examples/SocialMediaAccountsView";
 import GameAccounts from "views/examples/GameAccounts";
 import GameAccountsView from "views/examples/GameAccountsView";
+import Service from "views/examples/Service";
+import ServiceView from "views/examples/ServiceView";
+import ServiceRequest from "views/examples/Service Request";
+import ServiceRequestview from "views/examples/Service Request view";
 
 
 
@@ -53,10 +57,17 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/tables",
-    name: "Leaderboard",
+    path: "/service",
+    name: "service",
     icon: "ni ni-bullet-list-67 text-red",
-    component: <Tables />,
+    component: <Service />,
+    layout: "/admin",
+  },
+  {
+    path: "/Service-Request",
+    name: "Service Request",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: <ServiceRequest />,
     layout: "/admin",
   },
   {
@@ -73,14 +84,7 @@ var routes = [
     component: <Register />,
     layout: "/auth",
   },
-  {
-    path: "/View-Profile",
-    component: <ViewProfile/>,
-    layout: "/admin",
-  },
-
-
-
+ 
   {
     path: "/user/:id",
     component: <UserAccountsView/>,
@@ -99,6 +103,16 @@ var routes = [
   {
     path: "/GameAccountView/:id",
     component: <GameAccountsView/>,
+    layout: "/admin",
+  },
+  {
+    path: "/serviceView/:id",
+    component: <ServiceView/>,
+    layout: "/admin",
+  },
+  {
+    path: "/servicerequestView/:id",
+    component: <ServiceRequestview/>,
     layout: "/admin",
   },
   
