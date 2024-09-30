@@ -11,6 +11,9 @@ const ServicerequestSchema = new mongoose.Schema({
         of: String
       },
   documentnumber: Number,
+  userid: {
+    type: String,
+},
 });
 
 // Create the model

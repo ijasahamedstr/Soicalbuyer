@@ -90,7 +90,6 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
 
         setFetchedItem(itemData);
         setUserInfo(userData);
-
       } catch (error) {
         setError(error.message);
       } finally {
@@ -100,6 +99,14 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
 
     fetchItem();
   }, [id]);
+
+  useEffect(() => {
+    // Initialize formData with user ID
+    setFormData(prevData => ({
+      ...prevData,
+      userid: userinfo?._id || ''
+    }));
+  }, [userinfo]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -198,6 +205,15 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                             </div>
                           </li>
                         </ul>
+                        <Form.Group className="mb-3" controlId="formGridUserId" style={{ width: '100%' }}>
+                          <Form.Label>الإسم الأول</Form.Label>
+                          <Form.Control 
+                            placeholder="الإسم الأول" 
+                            name="userid" 
+                            value={formData.userid || ''} 
+                            readOnly 
+                          />
+                        </Form.Group>
                         {Array.isArray(fetchedItem?.additionalFields1) && fetchedItem.additionalFields1.length > 0 && (
                           <>
                             <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
@@ -207,7 +223,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                               <Form.Group key={index} className="mb-3" controlId={`formGridField${index}`} style={{ width: '100%' }}>
                                 <Form.Label>{field.title}</Form.Label>
                                 <Form.Control
-                                  placeholder="الإسم الاول"
+                                  placeholder="الإسم الأول"
                                   className='sign__input'
                                   name={`field${index}`}
                                   onChange={handleChange}
@@ -217,7 +233,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                             ))}
                           </>
                         )}
-                        {Array.isArray(fetchedItem?.additionalFields) && fetchedItem.additionalFields.length > 0 ? (
+                        {Array.isArray(fetchedItem?.additionalFields) && fetchedItem.additionalFields.length > 0 && (
                           <>
                             <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
                               خيارات إضافية مدفوعة
@@ -245,9 +261,8 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                               </Form.Group>
                             ))}
                           </>
-                        ) : null}
-
-                        <Form.Group className="mb-3" controlId="formGridAddress2" style={{ width: '100%' }}>
+                        )}
+                        <Form.Group className="mb-3" controlId="formGridDocumentNumber" style={{ width: '100%' }}>
                           <Form.Label>الكمية</Form.Label>
                           <Form.Control
                             placeholder="رقم وثيقة الإثبات"

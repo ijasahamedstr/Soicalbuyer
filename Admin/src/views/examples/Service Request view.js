@@ -27,7 +27,7 @@ const ServiceRequestview = () => {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/Accountactive/${id}`);
+        const response = await fetch(`http://localhost:8000/servicerequest/${id}`);
         if (!response.ok) throw new Error('Unable to fetch data');
         const data = await response.json();
         setItem(data);
@@ -50,33 +50,6 @@ const ServiceRequestview = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:8000/adminfeedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          userid: item._id // Send user ID along with feedback
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to submit feedback');
-
-      await response.json();
-      setFormData({ heading: '', feedback: '' }); // Reset form on success
-      alert('Feedback submitted successfully!'); // Optional user feedback
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error submitting feedback. Please try again.');
-    }
-  };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
@@ -190,37 +163,6 @@ const ServiceRequestview = () => {
                       </Col>
                     </Row>
                   </div>
-                  <hr className="my-4" />
-                  <h6 className="heading-small text-muted mb-4">Admin Feedback</h6>
-                  <div className="pl-lg-4">
-                    <Row>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label className="form-control-label" htmlFor="heading">Heading</label>
-                          <Input
-                            className="form-control-alternative"
-                            id="heading"
-                            type="text"
-                            value={formData.heading}
-                            onChange={handleChange}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <FormGroup>
-                      <label>Feedback</label>
-                      <Input
-                        className="form-control-alternative"
-                        id="feedback"
-                        placeholder="A few words about you ..."
-                        rows="4"
-                        value={formData.feedback}
-                        type="textarea"
-                        onChange={handleChange}
-                      />
-                    </FormGroup>
-                  </div>
-                  <Button color="primary" type="submit">Submit Feedback</Button>
                 </Form>
               </CardBody>
             </Card>

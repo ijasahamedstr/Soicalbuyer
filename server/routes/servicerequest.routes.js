@@ -1,6 +1,6 @@
 // Import required modules
 import express from "express";
-import { servicerequest } from "../controller/servicerequest.controller.js";
+import { servicerequest, ServicerequestDetails, ServicerequestView } from "../controller/servicerequest.controller.js";
 
 const servicerequestrouter = express.Router()
 
@@ -8,6 +8,12 @@ const servicerequestrouter = express.Router()
 
 // Create the Data Register
 servicerequestrouter.post('/',servicerequest);
+
+// View the Single Data Register
+servicerequestrouter.get("/:id",ServicerequestDetails)
+
+// View the Data Register
+servicerequestrouter.get('/',ServicerequestView);
 
 
 export default servicerequestrouter;

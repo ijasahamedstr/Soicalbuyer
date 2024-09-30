@@ -50,7 +50,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/user-profile",
+    path: "/Game-Account",
     name: "Games Accounts",
     icon: "ni ni-single-02 text-yellow",
     component: < GameAccounts/>,
