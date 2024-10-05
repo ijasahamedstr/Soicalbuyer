@@ -13,7 +13,7 @@ import {
   import axios from 'axios';
   import { Link } from 'react-router-dom';
   
-  const AccountBoost = () => {
+  const BankInfo = () => {
     const [accountUser, setAccountUser] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ import {
     useEffect(() => {
       const fetchAccountData = async () => {
         try {
-          const response = await axios.get('http://localhost:8000/boost');
+          const response = await axios.get('http://localhost:8000/bank');
           setAccountUser(response.data);
         } catch (err) {
           console.error('Error fetching account data: ', err);
@@ -71,18 +71,17 @@ import {
                   <Table className="align-items-center table-dark table-flush" responsive>
                     <thead className="thead-dark">
                       <tr>
-                        <th scope="col">Account Boost UserName</th>
-                        <th scope="col">Account Boost Name</th>
-                        <th scope="col">Account Boost Type</th>
-                        <th scope="col">Account Boost Day</th>
-                        <th scope="col">Account Boost Promotion Name</th>
-                        <th scope="col">Account Boost Promotion Price</th>
+                        <th scope="col">Feedback UserName</th>
+                        <th scope="col">Feedback Name</th>
+                        <th scope="col">Bank Account Name</th>
+                        <th scope="col">IBAN No</th>
+                        <th scope="col">Bank Account No</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {Array.isArray(accountUser) && accountUser.map(item => {
-                        const user = userInfo.find(user => user._id === item.userid);
+                        const user = userInfo.find(user => user._id === item.userId);
                         return (
                           <tr key={item._id}>
                             <th scope="row">
@@ -98,12 +97,11 @@ import {
                             <td>
                               <Badge color="" className="badge-dot mr-4">
                                 <i className="bg-warning" />
-                               {item.paccount}
+                               {item.bankAccountName}
                               </Badge>
                             </td>
-                            <td>{item.pdays}</td>
-                            <td>{item.pselectedPromotion}</td>
-                            <td>{item.ptotalPrice}</td>
+                            <td>{item.iban}</td>
+                            <td>{item.accountNumber}</td>
                             <td className="text-right">
                               <Button color="success" size="sm" to={`/admin/servicerequestView/${item._id}`} tag={Link}>
                                 View More
@@ -123,5 +121,5 @@ import {
     );
   };
   
-  export default AccountBoost;
+  export default BankInfo;
   

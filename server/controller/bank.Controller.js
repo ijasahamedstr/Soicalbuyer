@@ -28,3 +28,18 @@ export const BankCreate = async (req, res) => {
         return res.status(500).json({ error: "An error occurred while creating the bank account." });
     }
 };
+
+
+// All Acccount View 
+export const BankDeatailsView = async (req, res) => {
+    try {
+
+        const BankDeatails = await BankDB.find();
+
+        res.json(BankDeatails);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+

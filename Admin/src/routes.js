@@ -18,6 +18,8 @@ import ServiceView from "views/examples/ServiceView";
 import ServiceRequest from "views/examples/Service Request";
 import ServiceRequestview from "views/examples/Service Request view";
 import AccountBoost from "views/examples/Account Boost";
+import Userfeedback from "views/examples/User Feedback";
+import BankInfo from "views/examples/Bank Info";
 
 
 
@@ -76,6 +78,20 @@ var routes = [
     name: "Account Boost",
     icon: "ni ni-money-coins text-orange",
     component: <AccountBoost />,
+    layout: "/admin",
+  },
+  {
+    path: "/User-feedback",
+    name: "User feedback",
+    icon: "ni ni-badge text-blue",
+    component: <Userfeedback />,
+    layout: "/admin",
+  },
+  {
+    path: "/Bank-info",
+    name: "Bank Info",
+    icon: "ni ni-building text-blue",
+    component: <BankInfo />,
     layout: "/admin",
   },
   {

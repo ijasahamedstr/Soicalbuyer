@@ -1,6 +1,6 @@
 // Import required modules
 import express from "express";
-import { BankCreate } from "../controller/bank.Controller.js";
+import { BankCreate, BankDeatailsView } from "../controller/bank.Controller.js";
 
 const bankrouter = express.Router()
 
@@ -8,6 +8,9 @@ const bankrouter = express.Router()
 
 // Create the Data Register
 bankrouter.post('/',BankCreate);
+
+// View the Data Register
+bankrouter.get('/',BankDeatailsView);
 
 
 export default bankrouter;
