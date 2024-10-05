@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-
 const ServiceRequest = () => {
   const [accountUser, setAccountUser] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
@@ -23,7 +22,7 @@ const ServiceRequest = () => {
   useEffect(() => {
     const fetchAccountData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/servicerequest'); // Fixed typo in endpoint
+        const response = await axios.get('http://localhost:8000/servicerequest');
         setAccountUser(response.data);
       } catch (err) {
         console.error('Error fetching account data: ', err);
@@ -54,8 +53,6 @@ const ServiceRequest = () => {
     return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
   };
 
-  const user = userInfo.find((user) => user._id === accountUser.userid);
-
   return (
     <>
       <Header />
@@ -64,7 +61,7 @@ const ServiceRequest = () => {
           <div className="col">
             <Card className="bg-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Social Media Accounts</h3>
+                <h3 className="text-white mb-0">Service Requests</h3>
               </CardHeader>
               {loading ? (
                 <div>Loading...</div>
@@ -74,48 +71,41 @@ const ServiceRequest = () => {
                 <Table className="align-items-center table-dark table-flush" responsive>
                   <thead className="thead-dark">
                     <tr>
-                      <th scope="col">Game Account UserName</th>
-                      <th scope="col">Game Name</th>
-                      <th scope="col">Game  Description</th>
-                      <th scope="col">Game Type</th>
-                      <th scope="col">Game Amount</th>
-                      <th scope="col">Game Gmail</th>
-                      <th scope="col">Discount</th>
+                      <th scope="col">Service Request UserName</th>
+                      <th scope="col">Service Request Name</th>
+                      <th scope="col">Service Request total</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                  {Array.isArray(accountUser) && accountUser.map(item => (
-                      <tr key={item._id}>
-                        <th scope="row">
-                          <Media className="align-items-center">
-                            <Media>
-                              <span className="mb-0 text-sm">
-                                {item.documentnumber}
-                              </span>
+                    {Array.isArray(accountUser) && accountUser.map(item => {
+                      const user = userInfo.find(user => user._id === item.userid);
+                      return (
+                        <tr key={item._id}>
+                          <th scope="row">
+                            <Media className="align-items-center">
+                              <Media>
+                                <span className="mb-0 text-sm">
+                                  {user ? user.username : "Unknown User"}
+                                </span>
+                              </Media>
                             </Media>
-                          </Media>
-                        </th>
-                        <td>{item.gamename}</td>
-                        <td>
-                          <Badge color="" className="badge-dot mr-4">
-                            <i className="bg-warning" />
-              
-                          </Badge>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td className="text-right">
-
-                            <Button color="success" size="sm"  to={`/admin/servicerequest/${item._id}`} tag={Link}>
+                          </th>
+                          <td> {user ? user.displayName : "Unknown User"}</td>
+                          <td>
+                            <Badge color="" className="badge-dot mr-4">
+                              <i className="bg-warning" />
+                             {item.documentnumber}
+                            </Badge>
+                          </td>
+                          <td className="text-right">
+                            <Button color="success" size="sm" to={`/admin/servicerequestView/${item._id}`} tag={Link}>
                               View More
                             </Button>
-
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               )}

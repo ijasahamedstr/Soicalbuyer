@@ -13,43 +13,58 @@ import {
 } from "reactstrap";
 import UserHeader from "components/Headers/UserHeader.js";
 import { useParams } from "react-router-dom";
+import axios from 'axios';
 
 const ServiceRequestview = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
+  const [userInfo, setUserInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    heading: '',
-    feedback: ''
-  });
 
   useEffect(() => {
     const fetchItem = async () => {
       try {
         const response = await fetch(`http://localhost:8000/servicerequest/${id}`);
-        if (!response.ok) throw new Error('Unable to fetch data');
+        if (!response.ok) throw new Error('Unable to fetch service request data');
         const data = await response.json();
         setItem(data);
       } catch (error) {
-        setError('Error fetching data. Please try again later.');
+        setError('Error fetching service request data. Please try again later.');
         console.error('Fetch error:', error);
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/register');
+        setUserInfo(response.data);
+      } catch (err) {
+        console.error('Error fetching user info:', err);
+        setError('Failed to fetch user info.');
+      }
+    };
+
     fetchItem();
+    fetchUserInfo();
   }, [id]);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value
-    }));
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!item) {
+    return <div>Item not found</div>;
+  }
+
+  // Find the associated user info for the current service request
+  const user = userInfo.find(user => user._id === item.userid);
 
   return (
     <>
@@ -61,7 +76,7 @@ const ServiceRequestview = () => {
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
                   <Col xs="8">
-                    <h3 className="mb-0">User Accounts Active Request</h3>
+                    <h3 className="mb-0">Service Request</h3>
                   </Col>
                   <Col className="text-right" xs="4">
                     <Button color="primary" size="sm">Settings</Button>
@@ -69,30 +84,30 @@ const ServiceRequestview = () => {
                 </Row>
               </CardHeader>
               <CardBody>
-                <Form onSubmit={handleSubmit}>
+                <Form>
                   <h6 className="heading-small text-muted mb-4">User Information</h6>
                   <div className="pl-lg-4">
                     <Row>
                       <Col lg="6">
                         <FormGroup>
-                          <label className="form-control-label" htmlFor="input-fname">First Name</label>
+                          <label className="form-control-label" htmlFor="input-fname">Service Request Name</label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue={item.fname}
                             id="input-fname"
                             type="text"
+                            defaultValue={user ? user.displayName : ''}
                             readOnly
                           />
                         </FormGroup>
                       </Col>
                       <Col lg="6">
                         <FormGroup>
-                          <label className="form-control-label" htmlFor="input-mname">Middle Name</label>
+                          <label className="form-control-label" htmlFor="input-mname">Service Request UserName</label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue={item.midname}
                             id="input-mname"
                             type="text"
+                            defaultValue={user ? user.username: ''}
                             readOnly
                           />
                         </FormGroup>
@@ -101,66 +116,49 @@ const ServiceRequestview = () => {
                     <Row>
                       <Col lg="6">
                         <FormGroup>
-                          <label className="form-control-label" htmlFor="input-lname">Last Name</label>
+                          <label className="form-control-label" htmlFor="input-lname">Service Request total</label>
                           <Input
                             className="form-control-alternative"
-                            defaultValue={item.lname}
                             id="input-lname"
                             type="text"
-                            readOnly
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label className="form-control-label" htmlFor="input-country">Country</label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue={item.documentcountry}
-                            id="input-country"
-                            type="text"
-                            readOnly
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label className="form-control-label" htmlFor="input-doc-type">Document Type</label>
-                          <Input
-                            className="form-control-alternative"
-                            defaultValue={item.documenttype}
-                            id="input-doc-type"
-                            type="text"
-                            readOnly
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col lg="6">
-                        <FormGroup>
-                          <label className="form-control-label" htmlFor="input-doc-number">Document Number</label>
-                          <Input
-                            className="form-control-alternative"
                             defaultValue={item.documentnumber}
-                            id="input-doc-number"
-                            type="text"
                             readOnly
                           />
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
-                      <Col lg="12">
-                        <h6 className="heading-small text-muted mb-4">Document Verification Image</h6>
-                        <div className="image-container">
-                          <img
-                            src={item.imgpath ? `http://localhost:8000/uploads/AccountActive/${item.imgpath}` : 'https://via.placeholder.com/200'}
-                            alt="User Profile"
-                            style={{ maxWidth: '50%', height: 'auto' }}
-                          />
-                        </div>
-                      </Col>
+                    {Array.isArray(fetchedItem?.additionalFields) && fetchedItem.additionalFields.length > 0 && (
+                          <>
+                            <h3 style={{ marginBottom: '30px', color: 'rgb(97, 100, 255)', fontSize: '23px', textAlign: 'center' }}>
+                              خيارات إضافية مدفوعة
+                            </h3>
+                            <p>
+                              العروض مستمرة الى نهاية الشهر 😍 لا تشمل عروض الاضعاف ، لا تشمل عرض دبل المتابعين ، لا تشمل عرض زيادة المتابعين
+                            </p>
+                            {fetchedItem.additionalFields.map((field, index) => (
+                              <Form.Group key={index} className="mb-3" controlId={`formGridAddress${index}`} style={{ width: '100%' }}>
+                                <Form.Label>{field.documentcountry0}</Form.Label>
+                                <Form.Select
+                                  aria-label="Default select example"
+                                  className='sign__input'
+                                  name={`documentcountry${index}`}
+                                  onChange={handleChange}
+                                >
+                                  {Array.isArray(field?.fields) && field.fields.length > 0 ? (
+                                    field.fields.map((optionField, i) => (
+                                      <option value={optionField.value} key={i}>{optionField.documentcountry0} + {optionField.amount}</option>
+                                    ))
+                                  ) : (
+                                    <option disabled>No additional fields available</option>
+                                  )}
+                                </Form.Select>
+                              </Form.Group>
+                            ))}
+                          </>
+                        )}
+                    </Row>
+                    <Row>
                     </Row>
                   </div>
                 </Form>

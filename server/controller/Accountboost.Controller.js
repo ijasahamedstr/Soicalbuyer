@@ -124,3 +124,18 @@ export const Accountservicecreate = async (req, res) => {
         res.status(500).json({ status: 500, message: 'Internal server error', error });
     }
 };
+
+
+// All Acccount View 
+export const AcoountboostView = async (req, res) => {
+    try {
+
+        const Acoountboost = await Accountboost.find();
+
+        res.json(Acoountboost);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+

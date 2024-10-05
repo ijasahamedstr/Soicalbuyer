@@ -17,6 +17,7 @@ import Service from "views/examples/Service";
 import ServiceView from "views/examples/ServiceView";
 import ServiceRequest from "views/examples/Service Request";
 import ServiceRequestview from "views/examples/Service Request view";
+import AccountBoost from "views/examples/Account Boost";
 
 
 
@@ -68,6 +69,13 @@ var routes = [
     name: "Service Request",
     icon: "ni ni-bullet-list-67 text-red",
     component: <ServiceRequest />,
+    layout: "/admin",
+  },
+  {
+    path: "/Account-Boost",
+    name: "Account Boost",
+    icon: "ni ni-money-coins text-orange",
+    component: <AccountBoost />,
     layout: "/admin",
   },
   {

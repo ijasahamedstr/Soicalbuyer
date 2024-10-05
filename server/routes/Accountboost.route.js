@@ -1,5 +1,5 @@
 import express from 'express';
-import { Accountboostcreate, Accountgamecreate, Accountservicecreate, Accountusercreate } from '../controller/Accountboost.Controller.js';
+import { Accountboostcreate, Accountgamecreate, Accountservicecreate, Accountusercreate, AcoountboostView } from '../controller/Accountboost.Controller.js';
 
 // Create a new router instance
 const Accountboostrouter = express.Router();
@@ -15,7 +15,7 @@ Accountboostrouter.post('/Services',Accountservicecreate);
 
 
 // View the Data Register
-Accountboostrouter.get('/',);
+Accountboostrouter.get('/',AcoountboostView);
 
 
 //Delete Data Register
