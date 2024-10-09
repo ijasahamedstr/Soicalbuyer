@@ -30,6 +30,8 @@ import bankrouter from "./routes/bank.route.js";
 import servicerequestrouter from "./routes/servicerequest.routes.js";
 import adminfeedbackrouter from "./routes/adminfeedback.route.js";
 import * as cheerio from 'cheerio';
+import userOtpRouter from './routes/userOtp.route.js'; // Ensure the path is correct
+
 
 
 // Create an instance of Express
