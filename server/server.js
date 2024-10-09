@@ -7,9 +7,6 @@ import otprouter from "./routes/userOtp.route.js";
 import loginrouter from "./routes/Login.route.js";
 import validuserrouter from "./routes/ValidUser.route.js";
 import cookiParser from "cookie-parser";
-import session from "express-session";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import logoutrouter from "./routes/Logout.route.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -23,14 +20,14 @@ import gamerouter from "./routes/gameaccount.route.js";
 import servicerouter from "./routes/service.route.js";
 import soicalrouter from "./routes/soicalAccount.route.js";
 import feedbackrouter from "./routes/feedback.route.js";
-import mongoose from 'mongoose';
 import axios from 'axios';
 import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
 import bankrouter from "./routes/bank.route.js";
 import servicerequestrouter from "./routes/servicerequest.routes.js";
 import adminfeedbackrouter from "./routes/adminfeedback.route.js";
 import * as cheerio from 'cheerio';
-import userOtpRouter from './routes/userOtp.route.js'; // Ensure the path is correct
+import userrouter from './routes/userOtp.route.js'; // Ensure this path is correct
+
 
 
 
