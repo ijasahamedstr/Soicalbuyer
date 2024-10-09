@@ -41,7 +41,7 @@ const Register = () => {
           formdata.append("userimg", filesdata)
       }
 
-      const response = await axios.post("http://localhost:8000/user/api/register", formdata, config).then((res) => res).catch((error) => error);
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/user/api/register`, formdata, config).then((res) => res).catch((error) => error);
       console.log("response", response)
 
       if (response.status === 200) {

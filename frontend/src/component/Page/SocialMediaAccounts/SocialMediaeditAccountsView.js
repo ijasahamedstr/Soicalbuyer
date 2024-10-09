@@ -18,7 +18,7 @@ function Editsocial() {
     useEffect(() => {
         const fetchItem = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/soical/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_API_HOST}/soical/${id}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 setItem(data);
@@ -35,7 +35,7 @@ function Editsocial() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:8000/soical/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_HOST}/soical/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(item),
@@ -60,7 +60,7 @@ function Editsocial() {
 
     const handleDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/soical/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_HOST}/soical/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) throw new Error('Network response was not ok');
@@ -272,7 +272,7 @@ function Editsocial() {
                                 <Card.Text>
                                     <div className="card__author card__author--verified">
                                         <img
-                                            src={`http://localhost:8000/uploads/${item?.social_avatar || "default.jpg"}`}
+                                            src={`${process.env.REACT_APP_API_HOST}/uploads/${item?.social_avatar || "default.jpg"}`}
                                             alt="User Avatar"
                                         />
                                         <a href={`https://usr.gg`}>

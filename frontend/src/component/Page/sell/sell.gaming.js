@@ -157,7 +157,7 @@ function Sellgaming() {
     files.forEach(file => formdata.append("userimg", file));
 
     try {
-      const response = await axios.post("http://localhost:8000/gameaccount", formdata, {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/gameaccount`, formdata, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       if (response.status === 200) {

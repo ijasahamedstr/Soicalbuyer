@@ -102,7 +102,7 @@ const Userboost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/boost', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/boost`, {
         userid: userdata?._id,
         paccount:paccount,
         pdays: days,
@@ -137,7 +137,7 @@ const Userboost = () => {
   const handleSubmit1 = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/boost/game', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/boost/game`, {
         userid: userdata._id,
         gaccount:gaccount,
         gdays: days1,
@@ -171,7 +171,7 @@ const Userboost = () => {
   const handleSubmit2 = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/boost/Users', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/boost/Users`, {
         userid: userdata._id,
         uaccount:uaccount,
         udays: days2,
@@ -205,7 +205,7 @@ const Userboost = () => {
   const handleSubmit3 = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/boost/Services', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/boost/Services`, {
         sserid: userdata._id,
         saccount:saccount,
         sdays: days3,

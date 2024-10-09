@@ -38,7 +38,7 @@ const JobList = ({ jobs, userinfo }) => {
                   {user && (
                     <div className="card__author card__author--verified">
                       <img
-                        src={`http://localhost:8000/uploads/${user.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                        src={`${process.env.REACT_APP_API_HOST}/uploads/${user.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
                         alt="Owner Avatar"
                       />
                       <a href="https://usr.gg/meshari">@{user.displayName}</a>

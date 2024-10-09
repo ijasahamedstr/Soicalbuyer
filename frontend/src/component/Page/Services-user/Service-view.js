@@ -77,8 +77,8 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
       try {
         const getUserId = localStorage.getItem("socialMediaAccountViewId");
         const [itemResponse, userResponse] = await Promise.all([
-          fetch(`http://localhost:8000/service/${id}`),
-          fetch(`http://localhost:8000/register/${getUserId}`)
+          fetch(`${process.env.REACT_APP_API_HOST}/service/${id}`),
+          fetch(`${process.env.REACT_APP_API_HOST}/register/${getUserId}`)
         ]);
 
         if (!itemResponse.ok || !userResponse.ok) {
@@ -133,7 +133,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8000/servicerequest', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/servicerequest`, formData);
       console.log(response.data);
       navigate("/الخدمات");
       // Optionally show success message or handle form reset here
@@ -186,7 +186,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                           <li>
                             <span>البائع</span>
                             <div className="asset__author" style={{ justifyContent: 'center' }}>
-                              <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                              <img src={`${process.env.REACT_APP_API_HOST}/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
                               <a href="#" style={{ fontSize: '12px' }}>
                                 @{userinfo?.displayName}
                               </a>

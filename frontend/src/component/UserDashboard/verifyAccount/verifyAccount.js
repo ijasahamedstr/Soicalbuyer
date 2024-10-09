@@ -92,7 +92,7 @@ function Verifyaccount({isOTPLoggedIn, OTPLoggedUserData}) {
     };
 
     try {
-      const res = await axios.post("http://localhost:8000/Accountactive", formData, config);
+      const res = await axios.post(`${process.env.REACT_APP_API_HOST}/Accountactive`, formData, config);
       
       if (res.data.status === 401 || !res.data) {
         Swal.fire({

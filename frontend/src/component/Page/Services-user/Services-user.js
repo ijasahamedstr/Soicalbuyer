@@ -33,7 +33,7 @@ function Servicesuser() {
     const fetchJobs = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/service'); // Replace with actual API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/service`); // Replace with actual API endpoint
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching job listings:', error);
@@ -51,7 +51,7 @@ function Servicesuser() {
     const fetchUserInfo = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register`); // Ensure endpoint is correct
         setUserinfo(response.data);
       } catch (error) {
         console.error('Error fetching user info:', error);

@@ -19,7 +19,7 @@ const Dashboard = () => {
     const fetchAllUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get("http://localhost:8000/user/api/getUser");
+            const response = await axios.get(`${process.env.REACT_APP_API_HOST}/user/api/getUser`);
             if (response.status === 200) {
                 setUserData(response.data);
             } else {
@@ -48,7 +48,7 @@ const Dashboard = () => {
             updatedFiles.forEach(file => formData.append('photos', file)); // Correctly append files
     
             const response = await axios.put(
-                `http://localhost:8000/user/api/${selectedUser._id}`,
+                `${process.env.REACT_APP_API_HOST}/user/api/${selectedUser._id}`,
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
@@ -117,7 +117,7 @@ const Dashboard = () => {
                                             <Card.Img
                                                 key={ele}
                                                 style={{ width: "50px", height: "50px", borderRadius: "50%", marginTop: "3px" }}
-                                                src={`http://localhost:8000/uploads/${ele}`}
+                                                src={`${process.env.REACT_APP_API_HOST}/uploads/${ele}`}
                                             />
                                         ))}
                                     </div>

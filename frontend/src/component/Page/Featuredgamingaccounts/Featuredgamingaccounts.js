@@ -40,7 +40,7 @@ function Game() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/gameaccount');
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/gameaccount`);
         setJobs(response.data || []);
       } catch (error) {
         console.error('Error fetching job listings:', error);
@@ -58,7 +58,7 @@ function Game() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/register');
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register`);
         setUserinfo(response.data || []);
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -149,7 +149,7 @@ function Game() {
                                 {userinfo.find(user => user._id === job.userid) && (
                                   <div className="card__author card__author--verified">
                                     <img
-                                      src={`http://localhost:8000/uploads/${userinfo.find(user => user._id === job.userid).imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                                      src={`${process.env.REACT_APP_API_HOST}/uploads/${userinfo.find(user => user._id === job.userid).imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
                                       alt="Owner Avatar"
                                     />
                                     <a href="https://usr.gg/meshari">@{userinfo.find(user => user._id === job.userid).displayName}</a>

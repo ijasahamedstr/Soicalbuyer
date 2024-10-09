@@ -35,7 +35,7 @@ function Gamesaccount() {
     const fetchJobData = async () => {
       try {
         setJobsLoading(true);
-        const response = await axios.get('http://localhost:8000/gameaccount'); // Replace with actual API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/gameaccount`); // Replace with actual API endpoint
         setJobs(response.data || []);
       } catch (error) {
         console.error('Error fetching job listings:', error);
@@ -53,7 +53,7 @@ function Gamesaccount() {
     const fetchUserInfo = async () => {
       try {
         setUsersLoading(true);
-        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register`); // Ensure endpoint is correct
         setUserinfo(response.data || []);
       } catch (error) {
         console.error('Error fetching user info:', error);

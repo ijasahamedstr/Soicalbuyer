@@ -5,6 +5,7 @@ const InstagramUserDetails = () => {
   const [username, setUsername] = useState('');
   const [accountInfo, setAccountInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFetchUserDetails = async () => {
     if (!username) {
@@ -12,22 +13,27 @@ const InstagramUserDetails = () => {
       return;
     }
 
+    setLoading(true);
+    setError(null); // Clear any previous errors
+
     try {
-      const response = await axios.get(`http://localhost:8000/api/instagram-info`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/instagram-info`, { // Use HTTP for local development
         params: { username }
       });
-      
+
       setAccountInfo({
         id: response.data.id,
         username: response.data.username,
         fullName: response.data.full_name,
         bio: response.data.biography,
       });
-      setError(null); // Clear error if successful
     } catch (err) {
-      console.error(err); // Log actual error
-      setError('Error fetching user details. Please check the console for more information.');
-      setAccountInfo(null); // Reset account info on error
+      console.error(err);
+      const errorMessage = err.response?.data?.message || 'Error fetching user details. Please check the console for more information.';
+      setError(errorMessage);
+      setAccountInfo(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,7 +45,9 @@ const InstagramUserDetails = () => {
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Enter Instagram username"
       />
-      <button onClick={handleFetchUserDetails}>Get User Details</button>
+      <button onClick={handleFetchUserDetails} disabled={loading}>
+        {loading ? 'Loading...' : 'Get User Details'}
+      </button>
 
       {accountInfo && (
         <div className="account-info">
@@ -56,3 +64,5 @@ const InstagramUserDetails = () => {
 };
 
 export default InstagramUserDetails;
+
+

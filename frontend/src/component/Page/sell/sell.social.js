@@ -170,10 +170,10 @@ function Sellsocial() {
 
 const getEndpointForPlatform = useCallback(async () => {
     const endpoints = {
-        instagram: `http://localhost:8000/api/instagram-info/${social_username}`,
-        tiktok: `http://localhost:8000/api/tiktok-info/${social_username}`,
-        twitter: `http://localhost:8000/api/twitter-info/${social_username}`,
-        steam: `http://localhost:8000/api/steam-info/${social_username}`,
+        instagram: `${process.env.REACT_APP_API_HOST}/api/instagram-info/${social_username}`,
+        tiktok: `${process.env.REACT_APP_API_HOST}/api/tiktok-info/${social_username}`,
+        twitter:`${process.env.REACT_APP_API_HOST}/api/twitter-info/${social_username}`,
+        steam: `${process.env.REACT_APP_API_HOST}/api/steam-info/${social_username}`,
     };
 
     const endpoint = endpoints[social_type] || endpoints.twitter;
@@ -222,7 +222,7 @@ const handleSubmit = async () => {
             accountgmailpassword: formData.accountgmailpassword,
             accountdec: formData.accountdec
         };
-        const response = await axios.post('http://localhost:8000/soical', submittedFormData);
+        const response = await axios.post(`${process.env.REACT_APP_API_HOST}/soical`, submittedFormData);
 
         if (response.status === 201) {
             Swal.fire({
@@ -251,7 +251,7 @@ const handleSubmit = async () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/soical');
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/soical`);
         const userPosts = response.data.filter(item => item.userid === userdata?._id);
         setData(userPosts);
       } catch (error) {
@@ -458,7 +458,7 @@ const handleSubmit = async () => {
                 <Card.Text>
                   <div className="card__author card__author--verified">
                     <img
-                      src={`http://localhost:8000/uploads/${social_username || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+                      src={`${process.env.REACT_APP_API_HOST}/uploads/${social_username || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
                       alt="User Avatar"
                     />
                     <a href={`https://usr.gg/${social_username || 'unknown'}`}>

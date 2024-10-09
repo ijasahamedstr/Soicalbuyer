@@ -23,7 +23,6 @@ function MyVerticallyCenteredModal(props) {
   const [iban, setIban] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [loading, setLoading] = useState(false);
-
   // Fetch user data from localStorage and set interval
   useEffect(() => {
     const fetchUserData = () => {
@@ -44,7 +43,7 @@ function MyVerticallyCenteredModal(props) {
 
     try {
       // Replace with your API endpoint
-      const response = await axios.post('http://localhost:8000/bank', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/bank`, { 
         userId: userdata?._id,
         bankAccountName,
         iban,
@@ -303,7 +302,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
             return;
         }
 
-        const response = await fetch('http://localhost:8000/point', {
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/point`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

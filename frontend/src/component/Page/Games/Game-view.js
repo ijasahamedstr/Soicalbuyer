@@ -72,7 +72,7 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
       const getUserId=localStorage.getItem("socialMediaAccountViewId")
       const fetchItem = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/register/${getUserId}`);
+          const response = await fetch(`${process.env.REACT_APP_API_HOST}/register/${getUserId}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
@@ -93,7 +93,7 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
     const getUserId=localStorage.getItem("socialMediaAccountViewId")
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/gameaccount/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/gameaccount/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -154,7 +154,7 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
                                 <Image
                                   key={index}
                                   width={200}
-                                  src={`http://localhost:8000/useruploads/${profile}`}
+                                  src={`${process.env.REACT_APP_API_HOST}/useruploads/${profile}`}
                                   alt={`User Profile ${index}`}
                                   placeholder={<Image src="https://via.placeholder.com/200" />} // Placeholder while loading
                                   onError={(e) => e.target.src = 'https://via.placeholder.com/200'} // Placeholder on error
@@ -173,7 +173,7 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
                           <li>
                             <span>البائع</span>
                             <div className="asset__author" style={{ justifyContent: 'center' }}>
-                              <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                              <img src={`${process.env.REACT_APP_API_HOST}/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
                               <a href="https://usr.gg/madmon">@{userinfo?.displayName}</a>
                             </div>
                           </li>

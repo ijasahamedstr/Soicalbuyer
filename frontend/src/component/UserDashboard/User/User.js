@@ -36,7 +36,7 @@ function User({ userdata}) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/register/${userdata._id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register/${userdata._id}`);
         setUserDetails(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -67,7 +67,7 @@ function User({ userdata}) {
     setValidated(true);
 
     try {
-      const response = await axios.put(`http://localhost:8000/register/${userdata._id}`, userDetails, {
+      const response = await axios.put(`${process.env.REACT_APP_API_HOST}/register/${userdata._id}`, userDetails, {
         headers: { 'Content-Type': 'application/json' }
       });
 
@@ -105,7 +105,7 @@ function User({ userdata}) {
       }
    
 
-      const res = await axios.put(`http://localhost:8000/register/${userdata._id}`, formData, {
+      const res = await axios.put(`${process.env.REACT_APP_API_HOST}/register/${userdata._id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -141,7 +141,7 @@ function User({ userdata}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/gameaccount'); // Replace with actual API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/gameaccount`); // Replace with actual API endpoint
         // Filter the data based on the current user's ID
         const userPosts = response.data.filter(item => item.userid === userdata._id);
         setData(userPosts);
@@ -163,7 +163,7 @@ function User({ userdata}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/soical'); // Replace with actual API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/soical`); // Replace with actual API endpoint
         // Filter the data based on the current user's ID
         const userPosts = response.data.filter(item => item.userid === userdata._id);
         setData1(userPosts);
@@ -185,7 +185,7 @@ function User({ userdata}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/service'); // Replace with actual API endpoint
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/service`); // Replace with actual API endpoint
         // Filter the data based on the current user's ID
         const userPosts = response.data.filter(item => item.userid === userdata._id);
         setData2(userPosts);
@@ -227,7 +227,7 @@ function User({ userdata}) {
             <div className="user-card">
               <div className='uper-container'>
                 <div className='image-card'>
-                  <img className="avatar"  src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}  alt="User Avatar" />
+                  <img className="avatar"  src={`${process.env.REACT_APP_API_HOST}/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}  alt="User Avatar" />
                 </div>
               </div>
               <div className="user-info">
@@ -267,7 +267,7 @@ function User({ userdata}) {
                                   <Card.Title>{item.social_username}</Card.Title>
                                   <Card.Text>
                                     <div className="card__author card__author--verified" style={{ borderRadius: '20px' }}>
-                                      <img src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
+                                      <img src={`${process.env.REACT_APP_API_HOST}/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="" />
                                       <a href={`https://usr.gg/${userDetails?.username}`}>{userDetails?.displayName}</a>
                                     </div>
                                   </Card.Text>
@@ -320,7 +320,7 @@ function User({ userdata}) {
                                   <Card.Text>
                                     <span>
                                       <div className="card__author card__author--verified">
-                                        <img src={`http://localhost:8000/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="Author Avatar" />
+                                        <img src={`${process.env.REACT_APP_API_HOST}/uploads/${userDetails.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt="Author Avatar" />
                                         <a href="https://usr.gg/meshari">@Ijas Ahamed</a>
                                       </div>
                                     </span>

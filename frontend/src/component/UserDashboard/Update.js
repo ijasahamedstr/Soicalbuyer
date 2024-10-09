@@ -21,7 +21,7 @@ const Update = () => {
   // Fetch user data
   const getUserData = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/imageupload', {
+      const res = await axios.get(`${process.env.REACT_APP_API_HOST}/imageupload`, {
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -38,7 +38,7 @@ const Update = () => {
   // Delete user data
   const dltUser = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/imageupload/${id}`, {
+      const res = await axios.delete(`${process.env.REACT_APP_API_HOST}/imageupload/${id}`, {
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -65,7 +65,7 @@ const Update = () => {
         formData.append('photo', updatedFile);
       }
 
-      const res = await axios.put(`http://localhost:8000/imageupload/${selectedUser._id}`, formData, {
+      const res = await axios.put(`${process.env.REACT_APP_API_HOST}/imageupload/${selectedUser._id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

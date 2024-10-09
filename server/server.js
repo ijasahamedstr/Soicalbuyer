@@ -52,13 +52,6 @@ app.use(cors({
   credentials:true
 }));
 
-// app.use(cors({
-//   origin: "https://soicalbuyer.vercel.app",
-//   methods: "GET,POST,PUT,DELETE",
-//   credentials: true
-// }));
-
-
 //Data understanding middleware
 app.use(express.json());
 

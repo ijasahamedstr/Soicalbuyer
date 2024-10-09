@@ -16,7 +16,7 @@ function GameEdit() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/gameaccount/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/gameaccount/${id}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setItem(data);
@@ -33,7 +33,7 @@ function GameEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/gameaccount/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/gameaccount/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(item),
@@ -58,7 +58,7 @@ function GameEdit() {
   };
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/gameaccount/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/gameaccount/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Network response was not ok');

@@ -15,7 +15,7 @@ function ServiceEdit() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/service/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/service/${id}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setItem(data);
@@ -35,7 +35,7 @@ function ServiceEdit() {
       const userdbtoken = localStorage.getItem('userdbtoken'); // Ensure 'userdbtoken' is the correct key
    
 
-      const response = await fetch(`http://localhost:8000/service/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/service/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ function ServiceEdit() {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/service/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/service/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Network response was not ok');

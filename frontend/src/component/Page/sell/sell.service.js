@@ -349,7 +349,7 @@ function Sellservice() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8000/service", {
+      const res = await axios.post(`${process.env.REACT_APP_API_HOST}/service`, {
         userid: String(userdata?._id),
         ...formState
       });
@@ -392,7 +392,7 @@ function Sellservice() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/service');
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/service`);
         const userPosts = response.data.filter(item => item.userid === userdata?._id);
         setData(userPosts);
       } catch (error) {

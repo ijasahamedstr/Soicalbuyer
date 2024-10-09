@@ -33,7 +33,7 @@ function Social() {
     const fetchJobsData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/soical'); // Ensure endpoint is correct
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/soical`); // Ensure endpoint is correct
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching job listings:', error);
@@ -51,7 +51,7 @@ function Social() {
     const fetchUserInfo = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/register'); // Ensure endpoint is correct
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register`); // Ensure endpoint is correct
         setUserinfo(response.data);
       } catch (error) {
         console.error('Error fetching user info:', error);

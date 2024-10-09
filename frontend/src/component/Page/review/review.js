@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import './review.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for data fetching
+import {BACKEND_URL} from "../LoginPage/LoginAPI/helper.js";
 
 
 function Review() {
@@ -32,7 +33,7 @@ function Review() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8000/feedback'); // Ensure endpoint is correct
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/feedback`); // Ensure endpoint is correct
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching job listings:', error);

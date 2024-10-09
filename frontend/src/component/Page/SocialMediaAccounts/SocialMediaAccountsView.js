@@ -86,7 +86,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
     const getUserId=localStorage.getItem("socialMediaAccountViewId")
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/register/${getUserId}`);
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/register/${getUserId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -105,7 +105,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/soical/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/soical/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -171,7 +171,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/feedback', {
+      const response = await axios.post(`${process.env.REACT_APP_API_HOST}/feedback`, {
         userid,
         feedback,
       });
@@ -239,7 +239,7 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         <li>
         <span>البائع</span>
         <div className="asset__author  ">
-        <img src={`http://localhost:8000/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt=""/>
+        <img src={`/uploads/${userinfo?.imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`} alt=""/>
         <div style={{display:'grid'}}>
             <div>@{userinfo?.displayName}</div>
             <div class="star-rating">
