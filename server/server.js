@@ -26,7 +26,6 @@ import bankrouter from "./routes/bank.route.js";
 import servicerequestrouter from "./routes/servicerequest.routes.js";
 import adminfeedbackrouter from "./routes/adminfeedback.route.js";
 import * as cheerio from 'cheerio';
-import userrouter from './routes/userOtp.route.js'; // Ensure this path is correct
 
 
 
