@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://riyadhsouq.com/server"
+export const BACKEND_URL = "https://node-eight-mocha.vercel.app"
