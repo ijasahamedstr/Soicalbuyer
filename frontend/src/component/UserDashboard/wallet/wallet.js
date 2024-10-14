@@ -17,6 +17,8 @@ import { RiBankFill } from "react-icons/ri";
 import { BsPaypal } from "react-icons/bs";
 import { SiBitcoinsv } from "react-icons/si";
 
+
+
 function MyVerticallyCenteredModal(props) {
   const [userdata, setUserdata] = useState(null);
   const [bankAccountName, setBankAccountName] = useState("");
@@ -262,7 +264,7 @@ function Wallet({ setIsOTPLoggedIn, setOTPLoggedUserData }) {
   const [username, setUsername] = useState('');
   const [points, setPoints] = useState('');
   const [reason, setReason] = useState('');
-  const [message, setMessage] = useState('');
+  const [setMessage] = useState('');
 
 
   // Fetch user data from localStorage and set interval

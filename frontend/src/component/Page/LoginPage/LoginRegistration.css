@@ -147,3 +147,41 @@ svg {
     height: 24px;
     vertical-align: middle;
   }
+
+
+  .google {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+  }
+  
+  .login-with-google-btn {
+    background-color: #4285F4; /* Google Blue */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-with-google-btn:hover {
+    background-color: #357ae8; /* Darker blue on hover */
+  }
+  
+  .login-with-google-btn:active {
+    transform: scale(0.98); /* Slight scale effect on click */
+  }
+  
+  .login-with-google-btn img {
+    margin-right: 8px;
+    height: 20px; /* Adjust as needed */
+    vertical-align: middle;
+  }
+  
