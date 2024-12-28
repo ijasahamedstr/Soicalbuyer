@@ -111,8 +111,8 @@ function ServiceEdit() {
                       className='sign__input'
                       name="service_heading"
                       placeholder="أدخل عنوانك هنا"
-                      value={item?.
-                        service_heading || ''}
+                      value={item
+                        ?.service_heading || ''}
                       onChange={(e) => setItem(prevItem => ({
                         ...prevItem,
                         service_heading: e.target.value
@@ -183,8 +183,8 @@ function ServiceEdit() {
                       name="service_time_houre"
                       type='number'
                       placeholder="أدخل عنوانك هنا"
-                      value={item?.
-                        service_time_houre || ''}
+                      value={item
+                        ?.service_time_houre || ''}
                       onChange={(e) => setItem(prevItem => ({
                         ...prevItem,
                         service_time_houre: e.target.value
@@ -200,8 +200,8 @@ function ServiceEdit() {
                       name="service_buy_Amount"
                       type='number'
                       placeholder="أدخل عنوانك هنا"
-                      value={item?.
-                        service_buy_Amount|| ''}
+                      value={item
+                        ?.service_buy_Amount|| ''}
                       onChange={(e) => setItem(prevItem => ({
                         ...prevItem,
                         service_buy_Amount: e.target.value

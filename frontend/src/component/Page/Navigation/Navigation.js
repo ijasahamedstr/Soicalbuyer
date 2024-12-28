@@ -73,27 +73,25 @@ function OffcanvasExample({ isOTPLoggedIn, OTPLoggedUserData }) {
   };
 
   return (
-    <Navbar expand="sm" className="p-3 mb-2 bg-dark text-white" data-bs-theme="dark" style={{ width: '100%', marginTop: '-16px', fontFamily: 'Noto Kufi Arabic' }}>
+    <Navbar expand="sm" className="p-3 mb-2 bg-dark text-white bg-body-tertiary" data-bs-theme="dark" style={{ width: '100%', marginTop: '-16px', fontFamily: 'Noto Kufi Arabic' }}>
       <Container>
-        <Navbar.Brand href="#">
-          <img src={user.avatar} className="img-fluid" style={{ width: '100px', height: 'auto' }} alt="User Avatar" />
-        </Navbar.Brand>
+        <Navbar.Brand href="#"><img src={user.avatar} style={{ width: '150px', fontSize: '15px' }} alt="User Avatar" /></Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar" onClick={() => setShowOffcanvas(!showOffcanvas)} />
         <Navbar.Offcanvas show={showOffcanvas} onHide={() => setShowOffcanvas(false)} placement="end">
           <Offcanvas.Header closeButton style={{ background: '#16151a' }}>
             <Offcanvas.Title>
-              <img src={user.avatar} className="img-fluid" style={{ width: '100px', height: 'auto' }} alt="User Avatar" />
+              <img src={user.avatar} style={{ width: '150px', fontSize: '15px' }} alt="User Avatar" />
             </Offcanvas.Title>
           </Offcanvas.Header>
-          <Offcanvas.Body style={{ color: 'black', background: '#303434' }}>
+          <Offcanvas.Body style={{ color: 'black', fontFamily: 'Noto Kufi Arabic', background: '#303434' }}>
             <Nav className="justify-content-start flex-grow-1 pe-3">
-              <Nav.Link><Link className="text-white text-decoration-none" to="/" onClick={handleMenuClick}>الرئيسية</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/التواصل الإجتماعي" onClick={handleMenuClick}>التواصل الإجتماعي</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/الألعاب" onClick={handleMenuClick}>الألعاب</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/الخدمات" onClick={handleMenuClick}>الخدمات</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/الأعضاء" onClick={handleMenuClick}>الأعضاء</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/طلبات المستخدمين" onClick={handleMenuClick}><span className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
-              <Nav.Link><Link className="text-white text-decoration-none" to="/متجر المنصة" onClick={handleMenuClick}>متجر المنصة</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/" onClick={handleMenuClick}>الرئيسية</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/التواصل الإجتماعي" onClick={handleMenuClick}>التواصل الإجتماعي</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/الألعاب" onClick={handleMenuClick}>الألعاب</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/الخدمات" onClick={handleMenuClick}>الخدمات</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/الأعضاء" onClick={handleMenuClick}>الأعضاء</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/طلبات المستخدمين" onClick={handleMenuClick}><span className='navb'>جديد</span>طلبات المستخدمين</Link></Nav.Link>
+              <Nav.Link><Link style={{ color: '#FFFFFF', textDecoration: 'none' }} to="/متجر المنصة" onClick={handleMenuClick}>متجر المنصة</Link></Nav.Link>
             </Nav>
 
             {userdata && userdata.Accountstatus === 'verified' && (
@@ -106,24 +104,24 @@ function OffcanvasExample({ isOTPLoggedIn, OTPLoggedUserData }) {
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <div className="dropdown" onClick={toggleDropdown} style={{ color: '#ffffff' }}>
                   <div className="card__author">
-                    <img src={userdata?.image || "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="" className="img-fluid" />
+                    <img src={userdata?.image || "https://usr.dokan-cdn.com/img/avatars/default.jpg"} alt="" />
                     {userdata?.displayName}
                   </div>
                   <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`} aria-labelledby="userDropdown" style={{ fontSize: '12px', marginBottom: '-10px' }}>
-                    <li><Link to={`/${userdata?.username}`} onClick={handleMenuClick}><button className="dropdown-item"><FaRegUserCircle /> حسابي</button></Link></li>
-                    <li><Link to='/Requests' onClick={handleMenuClick}><button className="dropdown-item"><MdWorkHistory /> المبيعات</button></Link></li>
-                    <li><Link to='/sales' onClick={handleMenuClick}><button className="dropdown-item"><ImCoinDollar /> المحفظة</button></Link></li>
-                    <li><Link to='/wallet' onClick={handleMenuClick}><button className="dropdown-item"><IoWallet /> الصندوق</button></Link></li>
-                    <li><Link to='/Points' onClick={handleMenuClick}><button className="dropdown-item"><BsArchiveFill /> ترويج منتج</button></Link></li>
-                    <li><Link to='/boost' onClick={handleMenuClick}><button className="dropdown-item"><PiBroadcastBold /> المحادثات</button></Link></li>
-                    <li><Link to='/Chat' onClick={handleMenuClick}><button className="dropdown-item"><BsChatDots /> التنبيهات</button></Link></li>
-                    <li><Link to='/notifications' onClick={handleMenuClick}><button className="dropdown-item"><BiSolidBellRing /> قائمة الحظر</button></Link></li>
-                    <li><Link to='/blocks' onClick={handleMenuClick}><button className="dropdown-item"><BsFillPersonXFill /> تفعيل الحساب</button></Link></li>
-                    <li><Link to='/verify-account' onClick={handleMenuClick}><button className="dropdown-item"><IoFingerPrintSharp /> تفعيل رقم الهاتف</button></Link></li>
-                    <li><Link to='/تسجيل الدخول' onClick={handleMenuClick}><button className="dropdown-item" style={{ color: 'red' }}><IoFingerPrintSharp /> حاسبة الرسوم</button></Link></li>
-                    <li><Link to='/challenges' onClick={handleMenuClick}><button className="dropdown-item"><BsBullseye /> التحديات</button></Link></li>
-                    <li><button className="dropdown-item" onClick={logoutFunction}><ImExit /> تسجيل الخروج</button></li>
-                  </ul>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to={`/${userdata?.username}`} onClick={handleMenuClick}><button className="dropdown-item"><FaRegUserCircle /> حسابي</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/Requests' onClick={handleMenuClick}><button className="dropdown-item"><MdWorkHistory /> المبيعات</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/sales' onClick={handleMenuClick}><button className="dropdown-item"><ImCoinDollar /> المحفظة</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/wallet' onClick={handleMenuClick}><button className="dropdown-item"><IoWallet /> الصندوق</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/Points' onClick={handleMenuClick}><button className="dropdown-item"><BsArchiveFill /> ترويج منتج</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/boost' onClick={handleMenuClick}><button className="dropdown-item"><PiBroadcastBold /> المحادثات</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/Chat' onClick={handleMenuClick}><button className="dropdown-item"><BsChatDots /> التنبيهات</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/notifications' onClick={handleMenuClick}><button className="dropdown-item"><BiSolidBellRing /> قائمة الحظر</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/blocks' onClick={handleMenuClick}><button className="dropdown-item"><BsFillPersonXFill /> تفعيل الحساب</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/verify-account' onClick={handleMenuClick}><button className="dropdown-item"><IoFingerPrintSharp /> تفعيل رقم الهاتف</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/تسجيل الدخول' onClick={handleMenuClick}><button className="dropdown-item" style={{ color: 'red' }}><IoFingerPrintSharp /> حاسبة الرسوم</button></Link></li>
+                  <li className="drop" style={{ marginBottom: '5px' }}><Link to='/challenges' onClick={handleMenuClick}><button className="dropdown-item"><BsBullseye /> التحديات</button></Link></li>
+                  <li className="drop"><button className="dropdown-item" onClick={logoutFunction}><ImExit /> تسجيل الخروج</button></li>
+                </ul>
                 </div>
               </Nav>
             ) : (

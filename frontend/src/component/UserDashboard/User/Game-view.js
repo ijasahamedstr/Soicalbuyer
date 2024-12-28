@@ -147,7 +147,7 @@ function Gameview({ isLoggedIn = false, item = {} }) {
                       </span>
                       <span className="a2a_label"></span>
                     </a>
-                    <a className="a2a_dd" href="https://www.addtoany.com/share#url=https%3A%2F%2Fyour-website-url&title=Share%20This%20Page" target="_blank" rel="nofollow noopener">
+                    <a className="a2a_dd" href="https://www.addtoany.com/share#url=https%3A%2F%2Fyour-website-url&title=Share%20This%20Page" target="_blank" rel="nofollow noopener noreferrer">
                       <span className="a2a_svg a2a_s__default a2a_s_share" style={{ background: 'rgb(97, 100, 255)' }}>
                         {/* Share SVG */}
                       </span>
