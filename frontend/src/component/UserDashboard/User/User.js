@@ -36,7 +36,7 @@ function User({ userdata}) {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register/${userdata._id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/categories/${userdata._id}`);
         setUserDetails(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -411,202 +411,214 @@ function User({ userdata}) {
 
                     {/* Profile Setting Card Section */}
                     <Tab eventKey="الأعدادات" title="الأعدادات">
-                      <Container style={{ marginTop: '30px' }}>
-                        <Row>
-                          {/* Profile Personal Data Setting Card Section */}
-                          <Col md={6}>
-                            <Card style={{ background: '#fff', padding: '0px' }}>
-                              <Card.Body>
-                                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                                  <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>البيانات الشخصية</h4>
-                                  <Row>
-                                    <Form.Group as={Col} md="6" controlId="validationCustom01">
-                                      <Form.Label>Username</Form.Label>
-                                      <Form.Control
-                                        required
-                                        type="text"
-                                        name="username"
-                                        placeholder="Enter username"
-                                        value={userDetails.username}
-                                        onChange={handleChange}
-                                      />
-                                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="6" controlId="validationCustom02">
-                                      <Form.Label>Email</Form.Label>
-                                      <Form.Control
-                                        required
-                                        type="email"
-                                        name="email"
-                                        placeholder="Enter email"
-                                        value={userDetails.email}
-                                        onChange={handleChange}
-                                      />
-                                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Row>
-                                    <Form.Group as={Col} md="6" controlId="validationCustom03">
-                                      <Form.Label>Display Name</Form.Label>
-                                      <Form.Control
-                                        required
-                                        type="text"
-                                        name="displayName"
-                                        placeholder="Enter display name"
-                                        value={userDetails.displayName}
-                                        onChange={handleChange}
-                                      />
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a valid display name.
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="6" controlId="validationCustom04">
-                                      <Form.Label>Phone</Form.Label>
-                                      <Form.Control
-                                        required
-                                        type="text"
-                                        name="Phone"
-                                        placeholder="Enter phone number"
-                                        value={userDetails.Phone}
-                                        onChange={handleChange}
-                                      />
-                                      <p className="mt-2" style={{ fontSize: '14px' }}>إذا كنت ترغب بتحديث رقم هاتفك , يرجى منك <a href="/ChangePhoneNumber">الضغط علي</a></p>
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a valid phone number.
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group as={Col} md="12" controlId="validationCustom05">
-                                      <Form.Label>Bio</Form.Label>
-                                      <Form.Control
-                                        as="textarea"
-                                        rows={3}
-                                        name="bio"
-                                        placeholder="Enter bio"
-                                        value={userDetails.bio}
-                                        onChange={handleChange}
-                                      />
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a bio.
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Button style={{ marginTop: '10px' }} type="submit">حفظ</Button>
-                                </Form>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-
-                          {/* Change the Appearance of the Account Setting Card Section */}
-                          <Col md={6}>
-                            <Card style={{ background: '#fff', padding: '0px' }}>
-                              <Card.Body>
-                                <Form onSubmit={(e) => { e.preventDefault(); updateUserData(); }}>
-                                  <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>تغيير مظهر الحساب</h4>
-                                  <Row>
-                                    <Form.Group as={Col} md="12" controlId="validationCustom01">
-                                      <Form.Label>افتار الحساب</Form.Label>
-                                      <Form.Control
-                                        placeholder="افتار الحساب"
-                                        className='sign__title'
-                                        type="file"
-                                        onChange={(e) => setUpdatedFile(e.target.files[0])}
-                                      />
-                                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Button style={{ background: '#6164ff', marginTop: '20px' }} type="submit">حفظ</Button>
-                                </Form>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-
-                          {/* Referral Link Setting Card Section */}
-                          <Col md={6}>
-                            <Card style={{ background: '#fff', padding: '0px' }}>
-                              <Card.Body>
-                                <Form noValidate validated={validated} className='formuser' onSubmit={handleSubmit}>
-                                  <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>رابط الإحاله</h4>
-                                  <h5 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)', fontSize: '15px' }}>يمكنك كسب أموال من خلال هذا الرابط!</h5>
-                                  <Row>
-                                    <Form.Group as={Col} controlId="validationCustom01">
-                                      <Form.Label>رابط الإحاله</Form.Label>
-                                      <Form.Control
-                                        required
-                                        type="text"
-                                        placeholder="أدخل اسم المستخدم"
-                                        className='sign__title'
-                                        value={userDetails?.Referrallink + userDetails?.username}
-                                        name="Referrallink"
-                                        onChange={handleChange}
-                                        
-                                      />
-                                      <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Row>
-                                    <Form.Group as={Col} controlId="validationCustom03">
-                                      <Form.Label>خلفية الحساب</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب"  value={userDetails?.Referral}  required style={{border:'none'}} />
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a valid city.
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Row>
-                                    <Form.Group as={Col} controlId="validationCustom03">
-                                      <Form.Label>كم كسبت؟</Form.Label>
-                                      <Form.Control type="text" placeholder="خلفية الحساب" value={userDetails?.Referralamount} required style={{border:'none'}} />
-                                      <Form.Control.Feedback type="invalid">
-                                        Please provide a valid city.
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Row>
-                                  <Button style={{ marginTop: '10px' }} type="submit">حفظ</Button>
-                                </Form>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-
-                          {/* Account Details Setting Card Section */}
-                          <Col md={6}>
-                            <Card style={{ background: '#fff', padding: '0px', width: '100%' }}>
-                              <Card.Body>
-                                <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>تفاصيل الحساب</h4>
+                    <Container style={{ marginTop: '30px' }}>
+                      <Row>
+                        {/* Profile Personal Data Setting Card Section */}
+                        <Col md={6}>
+                          <Card style={{ background: '#fff', padding: '0px' }}>
+                            <Card.Body>
+                              <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>
+                                  البيانات الشخصية
+                                </h4>
                                 <Row>
-                                  <ul className="knowledge__list">
-                                    <li>رمز الدعم الفني<span>{userDetails.supportcode}</span></li>
-                                    <li>عدد بوستاتي<span>{userDetails.posts}</span></li>
-                                    <li>حالة التوثيق<span>{userDetails.documentationstatus}</span></li>
-                                    <li>مستوى الحساب<span>{userDetails.Accountlevel}</span></li>
-                                    <li>الرصيد الحالي<span>${userDetails.currentbalance}</span></li>
-                                    <li>نوع الباقة<span>{userDetails.packagetype}</span></li>
-                                    <li>تاريخ إنتهاء الباقة<span>{userDetails.packageexpirationdate}</span></li>
-                                    <li>تاريخ إنشاء الحساب<span>{userDetails.createdAt}</span></li>
-                                  </ul>
+                                  <Form.Group as={Col} md="6" controlId="validationCustom01">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                      required
+                                      type="text"
+                                      name="username"
+                                      placeholder="Enter username"
+                                      value={userDetails.username}
+                                      onChange={handleChange}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                  </Form.Group>
+                                  <Form.Group as={Col} md="6" controlId="validationCustom02">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                      required
+                                      type="email"
+                                      name="email"
+                                      placeholder="Enter email"
+                                      value={userDetails.email}
+                                      onChange={handleChange}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                  </Form.Group>
                                 </Row>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-
-                          {/* Other Options Setting Card Section */}
-                          <Col md={6}>
-                            <Card style={{ background: '#fff', padding: '0px', width: '100%' }}>
-                              <Card.Body>
-                                <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>خيارات اخرى</h4>
                                 <Row>
-                                  <div className="col-12" style={{ display: 'flex', gap: '10px' }}>
-                                    <button className="sign__btn mr-3" type="button" style={{ background: 'red', textAlign: 'center', borderRadius: '15px', padding: '5px', fontFamily: 'Noto Kufi Arabic', color: 'white' }}>حذف جميع الحسابات المعروضة</button>
-                                    <button className="sign__btn" type="button" style={{ background: 'red', textAlign: 'center', borderRadius: '15px', padding: '5px', fontFamily: 'Noto Kufi Arabic', color: 'white' }}>حذف جميع الخدمات المعروضة</button>
-                                  </div>
-                                  <div>
-                                    <button className="sign__btn" type="button" style={{ background: 'red', textAlign: 'center', borderRadius: '15px', padding: '5px', fontFamily: 'Noto Kufi Arabic', color: 'white', marginTop: '15px', width: '100%' }}>تسجيل خروج جميع الأجهزة الأخرى</button>
-                                  </div>
+                                  <Form.Group as={Col} md="6" controlId="validationCustom03">
+                                    <Form.Label>Display Name</Form.Label>
+                                    <Form.Control
+                                      required
+                                      type="text"
+                                      name="displayName"
+                                      placeholder="Enter display name"
+                                      value={userDetails.displayName}
+                                      onChange={handleChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                      Please provide a valid display name.
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                  <Form.Group as={Col} md="6" controlId="validationCustom04">
+                                    <Form.Label>Phone</Form.Label>
+                                    <Form.Control
+                                      required
+                                      type="text"
+                                      name="Phone"
+                                      placeholder="Enter phone number"
+                                      value={userDetails.Phone}
+                                      onChange={handleChange}
+                                    />
+                                    <p className="mt-2" style={{ fontSize: '14px' }}>
+                                      إذا كنت ترغب بتحديث رقم هاتفك , يرجى منك <a href="/ChangePhoneNumber">الضغط علي</a>
+                                    </p>
+                                    <Form.Control.Feedback type="invalid">
+                                      Please provide a valid phone number.
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                  <Form.Group as={Col} md="12" controlId="validationCustom05">
+                                    <Form.Label>Bio</Form.Label>
+                                    <Form.Control
+                                      as="textarea"
+                                      rows={3}
+                                      name="bio"
+                                      placeholder="Enter bio"
+                                      value={userDetails.bio}
+                                      onChange={handleChange}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                      Please provide a bio.
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
                                 </Row>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-                        </Row>
-                      </Container>
+                                <Button style={{ marginTop: '10px' }} type="submit">
+                                  حفظ
+                                </Button>
+                              </Form>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+
+                        {/* Change the Appearance of the Account Setting Card Section */}
+                        <Col md={6}>
+                          <Card style={{ background: '#fff', padding: '0px' }}>
+                            <Card.Body>
+                              <Form onSubmit={(e) => { e.preventDefault(); updateUserData(); }}>
+                                <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>
+                                  تغيير مظهر الحساب
+                                </h4>
+                                <Row>
+                                  <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                    <Form.Label>افتار الحساب</Form.Label>
+                                    <Form.Control
+                                      placeholder="افتار الحساب"
+                                      className="sign__title"
+                                      type="file"
+                                      onChange={(e) => setUpdatedFile(e.target.files[0])}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                  </Form.Group>
+                                </Row>
+                                <Button style={{ background: '#6164ff', marginTop: '20px' }} type="submit">
+                                  حفظ
+                                </Button>
+                              </Form>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+
+                        {/* Referral Link Setting Card Section */}
+                        <Col md={6}>
+                          <Card style={{ background: '#fff', padding: '0px' }}>
+                            <Card.Body>
+                              <Form noValidate validated={validated} className="formuser" onSubmit={handleSubmit}>
+                                <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>
+                                  رابط الإحاله
+                                </h4>
+                                <h5 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)', fontSize: '15px' }}>
+                                  يمكنك كسب أموال من خلال هذا الرابط!
+                                </h5>
+                                <Row>
+                                  <Form.Group as={Col} controlId="validationCustom01">
+                                    <Form.Label>رابط الإحاله</Form.Label>
+                                    <Form.Control
+                                      required
+                                      type="text"
+                                      placeholder="أدخل اسم المستخدم"
+                                      className="sign__title"
+                                      value={userDetails?.Referrallink + userDetails?.username}
+                                      name="Referrallink"
+                                      onChange={handleChange}
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                  </Form.Group>
+                                </Row>
+                                <Row>
+                                  <Form.Group as={Col} controlId="validationCustom03">
+                                    <Form.Label>خلفية الحساب</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      placeholder="خلفية الحساب"
+                                      value={userDetails?.Referral}
+                                      required
+                                      style={{ border: 'none' }}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                      Please provide a valid city.
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Row>
+                                <Row>
+                                  <Form.Group as={Col} controlId="validationCustom03">
+                                    <Form.Label>كم كسبت؟</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      placeholder="خلفية الحساب"
+                                      value={userDetails?.Referralamount}
+                                      required
+                                      style={{ border: 'none' }}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                      Please provide a valid city.
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Row>
+                                <Button style={{ marginTop: '10px' }} type="submit">
+                                  حفظ
+                                </Button>
+                              </Form>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+
+                        {/* Account Details Setting Card Section */}
+                        <Col md={6}>
+                          <Card style={{ background: '#fff', padding: '0px', width: '100%' }}>
+                            <Card.Body>
+                              <h4 className="sign__title" style={{ marginBottom: '20px', color: 'rgb(97, 100, 255)' }}>
+                                تفاصيل الحساب
+                              </h4>
+                              <Row>
+                                <ul className="knowledge__list">
+                                  <li>رمز الدعم الفني<span>{userDetails.supportcode}</span></li>
+                                  <li>عدد بوستاتي<span>{userDetails.posts}</span></li>
+                                  <li>حالة التوثيق<span>{userDetails.documentationstatus}</span></li>
+                                  <li>مستوى الحساب<span>{userDetails.Accountlevel}</span></li>
+                                  <li>الرصيد الحالي<span>${userDetails.currentbalance}</span></li>
+                                  <li>نوع الباقة<span>{userDetails.packagetype}</span></li>
+                                  <li>تاريخ إنتهاء الباقة<span>{userDetails.packageexpirationdate}</span></li>
+                                  <li>تاريخ إنشاء الحساب<span>{userDetails.createdAt}</span></li>
+                                </ul>
+                              </Row>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Container>
+
                     </Tab>
                   </Tabs>
                 </Col>

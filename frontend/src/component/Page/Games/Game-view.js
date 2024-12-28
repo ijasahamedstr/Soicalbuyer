@@ -4,40 +4,12 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { Image } from 'antd';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
-
-function MyPaymentModal(props) {
-  return (
-    <Modal
-      {...props}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'18px'}}>
-        تعليمات البائع
-        </Modal.Title>
-      </Modal.Header>
-      <p style={{color:'red',padding:'10px'}}>الحساب مربوط ب ايدي سوني موجود بنفس إيميل الايبك<br/><span style={{color:'black'}}>إختيار طريقة الدفع</span></p>
-
-        <Modal.Body>
-          <div className='btn'>
-             <Button variant="primary" style={{background:'#73a73e',width:'100%',border:'none',marginBottom:'10px'}}>
-              العملات الرقمية
-              </Button>
-              <Button variant="primary" style={{background:'#a73e3e',width:'100%',border:'none'}}>
-              فيزا - ماستر كارد - مدى - ابل باي - استي سي باي 
-              </Button>
-          </div>
-       
-      </Modal.Body>
-    </Modal>
-  );
-}
+import Modal from 'react-bootstrap/Modal';
 
 function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalShow, setLoginModalShow] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const { id } = useParams();
   const [item, setItem] = useState(null);
@@ -45,6 +17,28 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [error, setError] = useState(null);
   const [modalShow, setModalShow] = React.useState(false);
   const [userinfo, setUserInfo] = useState(null);
+
+
+
+   // Check login status on component mount
+   useEffect(() => {
+    const token = localStorage.getItem('userdbtoken'); // Check for the token in localStorage
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handlePurchase = () => {
+    if (isLoggedIn) {
+      // Proceed with the purchase process
+      setModalShow(true); // Show modal for purchase
+    } else {
+      // Show the login prompt modal
+      setLoginModalShow(true); // Show the login modal
+    }
+  };
 
   // Fetch and set user data
   useEffect(() => {
@@ -200,11 +194,46 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
                           </Link>
                         ) : (
                           // Render buy button for others
-                          <Button variant="primary" onClick={() => setModalShow(true)}>
+                          <Button variant="primary"  onClick={handlePurchase}>
                           <span>(${item.gameAmount})</span>شراء
                           </Button>
                   
                         )}
+
+                           {/* Purchase Modal */}
+                          <Modal show={modalShow} onHide={() => setModalShow(false)}>
+                            <Modal.Header closeButton>
+                              <Modal.Title>Confirm Purchase</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className='btn'>
+                                  <Button variant="primary" style={{background:'#73a73e',width:'100%',border:'none',marginBottom:'10px'}}>
+                                    العملات الرقمية
+                                    </Button>
+                                    <Button variant="primary" style={{background:'#a73e3e',width:'100%',border:'none'}}>
+                                    فيزا - ماستر كارد - مدى - ابل باي - استي سي باي 
+                                    </Button>
+                                </div>
+                            
+                            </Modal.Body>
+                          </Modal>
+
+                        {/* Login Prompt Modal */}
+                        <Modal show={loginModalShow} onHide={() => setLoginModalShow(false)}>
+                          <Modal.Header closeButton>
+                            <Modal.Title>Please Log In</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>You need to log in to proceed with the purchase.</Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setLoginModalShow(false)}>Close</Button>
+                            <Button variant="primary" onClick={() => {
+                              // Simulate login process
+                              localStorage.setItem('userdbtoken'); // Simulating login
+                              setIsLoggedIn(true); // Update state to reflect login
+                              setLoginModalShow(false); // Close login modal
+                            }}>Log In</Button>
+                          </Modal.Footer>
+                        </Modal>
 
                         <div className="a2a_kit a2a_kit_size_32 a2a_default_style mt-3" style={{ lineHeight: '32px' }}>
                         <div className="a2a_kit a2a_kit_size_32 a2a_default_style mt-3" style={{ lineHeight: '32px' }}>
@@ -340,10 +369,6 @@ function Gameview({ isOTPLoggedIn, OTPLoggedUserData }) {
           </Col>
         </Row>
       </Container>
-      <MyPaymentModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
     </>
   );
 }

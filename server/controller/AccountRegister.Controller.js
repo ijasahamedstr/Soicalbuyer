@@ -9,7 +9,7 @@ export const AccountCreate = async (req, res) => {
 
     if (!displayName || !username || !email || !Phone || !Referrallink || !Referral || !Referralamount || !supportcode || !posts || !documentationstatus || !Accountlevel || !currentbalance || !packagetype || !packageexpirationdate || !Accountstatus) {
         res.status(400).json({ error: "Please Enter All Input Data" })
-    }
+    }s
 
     try {
         const presuer = await AccountRegister.findOne({ email: email });
@@ -37,11 +37,8 @@ export const AccountCreate = async (req, res) => {
 // All Acccount View 
 export const AccountIndex = async (req, res) => {
     try {
-
         const AcoountsRegister = await AccountRegister.find();
-
         res.json(AcoountsRegister);
-
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -87,7 +84,7 @@ export const AccountDelete = async (req, res) => {
 
 // All Acccount Update
 
-export const AccountUpdate  = async (req, res) => {
+export const CategoriesUpdate  = async (req, res) => {
 
     const { id } = req.params;
     const { displayName } = req.body;
@@ -97,7 +94,6 @@ export const AccountUpdate  = async (req, res) => {
     const {  bio } = req.body;
     const { Referrallink } = req.body;
     const { file } = req;
-    const { file1 } = req;
     
 
     try {
@@ -131,10 +127,6 @@ export const AccountUpdate  = async (req, res) => {
         // Update image if a new file is uploaded
         if (file) {
             user.imgpath = file.filename;
-        }
-
-        if (file1) {
-            user.bmgpath = file.filename;
         }
 
         // Save the updated user data

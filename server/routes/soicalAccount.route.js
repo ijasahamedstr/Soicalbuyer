@@ -16,10 +16,7 @@ soicalrouter.get("/:id",soicalSingleDetails);
 //Update Data Register
 soicalrouter.put('/:id',SoicalAccountUpdate);
 
-
-
 //Delete Data Register
-
 soicalrouter.delete('/:id',soicalAccountDelete);
 
 export default soicalrouter;

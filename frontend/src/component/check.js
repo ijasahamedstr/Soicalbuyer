@@ -1,68 +1,72 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const InstagramUserDetails = () => {
+function InstagramUserDetails() {
+  const [userInfo, setUserInfo] = useState(null);
   const [username, setUsername] = useState('');
-  const [accountInfo, setAccountInfo] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
 
-  const handleFetchUserDetails = async () => {
+  // Handle the manual input of the Instagram username
+  const handleUsernameSubmit = async () => {
     if (!username) {
-      setError('Please enter a username');
+      setError('Please enter a valid username');
       return;
     }
 
-    setLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
+    setLoading(true);  // Set loading state to true while fetching data
 
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_HOST}/api/instagram-info`, { // Use HTTP for local development
-        params: { username }
-      });
+      // Call the backend API which will interact with Instagram Graph API
+      const response = await axios.post('/api/getUserInfo', { username });
 
-      setAccountInfo({
-        id: response.data.id,
-        username: response.data.username,
-        fullName: response.data.full_name,
-        bio: response.data.biography,
-      });
+      setLoading(false);  // Reset loading state after request is complete
+
+      if (response.data) {
+        setUserInfo(response.data);
+      } else {
+        setError('User not found');
+      }
     } catch (err) {
-      console.error(err);
-      const errorMessage = err.response?.data?.message || 'Error fetching user details. Please check the console for more information.';
-      setError(errorMessage);
-      setAccountInfo(null);
-    } finally {
-      setLoading(false);
+      setLoading(false);  // Reset loading state in case of error
+      setError('Failed to fetch user info');
     }
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter Instagram username"
-      />
-      <button onClick={handleFetchUserDetails} disabled={loading}>
-        {loading ? 'Loading...' : 'Get User Details'}
-      </button>
+    <div className="App">
+      <h1>Instagram User Information</h1>
 
-      {accountInfo && (
-        <div className="account-info">
-          <h2>Account Information</h2>
-          <p><strong>Username:</strong> {accountInfo.username}</p>
-          <p><strong>Full Name:</strong> {accountInfo.fullName}</p>
-          <p><strong>Bio:</strong> {accountInfo.bio}</p>
+      {/* Input for custom username */}
+      <div>
+        <input
+          type="text"
+          placeholder="Enter Instagram Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button onClick={handleUsernameSubmit}>Search</button>
+      </div>
+
+      {/* Show loading message while fetching data */}
+      {loading && <p>Loading...</p>}
+
+      {/* Display user info if available */}
+      {userInfo && (
+        <div>
+          <h2>Profile</h2>
+          <p><strong>Username:</strong> {userInfo.username}</p>
+          <p><strong>Bio:</strong> {userInfo.bio}</p>
+          <p><strong>Account Type:</strong> {userInfo.account_type}</p>
+          <p><strong>Media Count:</strong> {userInfo.media_count}</p>
         </div>
       )}
 
+      {/* Show error message */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
-};
+}
 
 export default InstagramUserDetails;
-
-

@@ -126,9 +126,9 @@ const RegisterForm = () => {
     } catch (error) {
       console.error('Registration failed:', error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'Already registered Account. Please try again later.',
+        icon: 'success',
+        title: 'Success!',
+        text: 'Account registered successfully!',
       });
     }
   };
@@ -220,8 +220,7 @@ const RegisterForm = () => {
       </Form>
     </div>
     <Link to='/تسجيل الدخول'><div className='account1' style={{color:'rgb(97, 100, 255)'}}>لديك حساب بالفعل؟</div></Link>
-      <div className='account'>أو قم بتسجيل الدخول عبر</div>
-      <div className='google'><button style={{ borderRadius: '40px'}} className='button'  type="submit"><i className="fab fa-google" style={{color:'rgb(97, 100, 255)'}}></i> تسجيل الدخول عبر جوجل</button></div>     
+      <div className='account'>أو قم بتسجيل الدخول عبر</div>   
       </div>
       </div>
       <ToastContainer />

@@ -5,7 +5,6 @@ import Slider from "react-slick";
 import './review.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Import axios for data fetching
-import {BACKEND_URL} from "../LoginPage/LoginAPI/helper.js";
 
 
 function Review() {
@@ -14,6 +13,7 @@ function Review() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userinfo, setUserinfo] = useState([]);
 
   // Fetch user data from localStorage and set interval
   useEffect(() => {
@@ -45,6 +45,30 @@ function Review() {
 
     fetchData();
   }, []);
+
+   // Fetch user info from API
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/register`); // Ensure endpoint is correct
+        setUserinfo(response.data);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setError('Failed to fetch user info.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filter jobs based on user ownership
+  const filteredJobs = jobs.filter(job =>
+    userinfo.some(user => user._id === job.userid)
+  );
+
   
   
   const marginTopValue = '50px',marginBottomValue = '20px';
@@ -91,16 +115,26 @@ function Review() {
       <div className="slider-container">
       <div style={{marginTop:marginTopValue,marginBottom:marginBottomValue}}><h2 className='entry-title'>🌟ماذا قالوا عن يوزر؟</h2></div>
       <Slider {...settings}>
-      {jobs.map((job, index) => (
+      {filteredJobs.map((job) => (
         <div className="col-12 col-sm-6 col-md-4 col-lg-3">
           <div className="p-3">
           <div className='feature'>
           <Card style={{ backgroundColor:'#F2F3F4'}}>
             <Card.Body>
-              <Card.Title>@Ijas Ahamed</Card.Title>
+              <Card.Title>
+              {userinfo.find(user => user._id === job.userid) && (                  
+              <a>{userinfo.find(user => user._id === job.userid).displayName}</a>                         
+              )}
+              </Card.Title>
               <Card.Text>
               <span><div class="card__author  card__author--verified" style={{gap:'5px'}}>
-              <img src="https://usr.dokan-cdn.com/public/avatars/e334bb8a73397609e060efed2fb27f96.gif" alt="" /><span class="good-review-badge">ممتاز</span>
+              {userinfo.find(user => user._id === job.userid) && (                  
+              <img
+              src={`${process.env.REACT_APP_API_HOST}/uploads/${userinfo.find(user => user._id === job.userid).imgpath || "https://usr.dokan-cdn.com/img/avatars/default.jpg"}`}
+             alt="Owner Avatar"
+              />                        
+              )}
+             <span class="good-review-badge">ممتاز</span>
               <span class="good-review-badge">مشتري</span>  </div></span>
               <span>
               ⭐️

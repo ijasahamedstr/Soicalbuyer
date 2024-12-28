@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Footer = () => {
     const user = {
-        avatar: 'https://digilaser.sa/wp-content/uploads/2024/04/78-removebg-preview.png', // Replace with actual avatar URL
+        avatar: '', // Replace with actual avatar URL
       };
     return (
         <>

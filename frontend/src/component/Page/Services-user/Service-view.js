@@ -1,43 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Modal, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-function MyPaymentModal({ show, onHide }) {
-  return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter" style={{ fontSize: '18px' }}>
-          تعليمات البائع
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p style={{ color: 'red', padding: '10px' }}>
-          الحساب مربوط ب ايدي سوني موجود بنفس إيميل الايبك<br />
-          <span style={{ color: 'black' }}>إختيار طريقة الدفع</span>
-        </p>
-        <div className='btn'>
-          <Button variant="primary" style={{ background: '#73a73e', width: '100%', border: 'none', marginBottom: '10px' }}>
-            العملات الرقمية
-          </Button>
-          <Button variant="primary" style={{ background: '#a73e3e', width: '100%', border: 'none' }}>
-            فيزا - ماستر كارد - مدى - ابل باي - استي سي باي
-          </Button>
-        </div>
-      </Modal.Body>
-    </Modal>
-  );
-}
 
 function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const { id } = useParams();
   const [fetchedItem, setFetchedItem] = useState(null);
@@ -47,8 +15,27 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [userinfo, setUserInfo] = useState(null);
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
-
   const navigate = useNavigate();
+
+  // Check login status on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('userdbtoken'); // Check for the token in localStorage
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handlePurchase = () => {
+    if (isLoggedIn) {
+      // Proceed with the purchase process
+      // Submit the data (code can be added here if required)
+    } else {
+      // Show the login prompt modal
+      setModalShow(true); // Trigger modal
+    }
+  };
 
   useEffect(() => {
     if (isOTPLoggedIn) {
@@ -101,7 +88,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
   }, [id]);
 
   useEffect(() => {
-    // Initialize formData with user ID
+    // Initialize formData with user ID if available
     setFormData(prevData => ({
       ...prevData,
       userid: userinfo?._id || ''
@@ -121,7 +108,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
     if (!formData.documentnumber) {
       errors.documentnumber = "Document number is required";
     }
-    // Add other validations as needed
+    // Add other validations if needed
     return errors;
   };
 
@@ -207,11 +194,11 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                         </ul>
                         <Form.Group className="mb-3" controlId="formGridUserId" style={{ width: '100%' }}>
                           <Form.Label>الإسم الأول</Form.Label>
-                          <Form.Control 
-                            placeholder="الإسم الأول" 
-                            name="userid" 
-                            value={formData.userid || ''} 
-                            readOnly 
+                          <Form.Control
+                            placeholder="الإسم الأول"
+                            name="userid"
+                            value={formData.userid || ''}
+                            readOnly
                           />
                         </Form.Group>
                         {Array.isArray(fetchedItem?.additionalFields1) && fetchedItem.additionalFields1.length > 0 && (
@@ -277,6 +264,7 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
                           <Button
                             type="submit"
                             style={{ width: '100%', backgroundColor: '#4CAF50', borderColor: '#4CAF50' }}
+                            onClick={handlePurchase}
                           >
                             إضافة إلى السلة
                           </Button>
@@ -289,11 +277,23 @@ function Serviceview({ isOTPLoggedIn, OTPLoggedUserData }) {
             </div>
           </Col>
         </Row>
-        <MyPaymentModal
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-        />
       </Container>
+
+      {/* Modal for Login Prompt */}
+      <Modal show={modalShow} onHide={() => setModalShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>يرجى تسجيل الدخول</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Please Login your Account</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setModalShow(false)}>
+            إغلاق
+          </Button>
+          <Button variant="primary" onClick={() => navigate('/تسجيل الدخول')}>
+            تسجيل الدخول
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

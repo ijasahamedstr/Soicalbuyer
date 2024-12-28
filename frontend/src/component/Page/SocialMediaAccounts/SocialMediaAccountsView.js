@@ -16,40 +16,9 @@ import { LuMessagesSquare } from "react-icons/lu";
 import Swal from 'sweetalert2';  // Import SweetAlert2
 import axios from 'axios';
 
-
-
-function MyPaymentModal(props) {
-  return (
-    <Modal
-      {...props}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter" style={{fontSize:'18px'}}>
-        تعليمات البائع
-        </Modal.Title>
-      </Modal.Header>
-      <p style={{color:'red',padding:'10px'}}>الحساب مربوط ب ايدي سوني موجود بنفس إيميل الايبك<br/><span style={{color:'black'}}>إختيار طريقة الدفع</span></p>
-
-        <Modal.Body>
-          <div className='btn'>
-             <Button variant="primary" style={{background:'#73a73e',width:'100%',border:'none',marginBottom:'10px'}}>
-              العملات الرقمية
-              </Button>
-              <Button variant="primary" style={{background:'#a73e3e',width:'100%',border:'none'}}>
-              فيزا - ماستر كارد - مدى - ابل باي - استي سي باي 
-              </Button>
-          </div>
-       
-      </Modal.Body>
-    </Modal>
-  );
-}
-
-
 function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalShow, setLoginModalShow] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const { id } = useParams();
   const [item, setItem] = useState(null);
@@ -60,6 +29,28 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
   const [userid, setUserid] = useState('');
   const [feedback, setFeedback] = useState('');
   const [userinfo, setUserInfo] = useState(null);
+
+
+
+   // Check login status on component mount
+   useEffect(() => {
+    const token = localStorage.getItem('userdbtoken'); // Check for the token in localStorage
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handlePurchase = () => {
+    if (isLoggedIn) {
+      // Proceed with the purchase process
+      setModalShow(true); // Show modal for purchase
+    } else {
+      // Show the login prompt modal
+      setLoginModalShow(true); // Show the login modal
+    }
+  };
 
   // Fetch and set user data
   useEffect(() => {
@@ -295,10 +286,45 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         </Link>
           ) : (
         // Render buy button for others
-        <Button variant="primary" style={{ textDecoration: 'none', width:'100%' }}  onClick={() => setModalShow(true)} >
+        <Button variant="primary" style={{ textDecoration: 'none', width:'100%' }}   onClick={handlePurchase} >
         <span>(${item.social_amount})</span>شراء
         </Button>                      
         )}
+
+              {/* Purchase Modal */}
+            <Modal show={modalShow} onHide={() => setModalShow(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Purchase</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <div className='btn'>
+                    <Button variant="primary" style={{background:'#73a73e',width:'100%',border:'none',marginBottom:'10px'}}>
+                      العملات الرقمية
+                      </Button>
+                      <Button variant="primary" style={{background:'#a73e3e',width:'100%',border:'none'}}>
+                      فيزا - ماستر كارد - مدى - ابل باي - استي سي باي 
+                      </Button>
+                  </div>
+              
+              </Modal.Body>
+            </Modal>
+
+          {/* Login Prompt Modal */}
+          <Modal show={loginModalShow} onHide={() => setLoginModalShow(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Please Log In</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>You need to log in to proceed with the purchase.</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setLoginModalShow(false)}>Close</Button>
+              <Button variant="primary" onClick={() => {
+                // Simulate login process
+                localStorage.setItem('userdbtoken'); // Simulating login
+                setIsLoggedIn(true); // Update state to reflect login
+                setLoginModalShow(false); // Close login modal
+              }}>Log In</Button>
+            </Modal.Footer>
+          </Modal>
        
         <div class="a2a_kit a2a_kit_size_32 a2a_default_style mt-3" style={{lineHeight:'32px'}}>
         <div className="iconfont">
@@ -314,10 +340,6 @@ function SoiaclAcoountView({ isOTPLoggedIn, OTPLoggedUserData }) {
         </Col>
       </Row>
   </Container>
-      <MyPaymentModal
-      show={modalShow}
-      onHide={() => setModalShow(false)}
-      /> 
     <Container fluid="md">
       <Row>
         <Col>
