@@ -84,7 +84,7 @@ export const AccountDelete = async (req, res) => {
 
 // All Acccount Update
 
-export const CategoriesUpdate  = async (req, res) => {
+export const AccountUpdate  = async (req, res) => {
 
     const { id } = req.params;
     const { displayName } = req.body;

@@ -22,6 +22,7 @@
     "antd": "^5.20.3",
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
+    "eslint-config-react-app": "^7.0.1",
     "flowbite-react": "^0.10.1",
     "jwt-decode": "^4.0.0",
     "lightgallery": "^2.7.2",

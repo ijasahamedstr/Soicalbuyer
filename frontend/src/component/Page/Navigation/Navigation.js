@@ -73,7 +73,7 @@ function OffcanvasExample({ isOTPLoggedIn, OTPLoggedUserData }) {
   };
 
   return (
-    <Navbar expand="sm" className="p-3 mb-2 bg-dark text-white bg-body-tertiary" data-bs-theme="dark" style={{ width: '100%', marginTop: '-16px', fontFamily: 'Noto Kufi Arabic' }}>
+    <Navbar expand="sm" className="p-3 mb-2 bg-dark text-white" data-bs-theme="dark" style={{ width: '100%', marginTop: '-16px', fontFamily: 'Noto Kufi Arabic' }}>
       <Container>
         <Navbar.Brand href="#">
           <img src={user.avatar} className="img-fluid" style={{ width: '100px', height: 'auto' }} alt="User Avatar" />
@@ -85,7 +85,7 @@ function OffcanvasExample({ isOTPLoggedIn, OTPLoggedUserData }) {
               <img src={user.avatar} className="img-fluid" style={{ width: '100px', height: 'auto' }} alt="User Avatar" />
             </Offcanvas.Title>
           </Offcanvas.Header>
-          <Offcanvas.Body style={{ color: 'black', fontFamily: 'Noto Kufi Arabic', background: '#303434' }}>
+          <Offcanvas.Body style={{ color: 'black', background: '#303434' }}>
             <Nav className="justify-content-start flex-grow-1 pe-3">
               <Nav.Link><Link className="text-white text-decoration-none" to="/" onClick={handleMenuClick}>الرئيسية</Link></Nav.Link>
               <Nav.Link><Link className="text-white text-decoration-none" to="/التواصل الإجتماعي" onClick={handleMenuClick}>التواصل الإجتماعي</Link></Nav.Link>
