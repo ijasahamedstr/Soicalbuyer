@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin:"https://soicalbuyer.vercel.app",
+  origin:"https://soicalbuyer-vert.vercel.app",
   methods:"GET,POST,PUT,DELETE",
   credentials:true
 }));
