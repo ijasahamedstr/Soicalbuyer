@@ -118,18 +118,8 @@ app.use('/useruploads', express.static(path.join(__dirname, 'useruploads')));
 app.use('/uploads/AccountActive', express.static(path.join(__dirname, 'uploads/AccountActive')));
 app.use('/Accountimage', express.static(path.join(__dirname, 'Accountimage')));
 
-
-
-// multi image
-// get images
-// app.use("/uploads",express.static("./useruploads"))
-
 // user routes
 app.use("/user/api",userrouter);
-
-
-
-
 
 /* ************************************************************* */
 // Middleware to parse JSON requests
