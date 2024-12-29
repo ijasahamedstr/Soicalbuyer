@@ -33,7 +33,7 @@ function Soicalaccount() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_API_HOST}/soical`); // Ensure endpoint is correct
+        const response = await axios.get(`https://soicalbuyer-vert.vercel.app/soical`); // Ensure endpoint is correct
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching job listings:', error);
