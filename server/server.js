@@ -40,10 +40,17 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin: 'https://soicalbuyer-vert.vercel.app', // Allow only this origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],   // Specify the allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers (if needed)
-  credentials: true // Allow cookies or authorization headers to be sent
+  origin: function(origin, callback) {
+    const allowedOrigins = ['https://soicalbuyer-vert.vercel.app', 'https://soicalbuyer-omega.vercel.app'];
+    if (allowedOrigins.includes(origin) || !origin) {
+      // Allow requests with no origin (like mobile apps or Postman)
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
 //Data understanding middleware
