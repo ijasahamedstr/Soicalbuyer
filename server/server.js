@@ -40,9 +40,10 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin:"https://soicalbuyer-vert.vercel.app",
-  methods:"GET,POST,PUT,DELETE",
-  credentials:true
+  origin: 'https://soicalbuyer-vert.vercel.app', // Allow only this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],   // Specify the allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers (if needed)
+  credentials: true // Allow cookies or authorization headers to be sent
 }));
 
 //Data understanding middleware
