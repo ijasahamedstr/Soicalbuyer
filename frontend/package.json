@@ -22,6 +22,7 @@
     "antd": "^5.20.3",
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
+    "eslint": "^8.0.0",
     "flowbite-react": "^0.10.1",
     "jwt-decode": "^4.0.0",
     "lightgallery": "^2.7.2",
@@ -64,8 +65,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
