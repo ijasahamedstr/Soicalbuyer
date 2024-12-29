@@ -24,6 +24,7 @@ import axios from 'axios';
 import { TwitterApi } from 'twitter-api-v2'; // Ensure this is imported correctly
 import bankrouter from "./routes/bank.route.js";
 import servicerequestrouter from "./routes/servicerequest.routes.js";
+import adminfeedbackrouter from "./routes/adminfeedback.route.js";
 
 
 // Create an instance of Express
@@ -40,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin:"https://soicalbuyer-vert.vercel.app",
+  origin:"http://localhost:3000",
   methods:"GET,POST,PUT,DELETE",
   credentials:true
 }));
@@ -92,8 +93,6 @@ app.use('/feedback',feedbackrouter);
 // Account Point Transfer
 app.use('/adminfeedback', adminfeedbackrouter);
 
-
-
 // User Account User boost
 app.use('/boost',Accountboostrouter);
 
@@ -118,8 +117,9 @@ app.use('/useruploads', express.static(path.join(__dirname, 'useruploads')));
 app.use('/uploads/AccountActive', express.static(path.join(__dirname, 'uploads/AccountActive')));
 app.use('/Accountimage', express.static(path.join(__dirname, 'Accountimage')));
 
-// user routes
+
 app.use("/user/api",userrouter);
+
 
 /* ************************************************************* */
 // Middleware to parse JSON requests
