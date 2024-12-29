@@ -45,17 +45,17 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// app.use(cors({
-//   origin:"http://localhost:3000",
-//   methods:"GET,POST,PUT,DELETE",
-//   credentials:true
-// }));
-
 app.use(cors({
-  origin: "https://soicalbuyer.vercel.app",
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  origin:"https://soicalbuyer.vercel.app",
+  methods:"GET,POST,PUT,DELETE",
+  credentials:true
 }));
+
+// app.use(cors({
+//   origin: "https://soicalbuyer.vercel.app",
+//   methods: "GET,POST,PUT,DELETE",
+//   credentials: true
+// }));
 
 
 //Data understanding middleware
