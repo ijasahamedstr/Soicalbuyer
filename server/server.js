@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(cors({
-  origin:"http://localhost:3000",
+  origin:"https://soicalbuyer-vert.vercel.app",
   methods:"GET,POST,PUT,DELETE",
   credentials:true
 }));
