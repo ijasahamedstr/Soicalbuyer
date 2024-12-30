@@ -6,7 +6,7 @@ const feedbackrouter = express.Router();
 feedbackrouter.post('/',feedbackCreate );
 
 // View the Data Register
-feedbackrouter.get('/', FeedbackIndex);
+feedbackrouter.get('/',FeedbackIndex);
 
 export default feedbackrouter;
 

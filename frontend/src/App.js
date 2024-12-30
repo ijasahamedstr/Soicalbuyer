@@ -105,7 +105,7 @@ function App() {
           <Route path="/soicaledit/:id" element={<Editsocial isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData}/>}/>
           <Route path="/Service-view/:id" element={<Serviceview isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
           <Route path="/ServiceEdit/:id" element={<ServiceEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
-          <Route path="/UserView/:id" element={<ServiceEdit isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
+          <Route path="/UserView/:id" element={<Userview isOTPLoggedIn={isOTPLoggedIn} OTPLoggedUserData={OTPLoggedUserData} />} />
         </Routes>
       </Router>
       <Footer />

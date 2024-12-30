@@ -9,7 +9,7 @@ export const AccountCreate = async (req, res) => {
 
     if (!displayName || !username || !email || !Phone || !Referrallink || !Referral || !Referralamount || !supportcode || !posts || !documentationstatus || !Accountlevel || !currentbalance || !packagetype || !packageexpirationdate || !Accountstatus) {
         res.status(400).json({ error: "Please Enter All Input Data" })
-    }s
+    }
 
     try {
         const presuer = await AccountRegister.findOne({ email: email });
@@ -33,12 +33,14 @@ export const AccountCreate = async (req, res) => {
 
 
 
-
 // All Acccount View 
 export const AccountIndex = async (req, res) => {
     try {
+
         const AcoountsRegister = await AccountRegister.find();
+
         res.json(AcoountsRegister);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -90,8 +92,8 @@ export const AccountUpdate  = async (req, res) => {
     const { displayName } = req.body;
     const { username } = req.body;
     const { email } = req.body;
-    const {  Phone } = req.body;
-    const {  bio } = req.body;
+    const { Phone } = req.body;
+    const { bio } = req.body;
     const { Referrallink } = req.body;
     const { file } = req;
     

@@ -1,17 +1,33 @@
+import feedbackactive from "../models/feedback.models.js";
+
+
 export const feedbackCreate = async (req, res) => {
     const { userid, feedback } = req.body;
 
-    try {
-        // Create a new account instance
-        const accountCreate = new ({ userid, feedback });
+    // Validate required fields
+    if (!userid || !feedback) {
+        return res.status(400).json({ error: "Please enter all required fields." });
+    }
 
-        // Save the new account to the database
+    try {
+        // Create a new bank account entry
+        const accountCreate = new feedbackactive({
+            userid,
+            feedback
+        });
+
+        // Save to database
         const storeData = await accountCreate.save();
-        res.status(200).json(storeData);
+
+        // Respond with success and the created data
+        return res.status(201).json(storeData); // 201 Created is more appropriate for successful creation
     } catch (error) {
-        res.status(400).json({ error: "Invalid Details", details: error.message });
+        // Handle errors and respond with a generic message
+        console.error('Error creating account:', error); // Log error for debugging
+        return res.status(500).json({ error: "An error occurred while creating the bank account." });
     }
 };
+
 
 
 // All Acccount View 
@@ -26,3 +42,4 @@ export const FeedbackIndex = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
